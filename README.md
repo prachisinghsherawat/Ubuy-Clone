@@ -36,8 +36,8 @@ All pages are not responsive yet , those pages are might not be properly visible
   
   ## Team Members and Contributors 😇 :
 
-- 👤 prachi Singh Sherawat
-  Github: https://github.com/prachisinghsherawat
+- 👤 Bhavesh Suthar
+  Github: https://github.com/BhaveshSuthar00
   
 - 👤 SureshYarram
   Github: https://github.com/SureshYarram
