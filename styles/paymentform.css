@@ -1,0 +1,127 @@
+
+#container8 {
+  width: 40%;
+  height: 450px;
+  border: 1px solid orange;
+  margin: auto;
+  border-radius: 5px;
+  margin-top: 3%;
+}
+#paymentform {
+  width: 100%;
+  height: 13%;
+  border-bottom: 1px solid grey;
+}
+.payment {
+  display: flex;
+  justify-content: space-between;
+}
+
+.closebutton {
+  height: 30px;
+  width: 60%;
+  margin-top: 3%;
+ 
+}
+
+.xbuttondiv{
+  height: 30px;
+  width: 10%;
+  /* border: 2px solid red; */
+  margin-top: 10px;
+}
+.h2tag {
+  margin-left: 2%;
+}
+#carddetails {
+  width: 100%;
+  height: 70%;
+  /* border: 1px solid red; */
+}
+.carddiv {
+  height: 40%;
+  width: 50%;
+  /* border: 1px solid red; */
+  background-color: lightgrey;
+  margin-left: 7%;
+}
+.h4tag {
+  margin-left: 7%;
+}
+#cardnumber {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  width: 60%;
+  padding: 7px 12px;
+  margin-left: 6%;
+}
+.monthcvv {
+  display: flex;
+}
+#month {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 20%;
+  padding: 7px 7px;
+  margin-left: 6%;
+}
+#cvv {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 20%;
+  padding: 7px 7px;
+  margin-left: 6%;
+}
+.seq {
+  width: 50%;
+  height: 20%;
+  /* border: 1px solid red; */
+  display: flex;
+  margin-top: 10px;
+  margin-left: 7%;
+}
+.lock {
+  width: 20%;
+  height: 100%;
+  /* border: 1px solid red; */
+}
+.ptag {
+  width: 80%;
+  height: 100%;
+  /* border: 1px solid red; */
+  line-height: 100%;
+}
+.checkbox {
+  display: flex;
+  margin-left: 7%;
+}
+.check {
+  margin-top: 3.5%;
+}
+
+#placeorder {
+  width: 40%;
+  height: 35px;
+  /* border: 1px solid red; */
+  margin-left: 60%;
+}
+#order {
+  background-color: orange;
+  border-radius: 10px;
+  height: 35px;
+  width: 80%;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 17px;
+ 
+
+  cursor: pointer;
+}
+.lockimage {
+  margin-left: 20%;
+  margin-top: 30%;
+}
+.ptag,.h2tag,.h4tag{
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}

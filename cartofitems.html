@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="./styles/cartofitems.css" />
+    <link rel="stylesheet" href="./styles/navbar.css" />
+    <script
+      src="https://kit.fontawesome.com/2281802e38.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="startheader">
+      
+    </div>
+
+    <!-- mypart -->
+    <div class="orderlist">
+      <a href="/html file/productmainpage.html">Continue Shopping</a>
+    </div>
+    <!-- <div>continue shopping</div> -->
+    <div class="container">
+      <div id="product">
+        <div class="shoppingcart">
+          <p>
+            shopping cart
+            <span class="small">(<span class="totalcount">0</span> item) </span>
+          </p>
+          <div>
+            <button class="updatelist">Update Shopping Cart</button>
+          </div>
+        </div>
+        <div id="inputdata"></div>
+      </div>
+
+      <!-- ankit part -->
+
+      <div class="ordersummary">
+        <div class="order">
+          <div class="orderbox">
+            <div class="orderbox1">
+             
+            <div>Order Summary</div>
+            <div>
+              <div>Subtotal</div>
+              <div class="totalprice-here"></div>
+            </div>
+            <div>
+              <div>Shipping Fee</div>
+              <div>Calculating at checkout</div>
+            </div>
+            <div>
+              <div>Estimated Total</div>
+              <div class="totalprice"></div>
+            </div>
+          </div>
+          </div>
+          <hr/>
+          <div class="proceeddiv">
+            <div class="proceedbuttondiv">
+              <button
+                class="proceedbutton"
+                type="button"
+                onclick="proceedToCheckout()"
+                title="Proceed to Checkout"
+              >
+                <i class="fas fa-lock"></i> Proceed to Checkout
+              </button>
+            </div>
+            <div class="discountcodes">
+              <h3 class="h3tag">Discount Codes</h3>
+            </div>
+            <div class="discountcodes">
+              <h4 class="h4">Enter your coupon code if you have one.</h4>
+            </div>
+            <div class="inputtext"><input type="text" /></div>
+            <div class="coupondiv">
+              <button class="applycoupon">Apply Coupon</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Ankit part end -->
+    <div>
+      <h2 id="civil">
+          PRODUCTS YOU MAY LIKE
+      </h2>
+      
+      <div class="tapu">
+          <div>
+              <img width="100%" src="https://m.media-amazon.com/images/I/51TB5Mlsu8L._AC_SL300_.jpg"
+                  alt="">
+            
+                  <h2> US Store</h2>
+          
+              <h3>
+                  Office Chair, FelixKing Ergonomic Desk Chair with Adjustable
+              </h3>
+          </div>
+          <div>
+              <img width="100%"  src="https://m.media-amazon.com/images/I/71uk1EwC+VL._AC_SL300_.jpg"
+                  alt="">
+              <h2>
+                  US Store
+              </h2>
+              <h3>
+                  It's_Organized Z1-S Gaming Desk 44.5 inch Z Shaped Professional
+              </h3>
+          </div>
+          <div>
+              <img width="100%"  src="https://m.media-amazon.com/images/I/71U1R-4dX1L._SL300_.jpg"
+                  alt="">
+              
+                  <h2> US Store </h2>
+                  <h3>
+                      REVLON 1875W Volume Booster Hair Dryer
+                       Item #: 5912692
+                  </h3>
+          </div>
+          <div>
+              <img width="100%"   src="https://m.media-amazon.com/images/I/61BuT2yTQ6S._AC_SL300_.jpg"
+                  alt="">
+              <h2> US Store </h2>
+              <h3>
+                  ASUS ROG Strix G15 Gaming Laptop, 15.6” 300Hz IPS FHD Display,
+
+              </h3>
+          </div>
+          <div>
+              <img width="100%"  src="https://m.media-amazon.com/images/I/81BFNUe477L._AC_SL300_.jpg"
+                  alt="">
+              <h2> US Store</h2>
+              <h3>
+                  EnerPlex Kids Inflatable Travel Bed with High Speed Pump,
+
+              </h3>
+          </div>
+
+      </div>
+
+
+  <!-- santosh part end -->
+    <!-- footer part of cart -->
+    <footer class="footerofcart">
+      <div id="finaltable">
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/quick-links.svg"
+              alt=""
+            />
+            QUICK LINKS
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Corporate Enquiries</a></li>
+            <li><a href="#">Intellectual Property</a></li>
+            <li><a href="#">Sitemap</a></li>
+            <li><a href="#">Track Order</a></li>
+            <li><a href="#">Customs Tariffs And Fees</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/ubuy-important-links.svg"
+              alt=""
+            />
+            UBUY
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">Customer Reviews</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">FRQ</a></li>
+            <li><a href="#">About Ucredit</a></li>
+            <li><a href="#">Ubuy Affiliates</a></li>
+          </ul>
+        </div>
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/payment-links.svg"
+              alt=""
+            />
+            PAYMENT
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-158997744021.png"
+                alt=""
+              />
+              <a href="#">Paypal</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159064539994.png"
+                alt=""
+              />
+              <a href="#">Visa</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159049393275.png"
+                alt=""
+              />
+              <a href="#">mastercard</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159049550294.png"
+                alt=""
+              />
+              <a href="#">American Expess</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/shipping-links.svg"
+              alt=""
+            />
+            SHIPPING
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li>
+              <img
+                src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/ufulfilled-icon.svg"
+                alt=""
+              />
+              <a href="#">Express Shipping 3-6 Business Days</a>
+            </li>
+            <li>
+              <img
+                src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/u-not-fulfilled-icon.svg"
+                alt=""
+              />
+              <a href="#">Standard Shipping 10+ Business Days</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/countries-covered-links.svg"
+              alt=""
+            />
+            CITIES COVERED
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">Mumbai</a></li>
+            <li><a href="#">Delhi</a></li>
+            <li><a href="#">Bangalore</a></li>
+            <li><a href="#">Hyderabad</a></li>
+            <li><a href="#">Ahmedabad</a></li>
+            <li><a href="#">Chennai</a></li>
+            <li><a href="#">Kolkata</a></li>
+            <li><a href="#">Surat</a></li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/support-links.svg"
+              alt=""
+            />
+            24/7 Support
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <p>24/7 Support</p>
+            <p>Customer Services</p>
+            <div>
+              <div>Download Our App</div>
+              <div>
+                <a href="#">
+                  <img
+                    src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/app-store-icon.svg"
+                    alt=""
+                  />
+                </a>
+                <a href="#">
+                  <img
+                    src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/play-store-icon.svg"
+                    alt=""
+                  />
+                </a>
+              </div>
+            </div>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div id="subfooter-row1">
+          <div>UBUY POPULAR SEARCHES</div>
+          <div id="subfooter-subdelivery">
+            Delivery:
+            <select name="" id="subfooter-countrynames">
+              <option value="">India</option>
+              <option value="">Hong Kong</option>
+              <option value="">Japan</option>
+              <option value="">Malaysia</option>
+              <option value="">Maldives</option>
+              <option value="">Philippines</option>
+              <option value="">Singapore</option>
+              <option value="">South Korea</option>
+              <option value="">Taiwan</option>
+              <option value="">Thailand</option>
+              <option value="">Vietnam</option>
+              <option value="">Bangladesh</option>
+              <option value="">Georgia</option>
+              <option value="">Kazakhstan</option>
+              <option value="">Sri Lanka</option>
+              <option value="">Uzbekistan</option>
+              <option value="">View All countires</option>
+            </select>
+          </div>
+        </div>
+        <hr />
+        <div id="subfooter-row2">
+          <ul>
+            <li><a href="#">Mobile & Tab</a></li>
+            <li><a href="#">Fashion</a></li>
+            <li><a href="#">Electronics</a></li>
+            <li><a href="#">Perfumes</a></li>
+            <li><a href="#">Beauty Care</a></li>
+            <li><a href="#">Tools</a></li>
+            <li><a href="#">Video Games</a></li>
+            <li><a href="#">Boys Jeans</a></li>
+          </ul>
+        </div>
+        <hr />
+        <div id="subfooter-row3">
+          <div>Copyright © 2021 Ubuy Co. All rights reserved.</div>
+          <div id="subfooter-row3-ul">
+            <ul>
+              <li><a href="#">Terms & Conditions</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div id="subfooter-row3-lastcol">
+            <div>Follow Us</div>
+            <div>
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<script src="./scripts/cartofitems.js"></script>
+
+<script type="module">
+  let div = document.querySelector('.startheader');
+  import navbar from "./components/navbar.js";
+  div.innerHTML = navbar();
+</script>

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://kit.fontawesome.com/2281802e38.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="./styles/addtocart.css" />
+    <link rel="stylesheet" href="./styles/navbar.css" />
+  </head>
+
+  <body>
+    <div class="startheader">
+    <!-- end here -->
+    </div>
+
+    <div id="linktogoback">
+      <div>
+        <a href="./index.html">home</a>
+      </div>
+      <div>
+        <span class="nameof-the-product"></span>
+      </div>
+    </div>
+    <div class="maincont">
+      <div class="leftimg">
+        <div class="boximg"></div>
+
+        <div class="social">
+          <div class="share">
+            Share
+
+            <div class="sicon">
+              <img
+                src="data:image/png;base64,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"
+                height="100%"
+                width="100%"
+                alt=""
+              />
+            </div>
+            <div class="sicon">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT92HV_T3Vf8sIcPAwbB2m1Of9q48_t6ubfGA&usqp=CAU"
+                alt=""
+                height="100%"
+                width="100%"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="midimg">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmbyNKe2ymOoI1PFAbu6OwVdsVal1VnKabaw&usqp=CAU"
+          alt=""
+          height="100%"
+          width="100%"
+        />
+      </div>
+
+      <div class="rightcont">
+        <div class="descrip">
+          <!-- this box is for brand and items values (teal colored box )  -->
+        </div>
+        <div class="itemforstart">
+          <!-- this box is for star rating -->
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star"></span>
+          <strong class="ratingforpro">4.5 rating</strong>
+          <input
+            class="inputforwrite"
+            type="text"
+            placeholder="write a review"
+          />
+        </div>
+        <div class="item">
+          <!-- this box is for that specific code INRI... something -->
+        </div>
+
+        <div class="cont22">
+          Order now and get it around Thursday, February 03
+        </div>
+        <div class="cont23">
+          <div class="aval">Availability</div>
+          <div id="instock">In stock</div>
+        </div>
+
+        <div class="boxcard">
+          <div class="labelbox">
+            <label class="labelqty" for="Quantity">Qty</label>
+            <select name="quantity" id="quantity">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+            </select>
+          </div>
+
+          <div id="addtocartdiv">
+            <button id="buttonforcartitem">
+              <i id="ddd" class="fas fa-shopping-cart"></i>
+              <span id="btn0">Add to Cart</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="lastcont">
+          Note: Electronic products sold in US store operate on (110-120) volts,
+          a step-down power converter is required for the smooth device
+          function. It is mandatory to know the wattage of the device in order
+          to choose the appropriate power converter. Recommended power
+          converters Buy Now.
+        </div>
+      </div>
+    </div>
+
+    <div class="head5">
+      <h1>Product Details</h1>
+    </div>
+    <div class="cont9">
+      <ul>
+        <li>
+          Ergonomic Design - AboveTEK laptop table enables healthy posture by
+          raising your laptop for eye-level viewing; perfect for the person who
+          sitting long hours in the workplace.
+        </li>
+        <li>
+          Adjustable Height - Extendable legs with smart latch lock on each side
+          adjust to the proper height (9.5"-13") for both adults and children,
+          adjustable height perfectly fits any angle from 0°, 10°, 20°, or 30°.
+        </li>
+        <li>
+          Lightweight & Portable - Clever folding makes the legs stay flat to
+          easily carry around, to empower your productivity to work anywhere
+          with its lightweight construction.
+        </li>
+        <li>
+          Sturdy & Anti-Slip - Our computer tray is made of high-quality wood
+          surface that is eco-friendly, strong and durable while providing the
+          best protection due to the anti-skid rubber.
+        </li>
+        <li>
+          Versatile Laptop Desk - AboveTEK laptop desk also can be used as a
+          reading table, an office desk, a travel desk, a gaming desk, a kid's
+          study desk, even a breakfast tray or an outdoor camping table and much
+          more.
+        </li>
+      </ul>
+    </div>
+
+    <div class="boxwas">
+      <div class="cusrating">
+        <span class="ratehead">Customer ratings</span><br />
+        <div class="starbig">
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star"></span>
+        </div>
+        <p>4.1 average based on 254 reviews.</p>
+
+        <div class="row">
+          <div class="side">
+            <div>5 star</div>
+          </div>
+          <div class="middle">
+            <div class="bar-container">
+              <div class="bar-5"></div>
+            </div>
+            <div class="sideright">
+              <div>66%</div>
+            </div>
+          </div>
+
+          <div class="side">
+            <div>4 star</div>
+          </div>
+          <div class="middle">
+            <div class="bar-container">
+              <div class="bar-4"></div>
+            </div>
+            <div class="sideright">
+              <div>14%</div>
+            </div>
+          </div>
+
+          <div class="side">
+            <div>3 star</div>
+          </div>
+          <div class="middle">
+            <div class="bar-container">
+              <div class="bar-3"></div>
+            </div>
+            <div class="sideright">
+              <div>9%</div>
+            </div>
+          </div>
+
+          <div class="side">
+            <div>2 star</div>
+          </div>
+          <div class="middle">
+            <div class="bar-container">
+              <div class="bar-2"></div>
+            </div>
+            <div class="sideright">
+              <div>4%</div>
+            </div>
+          </div>
+
+          <div class="side">
+            <div>1 star</div>
+          </div>
+          <div class="middle">
+            <div class="bar-container">
+              <div class="bar-1"></div>
+            </div>
+            <div class="sideright">
+              <div>8%</div>
+            </div>
+          </div>
+
+          <hr />
+          <span class="ratehead">Review this Product</span>
+          <p>Share your thoughts with other customers</p>
+          <button id="btn1">write a customer review</button>
+        </div>
+      </div>
+
+      <div class="cusreview">
+        <div class="revhead">Customer Reviews</div>
+        <div class="revmain">
+          <div class="reviewcont">
+            <div class="revimg">
+              <div class="imgbox">
+                <img
+                  src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/user-avator.png"
+                  alt=""
+                  height="100%"
+                  width="80%"
+                />
+              </div>
+              <div class="namebox">Prachi</div>
+            </div>
+            <div class="revcont">
+              <div class="starbig">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+              </div>
+              <h2>Great fire stick for the price but not for 4K TV</h2>
+              <p>
+                If you’re looking for a basic fire stick, this is a great one
+                for the price!
+              </p>
+            </div>
+          </div>
+
+          <div class="reviewcont">
+            <div class="revimg">
+              <div class="imgbox">
+                <img
+                  src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/user-avator.png"
+                  alt=""
+                  height="100%"
+                  width="80%"
+                />
+              </div>
+              <div class="namebox">Bhavesh</div>
+            </div>
+            <div class="revcont">
+              <div class="starbig">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+              </div>
+              <h2>easy to set up</h2>
+              <p>easy to set up and easy to use. I love it.</p>
+            </div>
+          </div>
+
+          <div class="reviewcont">
+            <div class="revimg">
+              <div class="imgbox">
+                <img
+                  src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/user-avator.png"
+                  alt=""
+                  height="100%"
+                  width="80%"
+                />
+              </div>
+              <div class="namebox">Suresh</div>
+            </div>
+            <div class="revcont">
+              <div class="starbig">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <h2>Not happy as I can’t find help to set it up.</h2>
+              <p>
+                Can’t set it up Need help Need a real person to take me thru so
+                I can use it
+              </p>
+            </div>
+          </div>
+
+          <div class="reviewcont">
+            <div class="revimg">
+              <div class="imgbox">
+                <img
+                  src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/user-avator.png"
+                  alt=""
+                  height="100%"
+                  width="80%"
+                />
+              </div>
+              <div class="namebox">Santosh</div>
+            </div>
+            <div class="revcont">
+              <div class="starbig">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <h2>Great</h2>
+              <p>Great</p>
+            </div>
+          </div>
+
+          <div class="reviewcont">
+            <div class="revimg">
+              <div class="imgbox">
+                <img
+                  src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/user-avator.png"
+                  alt=""
+                  height="100%"
+                  width="80%"
+                />
+              </div>
+              <div class="namebox">Ankit</div>
+            </div>
+            <div class="revcont">
+              <div class="starbig">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <h2>Kind of impressed</h2>
+              <p>The noise cancelling works so well.</p>
+            </div>
+          </div>
+
+          <div class="reviewcont">
+            <div class="revimg">
+              <div class="imgbox">
+                <img
+                  src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/user-avator.png"
+                  alt=""
+                  height="100%"
+                  width="80%"
+                />
+              </div>
+              <div class="namebox">Tushar</div>
+            </div>
+            <div class="revcont">
+              <div class="starbig">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+              </div>
+              <h2>It’s so much better then the old one</h2>
+              <p>I love the remote with the Hula button</p>
+            </div>
+          </div>
+
+          <div class="reviewcont">
+            <div class="revimg">
+              <div class="imgbox">
+                <img
+                  src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/user-avator.png"
+                  alt=""
+                  height="100%"
+                  width="80%"
+                />
+              </div>
+              <div class="namebox">Hardik</div>
+            </div>
+            <div class="revcont">
+              <div class="starbig">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <h2>My cousin loves them</h2>
+              <p>Made her happy</p>
+            </div>
+          </div>
+
+          <div class="reviewcont">
+            <div class="revimg">
+              <div class="imgbox">
+                <img
+                  src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/user-avator.png"
+                  alt=""
+                  height="100%"
+                  width="80%"
+                />
+              </div>
+              <div class="namebox">Limra</div>
+            </div>
+            <div class="revcont">
+              <div class="starbig">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+              </div>
+              <h2>It works fine-could be a tad thicker</h2>
+              <p>
+                In case of falls, but for general protection it works exactly
+                like I wanted it to on my A55.
+              </p>
+            </div>
+          </div>
+          <div class="loadmoreforreview">
+            <button>Load More Reviews</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="context">
+      <div class="yellowhead"><h2>Important information</h2></div>
+      <div class="cont10">
+        <ul>
+          <li>
+            Limitations : For products shipped internationally, please note that
+            any manufacturer warranty may not be valid; manufacturer service
+            options may not be available; product manuals, instructions, and
+            safety warnings may not be in destination country languages; the
+            products (and accompanying materials) may not be designed in
+            accordance with destination country standards, specifications, and
+            labeling requirements; and the products may not conform to
+            destination country voltage and other electrical standards
+            (requiring use of an adapter or converter if appropriate). The
+            recipient is responsible for assuring that the product can be
+            lawfully imported to the destination country. When ordering from
+            Ubuy or its affiliates, the recipient is the importer of record and
+            must comply with all laws and regulations of the destination
+            country.
+          </li>
+          <li>
+            Not all the products listed on Ubuy are for sale, as Ubuy is a
+            global search engine. Products are subject to export/trade
+            regulations.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <br />
+    <br />
+    <hr class="silverlining" />
+    <br />
+    <br />
+    <footer class="footerofcart">
+      <div id="finaltable">
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/quick-links.svg"
+              alt=""
+            />
+            QUICK LINKS
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Corporate Enquiries</a></li>
+            <li><a href="#">Intellectual Property</a></li>
+            <li><a href="#">Sitemap</a></li>
+            <li><a href="#">Track Order</a></li>
+            <li><a href="#">Customs Tariffs And Fees</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/ubuy-important-links.svg"
+              alt=""
+            />
+            UBUY
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">Customer Reviews</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">FRQ</a></li>
+            <li><a href="#">About Ucredit</a></li>
+            <li><a href="#">Ubuy Affiliates</a></li>
+          </ul>
+        </div>
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/payment-links.svg"
+              alt=""
+            />
+            PAYMENT
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-158997744021.png"
+                alt=""
+              />
+              <a href="#">Paypal</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159064539994.png"
+                alt=""
+              />
+              <a href="#">Visa</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159049393275.png"
+                alt=""
+              />
+              <a href="#">mastercard</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159049550294.png"
+                alt=""
+              />
+              <a href="#">American Expess</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/shipping-links.svg"
+              alt=""
+            />
+            SHIPPING
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li>
+              <img
+                src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/ufulfilled-icon.svg"
+                alt=""
+              />
+              <a href="#">Express Shipping 3-6 Business Days</a>
+            </li>
+            <li>
+              <img
+                src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/u-not-fulfilled-icon.svg"
+                alt=""
+              />
+              <a href="#">Standard Shipping 10+ Business Days</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/countries-covered-links.svg"
+              alt=""
+            />
+            CITIES COVERED
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">Mumbai</a></li>
+            <li><a href="#">Delhi</a></li>
+            <li><a href="#">Bangalore</a></li>
+            <li><a href="#">Hyderabad</a></li>
+            <li><a href="#">Ahmedabad</a></li>
+            <li><a href="#">Chennai</a></li>
+            <li><a href="#">Kolkata</a></li>
+            <li><a href="#">Surat</a></li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/support-links.svg"
+              alt=""
+            />
+            24/7 Support
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <p>24/7 Support</p>
+            <p>Customer Services</p>
+            <div>
+              <div>Download Our App</div>
+              <div>
+                <a href="#">
+                  <img
+                    src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/app-store-icon.svg"
+                    alt=""
+                  />
+                </a>
+                <a href="#">
+                  <img
+                    src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/play-store-icon.svg"
+                    alt=""
+                  />
+                </a>
+              </div>
+            </div>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div id="subfooter-row1">
+          <div>UBUY POPULAR SEARCHES</div>
+          <div id="subfooter-subdelivery">
+            Delivery:
+            <select name="" id="subfooter-countrynames">
+              <option value="">India</option>
+              <option value="">Hong Kong</option>
+              <option value="">Japan</option>
+              <option value="">Malaysia</option>
+              <option value="">Maldives</option>
+              <option value="">Philippines</option>
+              <option value="">Singapore</option>
+              <option value="">South Korea</option>
+              <option value="">Taiwan</option>
+              <option value="">Thailand</option>
+              <option value="">Vietnam</option>
+              <option value="">Bangladesh</option>
+              <option value="">Georgia</option>
+              <option value="">Kazakhstan</option>
+              <option value="">Sri Lanka</option>
+              <option value="">Uzbekistan</option>
+              <option value="">View All countires</option>
+            </select>
+          </div>
+        </div>
+        <hr />
+        <div id="subfooter-row2">
+          <ul>
+            <li><a href="#">Mobile & Tab</a></li>
+            <li><a href="#">Fashion</a></li>
+            <li><a href="#">Electronics</a></li>
+            <li><a href="#">Perfumes</a></li>
+            <li><a href="#">Beauty Care</a></li>
+            <li><a href="#">Tools</a></li>
+            <li><a href="#">Video Games</a></li>
+            <li><a href="#">Boys Jeans</a></li>
+          </ul>
+        </div>
+        <hr />
+        <div id="subfooter-row3">
+          <div>Copyright © 2021 Ubuy Co. All rights reserved.</div>
+          <div id="subfooter-row3-ul">
+            <ul>
+              <li><a href="#">Terms & Conditions</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div id="subfooter-row3-lastcol">
+            <div>Follow Us</div>
+            <div>
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+<script src="./scripts/addtocart.js"></script>
+
+<script type="module">
+  let div = document.querySelector('.startheader');
+  import navbar from "./components/navbar.js";
+  div.innerHTML = navbar();
+</script>

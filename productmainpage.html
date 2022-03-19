@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/productmainpage.css" />
+    <!-- <link rel="stylesheet" href="footerforall.css"> -->
+    <script
+      src="https://kit.fontawesome.com/2281802e38.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="startheader">
+     
+    <!-- end here -->
+    </div>
+
+    <!-- mypart -->
+    <div class="mainbodyofpage">
+      <div id="functionlity">
+        <div>
+          <span class="headerinsidebar"> DELIVERY </span>
+          <div id="deliveryexpress">
+            <input type="checkbox" name="unfulfill" id="unfulfilled" />
+            <label for="unfulfilled">
+              <span></span>
+              <strong class="textinside-express">Express Delivery</strong>
+            </label>
+            <img
+              class="expressimage"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/ufulfilled-icon.svg"
+              alt=""
+            />
+          </div>
+          <p class="deliverypar">
+            Delivery time may vary depending on store and country. To learn more
+            about <a href="#">click here.</a>
+          </p>
+        </div>
+        <p>
+          <span class="headerinsidebar"> PRICE RANGE </span>
+        </p>
+        <div id="price-rangecat" onclick="priceofp()">
+          <div></div>
+          <div>
+            <label for="price1">
+              <input value="1" type="radio" name="priceunder7700" id="price1" />
+              <span>INR7700 to under</span> </label
+            ><br />
+          </div>
+          <div>
+            <label for="price2">
+              <input value="2" type="radio" name="priceunder7700" id="price2" />
+              <span>INR19250 to INR38500</span> </label
+            ><br />
+          </div>
+          <div>
+            <label for="price3">
+              <input value="3" type="radio" name="priceunder7700" id="price3" />
+              <span>INR38500 to INR77000</span> </label
+            ><br />
+          </div>
+          <div>
+            <label for="price4">
+              <input value="4" type="radio" name="priceunder7700" id="price4" />
+              <span>INR77000 and above</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <div>
+            <p><span class="headerinsidebar">Brands</span></p>
+          </div>
+          <div id="brandlistbelow">
+            <input id="placeholder" type="text" placeholder="Search by brand" />
+            <div>
+              <label for="brand10">
+                <input
+                  value="apple"
+                  type="radio"
+                  name="priceunder7700"
+                  id="brand10"
+                />
+                <span>Apple</span> </label
+              ><br />
+            </div>
+            <div>
+              <label for="brand20">
+                <input
+                  value="amazon"
+                  type="radio"
+                  name="priceunder7700"
+                  id="brand20"
+                />
+                <span>Amazon</span> </label
+              ><br />
+            </div>
+            <div>
+              <label for="brand30">
+                <input
+                  value="oculus"
+                  type="radio"
+                  name="priceunder7700"
+                  id="brand30"
+                />
+                <span>Oculus</span> </label
+              ><br />
+            </div>
+            <div>
+              <label for="brand40">
+                <input
+                  value="amazon basics"
+                  type="radio"
+                  name="priceunder7700"
+                  id="brand40"
+                />
+                <span>Amazon Basics</span>
+              </label>
+            </div>
+            <div>
+              <label for="brand50">
+                <input
+                  value="ailun"
+                  type="radio"
+                  name="priceunder7700"
+                  id="brand50"
+                />
+                <span>Ailun</span>
+              </label>
+            </div>
+            <div>
+              <label for="brand60">
+                <input
+                  value="licb"
+                  type="radio"
+                  name="priceunder7700"
+                  id="brand60"
+                />
+                <span>LiCB</span>
+              </label>
+            </div>
+            <div>
+              <label for="brand70">
+                <input
+                  value="engeizer"
+                  type="radio"
+                  name="priceunder7700"
+                  id="brand70"
+                />
+                <span>Enegizer</span>
+              </label>
+            </div>
+          </div>
+          <!-- for the listofitmeinsub of left side div -->
+          <div>
+            <p><span class="headerinsidebar">CATEGORIES</span></p>
+          </div>
+          <div id="listofiteminsub">
+            <div><a href="#">Accessories & Supplies</a></div>
+            <div><a href="#">Camera & Photo</a></div>
+            <div><a href="#">Car & Vehicle Electronics</a></div>
+            <div><a href="#">Cell Phones & Accessories</a></div>
+            <div><a href="#">Computer & Accessories</a></div>
+            <div><a href="#">Electronics Warranties</a></div>
+            <div><a href="#">GPS, Finders & Accessories</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- right side part -->
+      <div id="fromdatabase">
+        <!-- right side main container -->
+        <!-- <div id="inlineelement"> -->
+          <div class="smallBox">
+
+            <div class="up">
+                <div class="heading">
+                    <h2><b>SHOP CATEGORY</b></h2>
+                </div>
+                <div class="line"></div>
+            </div>
+    
+            <div class="down">
+                <div>
+                    <div class="head"> Small Appliances
+                        <div id="sym"> </div>
+                    </div>
+                    <div class="pic">
+                        <img src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/category-images/electronics/small-appliances.jpg.webp?v=1.0" alt="" height="100%" width="100%">
+                    </div>
+                </div>
+    
+                <div>
+                    <div class="head">Appliances
+                        <div id="sym">  </div>
+                    </div>
+                    <div class="pic">
+                        <img src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/category-images/electronics/appliances.jpg.webp?v=1.0"  alt="" height="100%" width="100%">
+                    </div>
+                </div>
+    
+                <div>
+                    <div class="head">Laptops
+                        <div id="sym">  </div>
+                    </div>
+                    <div class="pic">
+                        <img src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/category-images/electronics/laptops.jpg.webp?v=1.0" alt="" height="100%" width="100%">
+                    </div>
+                </div>
+    
+                <div>
+                    <div class="head">Accessories
+                        <div id="sym">  </div>
+                    </div>
+                    <div class="pic">
+                        <img src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/category-images/electronics/accessories.jpg.webp?v=1.0" alt="" height="100%" width="100%">
+                    </div>
+                </div>
+    
+                <div>
+                    <div class="head">Televisions
+                        <div id="sym">  </div>
+                    </div>
+                    <div class="pic">
+                        <img src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/category-images/electronics/televisions.jpg.webp?v=1.0" alt="" height="100%" width="100%">
+                    </div>
+                </div>    
+            </div>
+    
+        </div>
+          <!-- <div>prachi yaha pa aapna static data add on karna</div> -->
+        <div id="inputfromdata">
+          <!-- data from local storage will be shown in here -->
+        </div>
+      </div>
+    </div>
+    <footer class="footerofcart">
+      <div id="finaltable">
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/quick-links.svg"
+              alt=""
+            />
+            QUICK LINKS
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Corporate Enquiries</a></li>
+            <li><a href="#">Intellectual Property</a></li>
+            <li><a href="#">Sitemap</a></li>
+            <li><a href="#">Track Order</a></li>
+            <li><a href="#">Customs Tariffs And Fees</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/ubuy-important-links.svg"
+              alt=""
+            />
+            UBUY
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">Customer Reviews</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">FRQ</a></li>
+            <li><a href="#">About Ucredit</a></li>
+            <li><a href="#">Ubuy Affiliates</a></li>
+          </ul>
+        </div>
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/payment-links.svg"
+              alt=""
+            />
+            PAYMENT
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-158997744021.png"
+                alt=""
+              />
+              <a href="#">Paypal</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159064539994.png"
+                alt=""
+              />
+              <a href="#">Visa</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159049393275.png"
+                alt=""
+              />
+              <a href="#">mastercard</a>
+            </li>
+            <li>
+              <img
+                src="https://d2ati23fc66y9j.cloudfront.net/ubuycom/homebanner/payment_methods-159049550294.png"
+                alt=""
+              />
+              <a href="#">American Expess</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/shipping-links.svg"
+              alt=""
+            />
+            SHIPPING
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li>
+              <img
+                src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/ufulfilled-icon.svg"
+                alt=""
+              />
+              <a href="#">Express Shipping 3-6 Business Days</a>
+            </li>
+            <li>
+              <img
+                src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/u-not-fulfilled-icon.svg"
+                alt=""
+              />
+              <a href="#">Standard Shipping 10+ Business Days</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/countries-covered-links.svg"
+              alt=""
+            />
+            CITIES COVERED
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <li><a href="#">Mumbai</a></li>
+            <li><a href="#">Delhi</a></li>
+            <li><a href="#">Bangalore</a></li>
+            <li><a href="#">Hyderabad</a></li>
+            <li><a href="#">Ahmedabad</a></li>
+            <li><a href="#">Chennai</a></li>
+            <li><a href="#">Kolkata</a></li>
+            <li><a href="#">Surat</a></li>
+          </ul>
+        </div>
+
+        <div class="footerlinks">
+          <h4 class="inlinefooter">
+            <img
+              width="30px"
+              src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/new-home/images/footer/support-links.svg"
+              alt=""
+            />
+            24/7 Support
+          </h4>
+          <hr />
+          <ul class="listoflinks">
+            <p>24/7 Support</p>
+            <p>Customer Services</p>
+            <div>
+              <div>Download Our App</div>
+              <div>
+                <a href="#">
+                  <img
+                    src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/app-store-icon.svg"
+                    alt=""
+                  />
+                </a>
+                <a href="#">
+                  <img
+                    src="https://d3ulwu8fab47va.cloudfront.net/skin/frontend/default/ubuycom-v1/images/play-store-icon.svg"
+                    alt=""
+                  />
+                </a>
+              </div>
+            </div>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div id="subfooter-row1">
+          <div>UBUY POPULAR SEARCHES</div>
+          <div id="subfooter-subdelivery">
+            Delivery:
+            <select name="" id="subfooter-countrynames">
+              <option value="">India</option>
+              <option value="">Hong Kong</option>
+              <option value="">Japan</option>
+              <option value="">Malaysia</option>
+              <option value="">Maldives</option>
+              <option value="">Philippines</option>
+              <option value="">Singapore</option>
+              <option value="">South Korea</option>
+              <option value="">Taiwan</option>
+              <option value="">Thailand</option>
+              <option value="">Vietnam</option>
+              <option value="">Bangladesh</option>
+              <option value="">Georgia</option>
+              <option value="">Kazakhstan</option>
+              <option value="">Sri Lanka</option>
+              <option value="">Uzbekistan</option>
+              <option value="">View All countires</option>
+            </select>
+          </div>
+        </div>
+        <hr />
+        <div id="subfooter-row2">
+          <ul>
+            <li><a href="#">Mobile & Tab</a></li>
+            <li><a href="#">Fashion</a></li>
+            <li><a href="#">Electronics</a></li>
+            <li><a href="#">Perfumes</a></li>
+            <li><a href="#">Beauty Care</a></li>
+            <li><a href="#">Tools</a></li>
+            <li><a href="#">Video Games</a></li>
+            <li><a href="#">Boys Jeans</a></li>
+          </ul>
+        </div>
+        <hr />
+        <div id="subfooter-row3">
+          <div>Copyright © 2021 Ubuy Co. All rights reserved.</div>
+          <div id="subfooter-row3-ul">
+            <ul>
+              <li><a href="#">Terms & Conditions</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+
+          <div id="subfooter-row3-lastcol">
+            <div>Follow Us</div>
+            <div>
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+<script src="./scripts/sorting.js"></script>
+
+<script type="module">
+  let div = document.querySelector('.startheader');
+  import navbar from "./components/navbar.js";
+  div.innerHTML = navbar();
+</script>

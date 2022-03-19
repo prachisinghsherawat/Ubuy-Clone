@@ -1,0 +1,466 @@
+
+* {
+  font-family: "Open Sans", sans-serif;
+}
+.container {
+  display: flex;
+  width: 100%;
+  height: 600px;
+  margin-top: 2%;
+}
+
+#product {
+  width: 70%;
+  height: 600px;
+  overflow: scroll;
+  scroll-behavior: smooth;
+}
+#product::-webkit-scrollbar {
+  display: none;
+}
+
+#payment {
+  margin-left: 2%;
+  width: 30%;
+  height: 80%;
+  position: sticky;
+  border: 1px solid blueviolet;
+}
+.orderlist {
+  background: #fff;
+  margin-top: 6%;
+
+  width: 100%;
+  border-bottom: 3px solid #eeeeee;
+}
+.orderlist > a::before {
+  content: "< ";
+  font-weight: bolder;
+}
+.orderlist > a {
+  color: black;
+  line-height: 30px;
+  text-decoration: none;
+}
+.shoppingcart {
+  display: flex;
+  font-size: 25px;
+  padding-left: 10px;
+  font-weight: bolder;
+  font-family: Poppins, sans-serif;
+  position: relative;
+  justify-content: space-between;
+}
+.updatelist {
+  margin-top: 4%;
+  font-size: 20px;
+  background-color: gainsboro;
+  border: none;
+  color: black;
+  font-weight: bold;
+}
+
+/* input data from localstorage with date and month */
+#datemonth {
+  /* display: flex; */
+  margin-top: 4%;
+  font-size: 25px;
+  position: relative;
+  border-top: 1px solid gray;
+  border-right: 1px solid gray;
+  border-left: 1px solid gray;
+  padding-top: 14px;
+  padding-bottom: 20px;
+}
+
+/* data str in the prollist div in 3 division img, main, and (price, count, remove) */
+#prolist {
+  display: block;
+  margin-top: 2%;
+  width: 98%;
+  /* height: 200px; */
+  border: 1px solid rgb(219, 215, 215);
+  font-size: 26px;
+}
+.dateandmonth {
+  border-bottom: 1px solid rgb(219, 215, 215);
+  padding-top: 10px;
+  font-size: 14px;
+  padding-left: 20px;
+  padding-bottom: 10px;
+}
+.itemlistOndisplay {
+  display: flex;
+}
+.img {
+  height: 130px;
+  width: 150px;
+  margin-top: 32px;
+  margin-left: 15px;
+}
+.mainbody {
+  width: 70%;
+  margin-left: 2%;
+}
+.countofproduct {
+  height: 25px;
+  width: 43%;
+  margin-left: 5%;
+  display: block;
+  margin-top: 2%;
+  border: none;
+  margin-bottom: 2%;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+.displayprice {
+  margin-top: 50px;
+  font-size: 17px;
+  margin-bottom: 0%;
+}
+.displayprice::before {
+  content: "INR ";
+}
+.removebtn {
+  width: 80px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 30px;
+  border: transparent;
+  background-color: transparent;
+  color: gray;
+  cursor: pointer;
+}
+.dustpin {
+  margin-left: 0%;
+}
+.dustbinimg {
+  width: 9%;
+}
+.div3ofproduct {
+  width: 20%;
+  padding: 1%;
+  margin-left: 20px;
+  /* background-color: rgb(255, 177, 0); */
+}
+/* for heart button */
+.buttonforheart {
+  margin-top: 4%;
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+}
+.buttonforheart:hover {
+  cursor: pointer;
+}
+.heart {
+  color: black;
+  font-size: 20px;
+}
+/* for footer */
+#finaltable {
+  font-size: 15px;
+  display: flex;
+}
+.footerlinks {
+  margin-left: 20px;
+  width: 100%;
+}
+.inlinefooter {
+  display: flex;
+  /* width: 100px; */
+  font-size: 16px;
+  line-height: 40px;
+  color: rgb(102, 102, 102);
+  justify-content: start;
+}
+.listoflinks > li {
+  list-style-type: none;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+.listoflinks > li > img {
+  width: 60px;
+  height: 40px;
+  margin-right: 19px;
+}
+.footerlinks:nth-child(3) > .listoflinks > li {
+  display: flex;
+  line-height: 28px;
+}
+.footerlinks > .listoflinks > li > a {
+  text-decoration: none;
+  color: gray;
+}
+/* subfooter part */
+#subfooter-row1 {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 20px;
+  font-size: 18px;
+  font-weight: bolder;
+  margin-top: 2%;
+  padding-bottom: 15px;
+}
+#subfooter-subdelivery {
+  font-size: 20px;
+  line-height: 10px;
+}
+#subfooter-countrynames {
+  font-size: 20px;
+}
+/* subfooter-row2 */
+#subfooter-row2 > ul {
+  display: flex;
+  padding-bottom: 25px;
+  padding-top: 25px;
+}
+#subfooter-row2 > ul li {
+  margin-left: 2%;
+  font-size: 15px;
+  list-style-type: none;
+}
+#subfooter-row2 > ul > li:nth-child(1) {
+  margin-left: -3%;
+}
+#subfooter-row2 > ul li::before {
+  content: "\2022";
+  color: rgb(255, 177, 0);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+#subfooter-row2 > ul > li > a:hover,
+#subfooter-row3-ul > ul > li > a:hover {
+  color: rgb(255, 177, 0);
+  text-decoration: underline;
+}
+#subfooter-row2 > ul > li > a,
+#subfooter-row3-ul > ul > li > a {
+  color: gray;
+  text-decoration: none;
+}
+/* last subfooter(subfooter-row3) */
+#subfooter-row3 {
+  display: flex;
+}
+#subfooter-row3 > div:nth-child(1) {
+  width: 30%;
+  padding-top: 35px;
+  color: gray;
+}
+#subfooter-row3-ul {
+  width: 55%;
+}
+#subfooter-row3-ul > ul > li {
+  list-style: none;
+  margin-left: 1%;
+}
+#subfooter-row3-ul > ul li::before {
+  content: "\2022";
+  color: rgb(255, 177, 0);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  padding-top: 22px;
+  margin-left: 1em;
+}
+#subfooter-row3-ul > ul {
+  display: flex;
+}
+/* subfooter-row3-lastcol(follow us) */
+#subfooter-row3-lastcol {
+  padding-bottom: 30px;
+  padding-top: 40px;
+  display: flex;
+}
+#subfooter-row3-lastcol > div > a {
+  margin-left: 8px;
+  color: gray;
+}
+#subfooter-row3-lastcol > div:nth-child(1) {
+  line-height: 22px;
+}
+.detail {
+  /* border: 2px solid red; */
+  font-size: 15px;
+}
+/* Ankit Css part */
+
+.orderbox1 {
+  width: 100%;
+  margin-top: 3%;
+  /* height: 200px; */
+}
+.orderbox1>div:nth-child(1) {
+  font-size: 18px;
+}
+.orderbox1>div {
+  display: flex;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 30px;
+  justify-content: space-between;
+}
+.totalprice-here::before,.totalprice::before {
+  content: "INR ";
+}
+.orderbox {
+  width: 100%;
+  height: 170px;
+  display: flex;
+  /* border: 1px solid red; */
+  border-radius: 10px;
+}
+.ordersummary {
+  width: 30%;
+  height: 72%;
+  /* border: 5px solid red; */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  margin-left: 15px;
+  border-radius: 10px;
+}
+.order {
+  width: 90%;
+  /* height: 70%; */
+  /* border: 1px solid red; */
+  margin-left: 17px;
+}
+
+.discountcodes {
+  height: 7%;
+  width: 100%;
+  /* border: 1px solid red; */
+}
+.displayprice::after {
+  content: ".00";
+}
+.proceeddiv { 
+  height: 230px;
+  width: 100%;
+  /* border: 1px solid green; */
+}
+.proceedbutton {
+  height: 40px;
+  width: 100%;
+  background-color: orange;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.applycoupon {
+  height: 30px;
+  width: 50%;
+  background-color: orange;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.paytag {
+  font-weight: bold;
+}
+.proceedbuttondiv {
+  width: 100%;
+  height: 40px;
+  /* border: 2px solid green; */
+}
+.inputtext {
+  height: 30px;
+  width: 80%;
+  /* border: 2px solid red; */
+  margin-top: 10px;
+}
+.coupondiv {
+  width: 100%;
+  height: 50px;
+  /* border: 2px solid green; */
+}
+.inputtext > input {
+  height: 25px;
+  width: 120%;
+}
+/* javascript */
+/* #prolist1 {
+  display: flex;
+  margin-top: 15px;
+  height: 270px;
+  width: 95%;
+  margin-left: 12px;
+  background-color: rgb(168, 31, 31);
+}
+
+
+.subtotal,.shipping,.etotal{
+  background-color: rgb(41, 150, 212);
+  margin-left: 15px;
+  margin-top: 10px;
+  display: flex;
+}
+.shipping1,.price1,.etotal1{
+  background-color: rgb(197, 52, 16);
+  width: 30%;
+  height: 20px;
+  justify-content: space-between;
+}
+.shipping2,.price2,.etotal2{
+  background-color: rgb(197, 52, 16);
+  width: 30%;
+  height: 20px;
+  margin-left: 140px;
+}
+
+.demo{
+  display: flex;
+  justify-content: space-between;
+}
+#pricetotal{
+margin-left: 2%;
+}
+#pricetotal::before{
+  content: "INR";
+}
+
+#pricetotal::after{
+  content: "INR";
+} */
+
+/* santosh css */
+
+.standard {
+  display: flex;
+  width: 100%;
+  height: 600px;
+  margin: auto;
+}
+
+.tapu {
+  display: flex;
+  height: 300px;
+}
+.tapu>div {
+  margin: 2%;
+}
+#dibba {
+  margin: auto;
+}
+.tapu>div>img {
+  height: 50%;
+}
+.tapu>div>h3 {
+  font-size: 16px;
+}
+.tapu>div>h2 {
+  font-size: 12px;
+}
+#civil {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

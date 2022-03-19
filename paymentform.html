@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/paymentform.css" />
+  </head>
+  <body>
+    <div id="container8">
+      <div id="paymentform">
+        <div class="payment">
+          <h2 class="h2tag">Payment Form</h2>
+          <div class="xbuttondiv"><button class="closebutton">X</button></div> 
+        </div>
+      </div>
+      <div id="carddetails">
+        <h4 class="h4tag">Enter your card details:</h4>
+        <div class="carddiv">
+          <div>
+            <input
+              id="cardnumber"
+              type="tel"
+              inputmode="numeric"
+              pattern="[0-9\s]{13,19}"
+              autocomplete="cc-number"
+              maxlength="19"
+              placeholder="xxxx xxxx xxxx xxxx"
+            />
+          </div>
+          <div class="monthcvv">
+            <input type="number" id="month" class="name" placeholder="M / Y" />
+            <input type="number" id="cvv" class="name" placeholder="CVC" />
+          </div>
+        </div>
+        <div class="seq">
+          <div class="lock">
+            <img
+              src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxATEA8TEw8VEBUXFw8XFRUXDw8PGBUYFRUiFhUYGBUYHSggGBslGxYVITEhJSkvLi4uFx81ODMtNygtLisBCgoKDg0OGxAQGTAlHyYyKy8yLTc3Ny83Ky0yMjAvLy0tLy0uLS0tLS01KystLS0tLTctLTUtLS8tLTctLS0tLf/AABEIAOEA4QMBIgACEQEDEQH/xAAbAAEBAQEBAQEBAAAAAAAAAAAAAQcGAgUEA//EAEQQAAIBAgQDBQIJCQcFAAAAAAABMQJhAxEhcQSx8QUGEkFRgbITFjI0cnORktEHIiMzRFOCoaIkQkNUYsHCFFJj4fD/xAAZAQEBAQEBAQAAAAAAAAAAAAAABQQBAgP/xAAsEQEAAgEBBgUEAgMAAAAAAAAAAQIDBAURFDFRgRIhMkLBM0Fx8CPxImHR/9oADAMBAAIRAxEAPwDbxn6B+hLLoBW/JBvy8yRohF2BW8rsN5Ei7EauQLnlIz82S76C7Aqfm9AmSdhO3MCp57DPPYk7CyAufoG/JEsugjRAVvyQb9rJF2IuwK3lcZ5SSNXIu+gFz82E/N6EuxOrgCp+wJ57EnbmJ25gVPPYZ+hJ0QsugFb8kG/JEjRCLsCt+1lzPMXZUspkClIUDy35IkaIrfpJIuwEXYi7EXYjVyAjVyLvoLvoLsBdidhOwnbmAnbmJ2E7CyAWQsugsugjRAI0Qi7EXYi7ARdiNXIjVyLsBd9Bdi7E6uAE6uBO3MTtzE7cwE7cxOiE6IWXQBZdBGiEaIRdgIuxF2IuxGrkBGrkqXmyXZUvNgUpMygeW8tyRdlbyJGrkBGrkXfQXfQXYBerE7CdhO3MBO3MTsJ2FkAshZdBZdBGiARohF2G8tzi+8PfLwurD4ZqpxViyv4FD3em8nyy5q4432fPJlrjjfZ1/FcVh4VPixMSmi9VSpz2zPj4ve/gqX+udb/04eI/seWRmfEY9ddTrrrddTl1N1PbXyP5k6+0Le2GG2ut7Yadg98eCb1xaqd8LEyX2I+vwXH4OKvFh4tGJl5U1J5bqUY0esOtpqpN0tQ03S1s1ArtC8eqIcrrrfeG1zq4E7czguwO+dadNHE/n0fvEvzl9JL5SvO53eHiKtJ0tOlpNNPNNP0foUMOemWN9W7FmrkjfV6nbmLIWQsuh9n1LLoI0QjRCLsBF2IuxF2I1cgI1ci7F2LsBdlWupJ1cFWu3MD1mAAPL01Jd9Cv1ZLsBdidhOwnbmAnbmJ2E7CyAWQsugsugjRAI0Qi7EXZ+ftDilg4OLivXw01Vb5LRfbkjkzujfLkzuje5Hv1261nw2HVq1+lqV4oXs1fsXqcQj3jYtVVVVdT8VVTbqfq282dd3C7FVTfE4izVLyw048Smq+UK+foQ5m2py/vlCRPiz5P3yh57C7lVVpYnEN4aeqw1kqn9J/3dp2Or4Xu9wlC04ej+Kn4R+11Zs+ndidXBWx6bHjjyhSx4KUjyh8/G7C4Sv5XDYeVqKaH9tOTOZ7Z7jrJ18NU/q6nnn9Gp/7/AGnbTtzE7czuTT47x5w7fBS8ecMTxKGm6WnS02mmsmmpTR1Pcnt54da4eur9HW8qX/2VPyVm/wCbuz6nf3sVVUPiKFlVRksTL+9TGe69fTY4HYkWi2my+X9wmWi2DJ5fsNtsugjRHzO7faDxuFwq5qy8Nf0qdG3vPtPpxdlutotEWj7q9bRaImCLsRdiLsRq5PTpGrkXYuxdgLsTq4E6uBO3MBO3MueexJ25lz9APQJkUDy15sk7FaJO3MBO3MTsJ2FkAshZdBZdBGiARohF2IuxF2Ai7Od7+Yrp4Or1rrw6f5+LL+k6KNXJy/5Q1/ZKG/3tHu1Hx1M7sVvw+Oef47fhnVzX+weFWHw2BTGVFH2tZ1PfNsx+qGbTwazw8POPDRyMGzo/ytP4Y9DHnMv6zq4E7cxO3MTtzKqkTtzE6IWQsugHjHwlXTVQ1mqk6Xs1kzF8Sjw1VU+abT9jyNsjRGMcf+uxvp4nvMmbRj0z+U/XR6Z/Lt/yb436LHonKulr+KnL/idfF2cV+TV5Lit8H/kdrGrk1aSd+Gv792nSz/FBGrkXYuxdml9y7E6uBOrgTtzATtzE7cxO3MTogE6IufkiWXQtkBcikKB5az2JOxXrsSyAWQsugsugjRAI0Qi7EXYi7ARdiNXIjVyfD7w95cPhcqfD8JitZqhPJUrydT8jxe9aRvtPk83vFI32fcuzl/yh/NaG/wB7R7tR8d9/MfPP4HDtrW/9z5/bfefF4nDWHXh0UpVKr811Z5pNee5izavFfHNYljzanHakxEvg1QzaeE1w8P08NHt0MYeT8n9v/o6nD79Y6pVKwcPJJL+/5aepm0eamKZ8X+mfS5a45nxNDnbmJ0Rn/wAfeI/c4f8AX+I+PvEQsHC/r/E3cdh6tnGYurQLLoI0Rn67+4/lg4f9f4hd/cdf4OH/AF/iOOw9TjMXVoMbmMcf+uxvrMT3mdKu/uOv8HD/AK/xOXxsTxVVVNa1OpvJ+rz0MWsz0yxHhZdVmpkiPC7T8mryXFb4P/I7W7Mp7B7fr4X4TwYdNXj8OfidWnhzjLL1PrfHzHn4HD/r/E+2n1WOmOK2nzfXBqcdMcVmWgXYnVwc33f72YfEVrDrp+CrfyV4vFTVs/J2Z0k7czfjyVyRvrLZS9bxvrJO3MTtzE7cxOiPb2TohZdBZdBZALIq008yRotWVabgegQoHl+hLLoVvyRI0QCNEIuxF2IuwEXYjVyI1ci7AXfQyDt3FdfFcTVVPwmIvZS/Cl9iSNfXqzHe1vnHEfW43vsnbR9NWHXemH5AASk0AAAAAAAAAAAAAesPEdNVNSeTpaad080zaqX4kvTQxJm2YetNKXouRT2d7u3yoaD3dnqdELLoLLoLIpqBZCNFIjRSIuwEXZUspkkauSpebApSFA8t+SJF2Vv7SRdgIuxGrkRq5F2Au+guxdidXABa6+Rjna3zjiPrcb32bHO3Mx3tf5xxH1uN77J20fTVg13KH5AASk4AAA6PsXuhjY1CxKq1g01a050uuqpeqpzWSu2fD4DDpqxsGmqKq8NPZ1JM2ZJL/wC/kjbo9PXLMzblDXpcFcm+bM87U7kY2HQ68PEWPlNPgdFX8Kzfi/kcqbbdmTd6MKmnjOIVOi8WeXo6qVU/5tnrWaauOItV3VYK44i1XywAYGMAAEZtmH8mlL0Xs0MTZtmH8mlL0XIpbO527fLfoPd2+XqyEaKRGikRdlRRIuxGrkRq5F2AuypebJd9CrXUC5lJmUDy3kSNXJXpqS76ALvoLsXYnVwAnVwJ25iduYnbmAnYx3tf5xxH1uN77NisjHe1/nHEfW43vsnbR9NWDXcofkABKTgAAE8tfM1Pup2w+JwHVWsq6GqKn5VPLPNemeZlh3/5N/1OO3+8XuI26G0xl3R92vR2mMm7q+9272l/0+BXjOnxNZKmnPLWp5LMybiMaquuqut51VN1N+rbzZpHfvXgq3/qwveRmZ62hafHFftud1tp8cR9gAGBjAABGbZhaU05TkuRibNswtKafN5LkUtnc7dvlv0Hu7fL1F2I1ciNXIuyool2LvoLvoJ1YCdWVa7cyTtzLnntzA9AADy/VkuytebJOrgBOrgTtzE7cxO3MBOwnRCyFl0AWRjva3zjiPrcb32bFGiMd7W+ccR9bje+ydtH01YNdyh+QAEpOAAAO/8Aybr9Dj/WL3EcAd9+TfXBx1/5Fp/CvwNei+tHdp0n1Yfu7+PPgq/TxYXt/ORmZpnf2r+xV/Swvb+cZmetf9Xt/wBetb9TsAAxMgAAIzbMLSlNzkuRibNswvkpv0XIpbO527fLfoPd2+Xq7F30F30E6sqKJOrE7cxO3MTtzATtzLn6EnRQXPyQHrIEyKB5aJO3MrWexJ25gJ25idEJ0QsugCy6CNEI0Qi7ARdmOdrfOOI+txvfZskXZjna3zjiPrcb32Tto+mrBruUPyAAlJwAAB+7sntbG4et1YVWWayqTWdNSUZr/c/CDtbTWd8OxMxO+H0+2e3cfifCsRpU06qmlOmlOM9W237T5gB21ptO+ZLWm075AAeXAAARm2YXyaW/RezQxNm2YWtNLfouRS2dzt2+W/Qe7t8vU6sTtzE7cxO3MqKJO3MTooE6KBZALItkSyLGgFKQoHlrPYk6Ir9CWXQBZdBGiEaIRdgIuxF2IuxGrkBGrkyTvHwtWHxfEKpZZ11VK9Nb8Sa+3LdM1u7Pn9sdi4PE0r4WnVfJqT8NVPt89mZdVgnLXdHOGfUYZyV8ubIgd98QcL9/iJfRo/Ai7g4T/aMTL6NBO4LN0YOEy9HBA71dwcJ/tGJl9GgfEHC/zGJ92gcFm6HCZejggd78QcKFxFf3aA+4OFH/AFGJ92gcFm6HCZejggd6+4OF/mMTP6NAfcHCX7RifdoHBZuhwmXo4IHevuDhL9oxPu0D4g4UviK/u0Dgs3Q4TL0cEDvviDhS+Ir+7QRdwcL/ADGJ92gcFm6HCZejh+E4arFxKMOlZupqle3z2U+w2elaL0X8z5XYnd3h+H/OoTqqjx1NOrK3klsfWnbmUNJp5xRPi5y3abBOOJ385J25idFAnRQLI1tJZCyFkI0UgI0UlWm5IuyrTcClIUDy35IkaIrfkiRdgIuxF2IuxGrkBGrkXYuxdgLsTq4E6uBO3MBO3MTtzE7cxOiATohZdBZdBZALIRopEaKRF2Ai7EauRGrkXYC7F30F30E6sBOrE7cxO3MTtzATtzE6KBOigWQCyFkLIRopARopEXYi7EXYCLsqXmyRqypebApQAPLf2ki7PTIllr5gSNXIuypebCXmwJdidXBcs5GWe3MCTtzE7cyvXYP0Ak6IWXQr9ELICWQjRSWIkZZXYEi7EauSpZaywl5sCXYu+hUvNjLOQJOrE7cy5Z7cw9duYEnbmJ0UFfoH6ICWQsi2QiAJGikRdlyyuwlldgSLsRqypebCXmwJd9CrXVjLPVidgLmUACAoAgZQAYAAERQBECgAQoAgKAIwygAAACIigCAoAgKAIUACMoAEAAH/2Q=="
+              alt=""
+              srcset=""
+              height="30px"
+              width="30px"
+              class="lockimage"
+            />
+          </div>
+          <div class="ptag">
+            <p>
+              Your card details are protected using PCI DSS v3.2 security
+              standards.
+            </p>
+          </div>
+        </div>
+        <div class="checkbox">
+          <input type="checkbox" name="checkbox" class="check" />
+          <p class="ptag">Save card for future purchases</p>
+        </div>
+      </div>
+      <div id="placeorder">
+        <button id="order" onclick="payNow()">Place Order</button>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script src="./scripts/paymentform.js"></script>
