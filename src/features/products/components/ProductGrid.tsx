@@ -1,3 +1,5 @@
+"use client";
+
 import { Col, Empty, Row } from "antd";
 
 import { ProductCard } from "@/features/products/components/ProductCard";

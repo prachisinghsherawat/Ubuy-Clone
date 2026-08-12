@@ -111,7 +111,7 @@ export function SiteHeader() {
                 aria-label="Search"
               />
             }
-            styles={{ affixWrapper: { paddingInlineEnd: 4 } }}
+            styles={{ root: { paddingInlineEnd: 4 } }}
           />
         </div>
 

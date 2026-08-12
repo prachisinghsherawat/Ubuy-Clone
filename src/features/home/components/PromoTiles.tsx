@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { Col, Row } from "antd";
 import Link from "next/link";

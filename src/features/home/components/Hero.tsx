@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowRightOutlined, ThunderboltFilled } from "@ant-design/icons";
 import { Button } from "antd";
 import Image from "next/image";
