@@ -1,69 +1,74 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { CategoryTiles } from "@/features/home/components/CategoryTiles";
+import { Hero } from "@/features/home/components/Hero";
+import { Newsletter } from "@/features/home/components/Newsletter";
+import { PromoTiles } from "@/features/home/components/PromoTiles";
+import { ValueStrip } from "@/features/home/components/ValueStrip";
+import { ProductGrid } from "@/features/products/components/ProductGrid";
+import { ProductRail } from "@/features/products/components/ProductRail";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import {
+  getByCategory,
+  getDeals,
+  getFeatured,
+} from "@/features/products/data/products";
+import { ROUTES } from "@/lib/constants";
 
-export default function Home() {
+export default function HomePage() {
+  const deals = getDeals(8);
+  const featured = getFeatured(8);
+  const gaming = getByCategory("gaming", 8);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="container page">
+      <Hero />
+
+      <div style={{ marginTop: 24 }}>
+        <ValueStrip />
+      </div>
+
+      <section className="section">
+        <SectionHeading
+          title="Shop by category"
+          subtitle="Eight departments, one international checkout"
+          href={ROUTES.products}
         />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        <CategoryTiles />
+      </section>
+
+      <section className="section">
+        <SectionHeading
+          title="Today's deals"
+          subtitle="Biggest price drops across the catalogue"
+          href={`${ROUTES.products}?sort=discount`}
+        />
+        <ProductRail products={deals} />
+      </section>
+
+      <section className="section">
+        <PromoTiles />
+      </section>
+
+      <section className="section">
+        <SectionHeading
+          title="Best sellers & new arrivals"
+          subtitle="What everyone else is adding to their cart this week"
+          href={ROUTES.products}
+        />
+        <ProductGrid products={featured} />
+      </section>
+
+      <section className="section">
+        <SectionHeading
+          title="Gaming HQ"
+          subtitle="Consoles, controllers and VR — ready to ship"
+          href={`${ROUTES.products}?category=gaming`}
+        />
+        <ProductRail products={gaming} />
+      </section>
+
+      <section className="section">
+        <Newsletter />
+      </section>
     </div>
   );
 }
