@@ -19,7 +19,10 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
           src={gallery[active]}
           alt={`${name} — image ${active + 1} of ${gallery.length}`}
           fill
-          priority
+          // `priority` is deprecated in Next 16; this is the above-the-fold LCP
+          // image on the product page, so load it eagerly at high priority.
+          loading="eager"
+          fetchPriority="high"
           sizes="(max-width: 900px) 100vw, 520px"
           style={{ objectFit: "contain" }}
         />

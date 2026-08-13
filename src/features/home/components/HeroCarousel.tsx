@@ -18,6 +18,13 @@ interface Slide {
   background: string;
 }
 
+/** Trust markers, shown under the copy on every slide. */
+const STATS = [
+  { value: "300M+", label: "Products worldwide" },
+  { value: "100+", label: "Countries sourced" },
+  { value: "4.6★", label: "Average rating" },
+];
+
 /**
  * Editorial copy for the hero. Each slide is paired at render time with a real
  * product pulled from the catalogue, so the artwork and price are never stale
@@ -55,7 +62,17 @@ const SLIDES: Slide[] = [
 
 export function HeroCarousel({ products }: { products: Product[] }) {
   return (
-    <Carousel autoplay autoplaySpeed={6000} className="hero-carousel" draggable>
+    <Carousel
+      // `dotDuration` animates the active dot across the autoplay interval, so
+      // the carousel shows how long the slide has left rather than just cutting.
+      autoplay={{ dotDuration: true }}
+      autoplaySpeed={6000}
+      className="hero-carousel"
+      draggable
+      arrows
+      pauseOnHover
+      dotPlacement="bottom"
+    >
       {SLIDES.map((slide, index) => {
         // Cycle through whatever the catalogue returned so a short list still
         // fills every slide.
@@ -64,43 +81,64 @@ export function HeroCarousel({ products }: { products: Product[] }) {
         return (
           <div key={slide.title}>
             <section className="hero" style={{ background: slide.background }}>
-              <div className="hero-copy">
-                <span className="hero-eyebrow">
-                  <ThunderboltFilled /> {slide.eyebrow}
-                </span>
-                <h1 className="hero-title">{slide.title}</h1>
-                <p className="hero-text">{slide.text}</p>
-
-                <div className="hero-actions">
-                  <Link href={slide.href}>
-                    <Button type="primary" size="large" icon={<ArrowRightOutlined />} iconPosition="end">
-                      {slide.cta}
-                    </Button>
-                  </Link>
-                  <Link href={`${ROUTES.products}?sort=discount`}>
-                    <Button size="large" className="hero-ghost">
-                      Today&apos;s deals
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-
-              {product ? (
-                <Link href={ROUTES.product(product.slug)} className="hero-art">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    priority={index === 0}
-                    sizes="(max-width: 900px) 100vw, 480px"
-                    style={{ objectFit: "contain" }}
-                  />
-                  <span className="hero-price">
-                    <small>{product.brand}</small>
-                    <strong>{formatPrice(product.price)}</strong>
+              <div className="hero-inner">
+                <div className="hero-copy">
+                  <span className="hero-eyebrow">
+                    <ThunderboltFilled /> {slide.eyebrow}
                   </span>
-                </Link>
-              ) : null}
+                  <h1 className="hero-title">{slide.title}</h1>
+                  <p className="hero-text">{slide.text}</p>
+
+                  <div className="hero-actions">
+                    <Link href={slide.href}>
+                      <Button
+                        type="primary"
+                        size="large"
+                        icon={<ArrowRightOutlined />}
+                        iconPlacement="end"
+                      >
+                        {slide.cta}
+                      </Button>
+                    </Link>
+                    <Link href={`${ROUTES.products}?sort=discount`}>
+                      <Button size="large" className="hero-ghost">
+                        Today&apos;s deals
+                      </Button>
+                    </Link>
+                  </div>
+
+                  <div className="hero-stats">
+                    {STATS.map((stat) => (
+                      <div className="hero-stat" key={stat.label}>
+                        <strong>{stat.value}</strong>
+                        <span>{stat.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {product ? (
+                  <Link href={ROUTES.product(product.slug)} className="hero-art">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      // The first slide's art is the LCP element. `priority` is
+                      // deprecated in Next 16, and `preload` is the wrong tool
+                      // here because the remaining slides are equally likely to
+                      // be the LCP once the carousel advances.
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : "auto"}
+                      sizes="(max-width: 900px) 100vw, 440px"
+                      style={{ objectFit: "contain" }}
+                    />
+                    <span className="hero-price">
+                      <small>{product.brand}</small>
+                      <strong>{formatPrice(product.price)}</strong>
+                    </span>
+                  </Link>
+                ) : null}
+              </div>
             </section>
           </div>
         );

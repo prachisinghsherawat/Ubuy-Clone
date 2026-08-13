@@ -21,12 +21,28 @@
   --shadow-sm: 0 1px 2px rgba(15, 37, 64, 0.06);
   --shadow-md: 0 6px 20px rgba(15, 37, 64, 0.08);
   --shadow-lg: 0 18px 40px rgba(15, 37, 64, 0.14);
+  --shadow-glow: 0 10px 30px rgba(226, 87, 31, 0.28);
 
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
+  --radius-xl: 26px;
 
-  --header-height: 132px;
+  /* The header is three stacked rows. Keeping each row's height in a token and
+     summing them means --header-height can never drift out of sync with what
+     the header actually measures — every sticky offset depends on it. */
+  --header-strip-h: 34px;
+  --header-main-h: 68px;
+  --header-nav-h: 46px;
+  /* The strip's bottom hairline and the nav's top hairline are real layout
+     height; leaving them out made the header measure 2px taller than the token
+     and pushed the hero past the fold. */
+  --header-borders: 2px;
+  --header-height: calc(
+    var(--header-strip-h) + var(--header-main-h) + var(--header-nav-h) +
+      var(--header-borders)
+  );
+
   --page-max: 1280px;
 }
 
@@ -82,15 +98,30 @@ img {
 }
 
 .section-title {
+  position: relative;
   margin: 0;
+  padding-left: 14px;
   font-size: clamp(20px, 2.4vw, 26px);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--ink);
 }
 
+/* Brand tick that ties each section back to the header's accent line. */
+.section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.16em;
+  bottom: 0.16em;
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--brand-orange), var(--brand-amber));
+}
+
 .section-subtitle {
   margin: 6px 0 0;
+  padding-left: 14px;
   color: var(--ink-muted);
   font-size: 14px;
 }
@@ -110,7 +141,24 @@ img {
   z-index: 100;
   background: linear-gradient(180deg, var(--brand-navy) 0%, var(--brand-navy-deep) 100%);
   color: #fff;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 28px rgba(10, 27, 46, 0.24);
+}
+
+/* A hairline of brand colour so the header reads as deliberate against the
+   canvas rather than as a plain dark band. */
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--brand-orange),
+    var(--brand-amber) 45%,
+    var(--brand-mint)
+  );
+  opacity: 0.9;
 }
 
 .header-strip {
@@ -125,31 +173,43 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  height: 34px;
+  height: var(--header-strip-h);
   overflow: hidden;
   white-space: nowrap;
+}
+
+.header-strip .anticon {
+  color: var(--brand-amber);
 }
 
 .header-main {
   display: flex;
   align-items: center;
   gap: 20px;
-  height: 66px;
+  height: var(--header-main-h);
 }
 
 .header-brand {
   display: inline-flex;
   align-items: baseline;
   gap: 2px;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.04em;
   color: #fff;
   flex-shrink: 0;
+  transition: transform 0.18s ease;
+}
+
+.header-brand:hover {
+  transform: translateY(-1px);
 }
 
 .header-brand span {
-  color: var(--brand-amber);
+  background: linear-gradient(120deg, var(--brand-amber), var(--brand-orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .header-search {
@@ -201,17 +261,39 @@ img {
 }
 
 .category-bar {
+  position: relative;
   background: rgba(255, 255, 255, 0.04);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* The strip scrolls with its scrollbar hidden, so a fade on the trailing edge
+   is the only cue that there is more to reach. */
+.category-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 48px;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--brand-navy-deep));
+  opacity: 0.9;
+}
+
+/* Holds the nav's exact height while the client component streams in, so the
+   header never shifts under the hero. */
+.category-bar-placeholder {
+  height: var(--header-nav-h);
 }
 
 .category-bar-inner {
   display: flex;
   align-items: center;
   gap: 4px;
-  height: 44px;
+  height: var(--header-nav-h);
   overflow-x: auto;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .category-bar-inner::-webkit-scrollbar {
@@ -222,38 +304,140 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 6px 12px;
+  padding: 7px 13px;
   border-radius: 999px;
   font-size: 13px;
+  font-weight: 500;
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.82);
   transition: background 0.18s ease, color 0.18s ease;
 }
 
-.category-link:hover,
-.category-link[data-active="true"] {
+.category-link:hover {
   background: rgba(255, 255, 255, 0.14);
   color: #fff;
 }
 
+.category-link[data-active="true"] {
+  background: #fff;
+  color: var(--brand-navy);
+  font-weight: 600;
+}
+
+.category-link[data-active="true"] .anticon {
+  color: var(--brand-orange);
+}
+
+/* ------------------------------------------------------ header responsive -- */
+
+/* Tablet: the promo strip is the first thing to go, and the search field stops
+   competing with the action cluster for the same row. */
+@media (max-width: 992px) {
+  :root {
+    --header-strip-h: 0px;
+    --header-main-h: 64px;
+    /* Only the nav's top hairline survives once the strip is hidden. */
+    --header-borders: 1px;
+  }
+
+  .header-strip {
+    display: none;
+  }
+
+  .header-action-label {
+    display: none;
+  }
+}
+
+/* Phone: brand + actions keep one row, search drops to a row of its own. The
+   token grows to match so sticky offsets stay honest. */
+@media (max-width: 720px) {
+  :root {
+    --header-main-h: 116px;
+    --header-nav-h: 44px;
+  }
+
+  .header-main {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-block: 10px;
+    align-content: center;
+  }
+
+  .header-search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .header-actions {
+    gap: 2px;
+  }
+
+  .header-action {
+    padding: 7px 9px;
+  }
+
+  .header-brand {
+    font-size: 24px;
+  }
+}
+
 /* ------------------------------------------------------------------ hero -- */
+
+/**
+ * Full-bleed hero carousel.
+ *
+ * The slider itself spans the viewport; each slide's content is re-constrained
+ * to --page-max by .hero-inner so the copy still lines up with the rest of the
+ * page. Slides size from --hero-height rather than a percentage chain, because
+ * react-slick's track wrappers do not pass a usable height down.
+ */
+.hero-carousel {
+  --hero-height: calc(100svh - var(--header-height));
+  position: relative;
+  background: var(--brand-navy-deep);
+}
 
 .hero {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-lg);
   background:
     radial-gradient(circle at 82% 18%, rgba(255, 177, 0, 0.28), transparent 46%),
     linear-gradient(115deg, #0f2540 0%, #17375f 52%, #1d4a7d 100%);
   color: #fff;
-  padding: clamp(32px, 5vw, 60px);
-  min-height: 340px;
+  /* Cover the screen, but never get so short in landscape that the copy
+     clips, nor so tall on a big monitor that the type strands. */
+  min-height: clamp(460px, var(--hero-height), 860px);
   display: flex;
   align-items: center;
+  padding-block: clamp(40px, 6vh, 72px);
+}
+
+/* A soft vignette keeps the white type readable wherever the art lands. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(6, 18, 33, 0.55) 0%, transparent 62%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4vw, 40px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 56px);
 }
 
 .hero-copy {
-  max-width: 560px;
+  max-width: 620px;
   position: relative;
   z-index: 1;
 }
@@ -288,23 +472,188 @@ img {
   color: rgba(255, 255, 255, 0.82);
 }
 
+.hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* antd's default button on a dark ground reads as a hole; make it a glass pill
+   that keeps the same footprint as the primary next to it. */
+.hero-ghost {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  color: #fff !important;
+  backdrop-filter: blur(6px);
+}
+
+.hero-ghost:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: #fff !important;
+}
+
+/**
+ * Product artwork paired with each slide.
+ *
+ * This is a grid cell now, not an absolutely positioned decoration — the old
+ * rule set a width but no height, and a `fill` image inside a zero-height box
+ * never painted anything.
+ */
 .hero-art {
-  position: absolute;
-  right: clamp(-40px, -2vw, 0px);
-  bottom: -20px;
-  width: min(42%, 420px);
-  opacity: 0.96;
-  pointer-events: none;
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.hero-art:hover {
+  transform: translateY(-6px);
 }
 
 .hero-art img {
-  width: 100%;
-  filter: drop-shadow(0 24px 44px rgba(0, 0, 0, 0.45));
+  /* Padding on the image itself, since `fill` insets to the card's border box. */
+  padding: clamp(20px, 3vw, 34px);
+  filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.45));
 }
 
-@media (max-width: 768px) {
+/* Floating price chip on the artwork. */
+.hero-price {
+  position: absolute;
+  left: clamp(-12px, -1vw, 0px);
+  bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--ink);
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-price small {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+}
+
+.hero-price strong {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--brand-orange);
+}
+
+/* -------------------------------------------------- carousel chrome (hero) -- */
+
+/**
+ * antd's carousel rules are `:where(.ant-…).ant-carousel .slick-prev`, which
+ * scores 0-2-0 — the same as a plain two-class selector here — and its
+ * CSS-in-JS is injected after this stylesheet, so a tie goes to antd. Doubling
+ * the class reaches 0-3-0 and wins outright, which beats scattering !important.
+ * Sizes and offsets come from the Carousel theme tokens; only the parts antd
+ * does not tokenise live here.
+ */
+.hero-carousel.hero-carousel .slick-dots li button {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  opacity: 1;
+}
+
+.hero-carousel.hero-carousel .slick-dots li.slick-active button {
+  background: var(--brand-amber);
+}
+
+.hero-carousel.hero-carousel .slick-arrow {
+  z-index: 3;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: #fff;
+  /* antd fades its arrows to 0.4; at this size they should read as real
+     controls, so hold them at full strength. */
+  opacity: 1;
+  backdrop-filter: blur(8px);
+  transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.hero-carousel.hero-carousel .slick-arrow:hover {
+  background: var(--brand-orange);
+  border-color: var(--brand-orange);
+  transform: translateY(-50%) scale(1.08);
+}
+
+/* The glyph is a rotated two-sided border box sized from --ant-carousel-arrow-size.
+   Left to itself it fills the whole disc, so pin it to a chevron and re-centre
+   it — rotation is about its own centre, so centring the box centres the mark. */
+.hero-carousel.hero-carousel .slick-arrow::after {
+  width: 11px;
+  height: 11px;
+  top: 50%;
+  inset-inline-start: 50%;
+  margin-top: -5.5px;
+  margin-inline-start: -5.5px;
+  border-width: 0;
+  border-inline-start-width: 2px;
+  border-block-start-width: 2px;
+}
+
+.hero-carousel.hero-carousel .slick-arrow.slick-disabled {
+  opacity: 0;
+}
+
+/* Trust markers under the hero copy. */
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(18px, 3vw, 38px);
+  margin-top: 34px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.hero-stat strong {
+  display: block;
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.hero-stat span {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 900px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+
   .hero-art {
     display: none;
+  }
+
+  .hero-actions,
+  .hero-stats {
+    justify-content: center;
+  }
+
+  .hero-copy {
+    max-width: 60ch;
   }
 }
 
@@ -383,11 +732,89 @@ img {
   transform: scale(1.05);
 }
 
-.product-badge {
+/* `fill` images ignore the parent's padding (they inset to the border box), so
+   the breathing room around the art has to live on the image itself. */
+.product-img {
+  padding: 16px;
+  object-fit: contain;
+}
+
+.product-ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  padding: 5px 12px 6px;
+  border-end-end-radius: var(--radius-md);
+  background: linear-gradient(120deg, var(--brand-orange), #f0743c);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px rgba(226, 87, 31, 0.35);
+}
+
+/* The badge sits below the ribbon when both are present. */
+.product-media .product-ribbon ~ .product-badge {
+  top: 40px;
+}
+
+.product-oos {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(2px);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.product-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.product-rating .anticon {
+  color: var(--brand-amber);
+  font-size: 12px;
+}
+
+.product-rating-count {
+  font-weight: 400;
+  color: var(--ink-subtle);
+}
+
+.product-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand-orange);
+}
+
+.product-body .product-add {
+  margin-top: 12px;
+}
+
+/* Scoped to the parent to clear antd's `:where(…).ant-tag{position:relative}`,
+   which ties on specificity and would otherwise leave the tag as a centred
+   grid item instead of a corner overlay. */
+.product-media .product-badge {
   position: absolute;
   top: 12px;
   left: 12px;
   z-index: 2;
+  margin: 0;
 }
 
 .product-wish {
@@ -536,6 +963,17 @@ img {
 
 /* ------------------------------------------------------------------ rail -- */
 
+/**
+ * Product rail: a native horizontal scroller with overlaid paging arrows.
+ *
+ * The arrows are absolutely positioned so they float over the track instead of
+ * taking part in the flow, and they only surface on hover (or on touch, where
+ * there is no hover, they stay put).
+ */
+.rail-wrap {
+  position: relative;
+}
+
 .rail {
   display: grid;
   grid-auto-flow: column;
@@ -544,14 +982,71 @@ img {
   overflow-x: auto;
   padding-bottom: 8px;
   scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
+  scroll-padding-inline: 4px;
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
 }
 
 .rail > * {
   scroll-snap-align: start;
 }
 
+/* Parent-scoped so `position` and the colours outrank antd's own
+   `:where(…).ant-btn` rules, which tie at one class and are injected later. */
+.rail-wrap .rail-arrow {
+  position: absolute;
+  top: 42%;
+  z-index: 5;
+  width: 42px;
+  height: 42px;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.18s ease;
+}
+
+.rail-wrap:hover .rail-arrow,
+.rail-wrap .rail-arrow:focus-visible {
+  opacity: 1;
+}
+
+.rail-wrap .rail-arrow:hover:not(:disabled) {
+  background: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.rail-wrap .rail-arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rail-wrap .rail-arrow-prev {
+  inset-inline-start: -10px;
+}
+
+.rail-wrap .rail-arrow-next {
+  inset-inline-end: -10px;
+}
+
+/* No hover on touch, so keep the arrows visible and inside the bounds. */
+@media (hover: none) {
+  .rail-arrow {
+    display: none;
+  }
+}
+
 /* --------------------------------------------------------- product detail -- */
+
+.gallery {
+  position: relative;
+}
 
 .gallery-main {
   position: relative;
@@ -562,6 +1057,47 @@ img {
   padding: 28px;
   display: grid;
   place-items: center;
+  overflow: hidden;
+}
+
+.gallery-main .gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.gallery-main:hover .gallery-arrow,
+.gallery-main .gallery-arrow:focus-visible {
+  opacity: 1;
+}
+
+.gallery-main .gallery-arrow:hover {
+  background: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
+}
+
+.gallery-main .gallery-arrow-prev {
+  inset-inline-start: 14px;
+}
+
+.gallery-main .gallery-arrow-next {
+  inset-inline-end: 14px;
+}
+
+@media (hover: none) {
+  .gallery-main .gallery-arrow {
+    opacity: 1;
+  }
 }
 
 .gallery-main img {
@@ -574,9 +1110,19 @@ img {
   display: flex;
   gap: 10px;
   margin-top: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.gallery-thumbs::-webkit-scrollbar {
+  display: none;
 }
 
 .gallery-thumb {
+  /* `fill` images need a positioned ancestor to inset against. */
+  position: relative;
+  flex: 0 0 auto;
   width: 72px;
   height: 72px;
   border-radius: var(--radius-sm);
@@ -586,16 +1132,25 @@ img {
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: border-color 0.18s ease;
+  overflow: hidden;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
+/* ProductGallery marks the current thumb with `.is-active`; the data-attribute
+   form is kept for any caller still using it. */
+.gallery-thumb.is-active,
 .gallery-thumb[data-active="true"],
 .gallery-thumb:hover {
   border-color: var(--brand-orange);
 }
 
+.gallery-thumb.is-active {
+  box-shadow: 0 0 0 2px rgba(226, 87, 31, 0.2);
+}
+
 .gallery-thumb img {
   max-height: 100%;
+  padding: 6px;
   object-fit: contain;
   mix-blend-mode: multiply;
 }
@@ -858,11 +1413,9 @@ img {
   top: calc(var(--header-height) + 16px);
 }
 
+/* --header-height is composed from the row tokens now, and those are already
+   overridden per breakpoint above — it must not be hardcoded here. */
 @media (max-width: 992px) {
-  :root {
-    --header-height: 100px;
-  }
-
   .buy-box,
   .sticky-filters {
     position: static;

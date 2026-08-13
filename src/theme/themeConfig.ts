@@ -39,6 +39,18 @@ export const themeConfig: ThemeConfig = {
       paddingLG: 20,
       headerFontSize: 16,
     },
+    // Hero carousel chrome. Sizing and offsets are real design tokens in antd 6,
+    // so they belong here rather than in a stylesheet override; globals.css only
+    // adds the parts that are not tokenised (the glass arrow disc, dot colours).
+    Carousel: {
+      arrowSize: 40,
+      arrowOffset: 24,
+      dotWidth: 26,
+      dotHeight: 4,
+      dotActiveWidth: 44,
+      dotGap: 8,
+      dotOffset: 28,
+    },
     Input: {
       paddingBlock: 8,
     },

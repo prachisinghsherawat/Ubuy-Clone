@@ -14,7 +14,7 @@ import {
 import { App, Badge, Button, Dropdown, Input, type MenuProps } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { CategoryBar } from "@/components/layout/CategoryBar";
 import { useAuth } from "@/features/auth/AuthProvider";
@@ -158,7 +158,12 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <CategoryBar />
+      {/* CategoryBar reads the query string to mark the active tab. Isolating it
+          behind Suspense keeps the rest of the header prerenderable — without a
+          boundary, a static route calling useSearchParams fails the build. */}
+      <Suspense fallback={<div className="category-bar category-bar-placeholder" />}>
+        <CategoryBar />
+      </Suspense>
     </header>
   );
 }
