@@ -1,14 +1,10 @@
 /** Shared domain types. Keep these free of React/antd imports. */
 
-export type CategorySlug =
-  | "streaming"
-  | "audio"
-  | "gaming"
-  | "tv"
-  | "computers"
-  | "cameras"
-  | "smart-home"
-  | "accessories";
+/**
+ * Category slugs come from the live catalogue API, so this is a plain string
+ * rather than a closed union — the taxonomy changes without a redeploy.
+ */
+export type CategorySlug = string;
 
 export interface Category {
   slug: CategorySlug;
@@ -19,6 +15,13 @@ export interface Category {
 }
 
 export type ProductBadge = "Best Seller" | "New" | "Deal" | "Limited";
+
+export interface ProductReview {
+  rating: number;
+  comment: string;
+  date: string;
+  reviewerName: string;
+}
 
 export interface Product {
   id: string;
@@ -33,22 +36,42 @@ export interface Product {
   listPrice: number;
   rating: number;
   reviewCount: number;
+  /** Primary thumbnail. */
   image: string;
+  /** Full gallery; always contains at least `image`. */
+  images: string[];
   highlights: string[];
   description: string;
   inStock: boolean;
+  /** Units on hand — drives the "only N left" urgency copy. */
+  stock: number;
   badge?: ProductBadge;
+  sku?: string;
+  warranty?: string;
+  shippingInfo?: string;
+  returnPolicy?: string;
+  minimumOrderQuantity?: number;
+  tags?: string[];
+  reviews?: ProductReview[];
+  weight?: number;
+  dimensions?: { width: number; height: number; depth: number };
 }
 
-/** A cart line references the catalogue by id so storage stays small. */
+/**
+ * Cart lines carry a full product snapshot rather than just an id.
+ *
+ * The catalogue is now remote and paginated, so a stored id alone cannot be
+ * resolved synchronously at render time. Snapshotting also pins the price the
+ * shopper actually saw when they added the item.
+ */
 export interface CartLine {
   productId: string;
   quantity: number;
+  product: Product;
 }
 
-/** A cart line joined with its catalogue entry, ready to render. */
+/** A cart line with its computed line total, ready to render. */
 export interface CartLineView extends CartLine {
-  product: Product;
   lineTotal: number;
 }
 

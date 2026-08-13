@@ -505,9 +505,11 @@ export const PRODUCTS: Product[] = SEEDS.map((seed, index) => ({
   rating: seed.rating,
   reviewCount: seed.reviewCount,
   image: imageUrl(seed.imageId),
+  images: [imageUrl(seed.imageId)],
   highlights: seed.highlights,
   description: seed.description,
   inStock: seed.inStock ?? true,
+  stock: seed.inStock === false ? 0 : 40,
   badge: seed.badge,
 }));
 

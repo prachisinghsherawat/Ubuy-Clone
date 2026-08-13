@@ -4,7 +4,10 @@ import { AppstoreOutlined, FireOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { CATEGORIES } from "@/features/products/data/categories";
+import {
+  FEATURED_CATEGORY_SLUGS,
+  categoryMeta,
+} from "@/features/products/data/categories";
 import { categoryIcon } from "@/features/products/components/categoryIcons";
 import { ROUTES } from "@/lib/constants";
 
@@ -22,7 +25,7 @@ export function CategoryBar() {
           <AppstoreOutlined /> All Products
         </Link>
 
-        {CATEGORIES.map((category) => (
+        {FEATURED_CATEGORY_SLUGS.map(categoryMeta).map((category) => (
           <Link
             key={category.slug}
             href={`${ROUTES.products}?category=${category.slug}`}

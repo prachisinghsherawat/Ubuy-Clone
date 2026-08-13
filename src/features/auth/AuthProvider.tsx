@@ -1,17 +1,14 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
 
 import { STORAGE_KEYS } from "@/lib/constants";
-import { readStorage, removeStorage, writeStorage } from "@/lib/storage";
+import {
+  createPersistentStore,
+  useHydrated,
+  usePersistentValue,
+} from "@/lib/persistentStore";
+import { readStorage, writeStorage } from "@/lib/storage";
 import type { User } from "@/types";
 
 /**
@@ -50,14 +47,11 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 const normalise = (email: string) => email.trim().toLowerCase();
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [hydrated, setHydrated] = useState(false);
+const sessionStore = createPersistentStore<User | null>(STORAGE_KEYS.session, null);
 
-  useEffect(() => {
-    setUser(readStorage<User | null>(STORAGE_KEYS.session, null));
-    setHydrated(true);
-  }, []);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const user = usePersistentValue(sessionStore);
+  const hydrated = useHydrated();
 
   const signUp = useCallback((input: SignUpInput): AuthResult => {
     const accounts = readStorage<StoredAccount[]>(STORAGE_KEYS.users, []);
@@ -75,8 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: account.email,
       mobile: account.mobile,
     };
-    writeStorage(STORAGE_KEYS.session, session);
-    setUser(session);
+    sessionStore.set(session);
     return { ok: true };
   }, []);
 
@@ -97,15 +90,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: match.email,
       mobile: match.mobile,
     };
-    writeStorage(STORAGE_KEYS.session, session);
-    setUser(session);
+    sessionStore.set(session);
     return { ok: true };
   }, []);
 
-  const signOut = useCallback(() => {
-    removeStorage(STORAGE_KEYS.session);
-    setUser(null);
-  }, []);
+  const signOut = useCallback(() => sessionStore.set(null), []);
 
   const value = useMemo(
     () => ({ user, hydrated, signIn, signUp, signOut }),

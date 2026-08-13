@@ -1,24 +1,19 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
 
-import { getProductById } from "@/features/products/data/products";
 import {
   FLAT_SHIPPING,
   FREE_SHIPPING_THRESHOLD,
   STORAGE_KEYS,
   TAX_RATE,
 } from "@/lib/constants";
-import { readStorage, writeStorage } from "@/lib/storage";
-import type { CartLine, CartLineView, CartTotals } from "@/types";
+import {
+  createPersistentStore,
+  useHydrated,
+  usePersistentValue,
+} from "@/lib/persistentStore";
+import type { CartLine, CartLineView, CartTotals, Product } from "@/types";
 
 const MAX_QUANTITY = 10;
 
@@ -27,7 +22,7 @@ interface CartContextValue {
   totals: CartTotals;
   /** False until localStorage has been read, so the UI can hold off rendering counts. */
   hydrated: boolean;
-  addItem: (productId: string, quantity?: number) => void;
+  addItem: (product: Product, quantity?: number) => void;
   setQuantity: (productId: string, quantity: number) => void;
   removeItem: (productId: string) => void;
   clearCart: () => void;
@@ -35,6 +30,8 @@ interface CartContextValue {
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
+
+const cartStore = createPersistentStore<CartLine[]>(STORAGE_KEYS.cart, []);
 
 function computeTotals(lines: CartLineView[]): CartTotals {
   const subtotal = lines.reduce((sum, line) => sum + line.lineTotal, 0);
@@ -51,34 +48,28 @@ function computeTotals(lines: CartLineView[]): CartTotals {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [rawLines, setRawLines] = useState<CartLine[]>([]);
-  const [hydrated, setHydrated] = useState(false);
+  const rawLines = usePersistentValue(cartStore);
+  const hydrated = useHydrated();
 
-  // Read once on mount rather than during useState init: the server render must
-  // match the first client render, and the server has no localStorage.
-  useEffect(() => {
-    setRawLines(readStorage<CartLine[]>(STORAGE_KEYS.cart, []));
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (hydrated) writeStorage(STORAGE_KEYS.cart, rawLines);
-  }, [rawLines, hydrated]);
-
-  const addItem = useCallback((productId: string, quantity = 1) => {
-    setRawLines((current) => {
-      const existing = current.find((line) => line.productId === productId);
-      if (!existing) return [...current, { productId, quantity }];
+  const addItem = useCallback((product: Product, quantity = 1) => {
+    cartStore.set((current) => {
+      const existing = current.find((line) => line.productId === product.id);
+      if (!existing) return [...current, { productId: product.id, quantity, product }];
       return current.map((line) =>
-        line.productId === productId
-          ? { ...line, quantity: Math.min(line.quantity + quantity, MAX_QUANTITY) }
+        line.productId === product.id
+          ? {
+              ...line,
+              quantity: Math.min(line.quantity + quantity, MAX_QUANTITY),
+              // Refresh the snapshot so a price change is picked up on re-add.
+              product,
+            }
           : line,
       );
     });
   }, []);
 
   const setQuantity = useCallback((productId: string, quantity: number) => {
-    setRawLines((current) =>
+    cartStore.set((current) =>
       quantity <= 0
         ? current.filter((line) => line.productId !== productId)
         : current.map((line) =>
@@ -90,20 +81,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const removeItem = useCallback((productId: string) => {
-    setRawLines((current) => current.filter((line) => line.productId !== productId));
+    cartStore.set((current) => current.filter((line) => line.productId !== productId));
   }, []);
 
-  const clearCart = useCallback(() => setRawLines([]), []);
+  const clearCart = useCallback(() => cartStore.set([]), []);
 
-  // Lines whose product has vanished from the catalogue are dropped rather than
-  // rendered as holes — stale ids can survive in storage across deploys.
+  // Lines written by an older build may predate the snapshot field; drop them
+  // rather than rendering holes.
   const lines = useMemo<CartLineView[]>(
     () =>
-      rawLines.flatMap((line) => {
-        const product = getProductById(line.productId);
-        if (!product) return [];
-        return [{ ...line, product, lineTotal: product.price * line.quantity }];
-      }),
+      rawLines.flatMap((line) =>
+        line.product
+          ? [{ ...line, lineTotal: line.product.price * line.quantity }]
+          : [],
+      ),
     [rawLines],
   );
 

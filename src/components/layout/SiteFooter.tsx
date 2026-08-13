@@ -9,7 +9,10 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 
-import { CATEGORIES } from "@/features/products/data/categories";
+import {
+  FEATURED_CATEGORY_SLUGS,
+  categoryMeta,
+} from "@/features/products/data/categories";
 import { ROUTES, SITE } from "@/lib/constants";
 
 const COLUMNS = [
@@ -51,7 +54,7 @@ export function SiteFooter() {
           <div className="footer-col">
             <h4>Shop</h4>
             <ul>
-              {CATEGORIES.slice(0, 5).map((category) => (
+              {FEATURED_CATEGORY_SLUGS.slice(0, 5).map(categoryMeta).map((category) => (
                 <li key={category.slug}>
                   <Link href={`${ROUTES.products}?category=${category.slug}`}>
                     {category.label}

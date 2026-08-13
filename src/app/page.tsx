@@ -1,26 +1,34 @@
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CategoryTiles } from "@/features/home/components/CategoryTiles";
-import { Hero } from "@/features/home/components/Hero";
+import { HeroCarousel } from "@/features/home/components/HeroCarousel";
 import { Newsletter } from "@/features/home/components/Newsletter";
 import { PromoTiles } from "@/features/home/components/PromoTiles";
 import { ValueStrip } from "@/features/home/components/ValueStrip";
-import { ProductGrid } from "@/features/products/components/ProductGrid";
-import { ProductRail } from "@/features/products/components/ProductRail";
-import { SectionHeading } from "@/components/ui/SectionHeading";
 import {
   getByCategory,
+  getCategorySlugs,
   getDeals,
   getFeatured,
-} from "@/features/products/data/products";
+} from "@/features/products/api/catalogue";
+import { ProductGrid } from "@/features/products/components/ProductGrid";
+import { ProductRail } from "@/features/products/components/ProductRail";
+import { toCategories } from "@/features/products/data/categories";
 import { ROUTES } from "@/lib/constants";
 
-export default function HomePage() {
-  const deals = getDeals(8);
-  const featured = getFeatured(8);
-  const gaming = getByCategory("gaming", 8);
+export default async function HomePage() {
+  // One cached catalogue fetch backs all of these; the requests are deduped
+  // within the render pass, so this is a single upstream call.
+  const [deals, featured, categorySlugs, smartphones, beauty] = await Promise.all([
+    getDeals(10),
+    getFeatured(10),
+    getCategorySlugs(),
+    getByCategory("smartphones", 10),
+    getByCategory("fragrances", 10),
+  ]);
 
   return (
     <div className="container page">
-      <Hero />
+      <HeroCarousel products={featured.slice(0, 3)} />
 
       <div style={{ marginTop: 24 }}>
         <ValueStrip />
@@ -29,10 +37,10 @@ export default function HomePage() {
       <section className="section">
         <SectionHeading
           title="Shop by category"
-          subtitle="Eight departments, one international checkout"
+          subtitle={`${categorySlugs.length} departments, one international checkout`}
           href={ROUTES.products}
         />
-        <CategoryTiles />
+        <CategoryTiles categories={toCategories(categorySlugs)} />
       </section>
 
       <section className="section">
@@ -50,20 +58,29 @@ export default function HomePage() {
 
       <section className="section">
         <SectionHeading
-          title="Best sellers & new arrivals"
-          subtitle="What everyone else is adding to their cart this week"
-          href={ROUTES.products}
+          title="Top rated this week"
+          subtitle="What everyone else is adding to their cart"
+          href={`${ROUTES.products}?sort=rating`}
         />
-        <ProductGrid products={featured} />
+        <ProductGrid products={featured.slice(0, 8)} />
       </section>
 
       <section className="section">
         <SectionHeading
-          title="Gaming HQ"
-          subtitle="Consoles, controllers and VR — ready to ship"
-          href={`${ROUTES.products}?category=gaming`}
+          title="Smartphones"
+          subtitle="Flagships and daily drivers, ready to ship"
+          href={`${ROUTES.products}?category=smartphones`}
         />
-        <ProductRail products={gaming} />
+        <ProductRail products={smartphones} />
+      </section>
+
+      <section className="section">
+        <SectionHeading
+          title="Fragrances"
+          subtitle="Designer scents sourced from authorised sellers"
+          href={`${ROUTES.products}?category=fragrances`}
+        />
+        <ProductRail products={beauty} />
       </section>
 
       <section className="section">
