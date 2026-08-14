@@ -22,11 +22,30 @@
   --shadow-md: 0 6px 20px rgba(15, 37, 64, 0.08);
   --shadow-lg: 0 18px 40px rgba(15, 37, 64, 0.14);
   --shadow-glow: 0 10px 30px rgba(226, 87, 31, 0.28);
+  /* Lifted state for cards that rise on hover — deeper and warmer than
+     --shadow-lg so the hover reads as light coming from the brand accent. */
+  --shadow-lift: 0 22px 48px -12px rgba(15, 37, 64, 0.26),
+    0 0 0 1px rgba(226, 87, 31, 0.18);
 
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-xl: 26px;
+
+  /* Shared gradients. Declared once so a tile, a badge and a button that are
+     meant to read as "the same accent" cannot drift apart. */
+  --grad-brand: linear-gradient(120deg, var(--brand-orange), var(--brand-amber));
+  --grad-brand-soft: linear-gradient(
+    135deg,
+    rgba(226, 87, 31, 0.12),
+    rgba(255, 177, 0, 0.18)
+  );
+  --grad-navy: linear-gradient(135deg, var(--brand-navy) 0%, #1d4a7d 100%);
+
+  /* One easing curve for every hover/lift in the UI. The slight overshoot is
+     what makes a card feel picked up rather than nudged. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 
   /* The header is three stacked rows. Keeping each row's height in a token and
      summing them means --header-height can never drift out of sync with what
@@ -89,11 +108,14 @@ img {
   margin-block: 44px;
 }
 
+/* `flex-end` rather than `baseline`: the "view all" pill has its own padding,
+   so baseline-aligning it against the title floated it above the subtitle. */
 .section-head {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
   margin-bottom: 18px;
 }
 
@@ -126,11 +148,170 @@ img {
   font-size: 14px;
 }
 
+/* Small caps kicker above a section title, for sections that want extra
+   editorial weight (deals, curated rails). */
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--grad-brand-soft);
+  border: 1px solid rgba(226, 87, 31, 0.22);
+  color: var(--brand-orange);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* Pulsing dot that stands in for a per-section icon — it carries the same
+   "this is live" signal without dragging an icon component across the
+   server/client boundary just to decorate a label. */
+.section-kicker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-orange);
+  box-shadow: 0 0 0 3px rgba(226, 87, 31, 0.18);
+  animation: soft-pulse 2s ease-in-out infinite;
+}
+
+/**
+ * "View all" affordance.
+ *
+ * The arrow lives in its own overflow-hidden track so it can slide out and a
+ * duplicate slide in on hover, which reads as forward motion without the link
+ * box itself changing width and reflowing the heading row.
+ */
+.section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--brand-orange);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.22s var(--ease-out), border-color 0.22s var(--ease-out),
+    color 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out),
+    transform 0.22s var(--ease-out);
+}
+
+.section-link:hover {
+  background: var(--grad-brand);
+  border-color: transparent;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.section-link .anticon {
+  transition: transform 0.22s var(--ease-out);
+}
+
+.section-link:hover .anticon {
+  transform: translateX(3px);
+}
+
 .surface-card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
+}
+
+/* ---------------------------------------------------------------- motion -- */
+
+/**
+ * Scroll-entrance animations, built on scroll-driven timelines rather than an
+ * IntersectionObserver.
+ *
+ * The whole block is behind `@supports`, so the default state everywhere —
+ * including browsers without `view()` and anyone with JS off — is the finished,
+ * fully visible one. Nothing can strand content at `opacity: 0`, which is the
+ * standard failure mode of the JS version of this effect.
+ *
+ * `animation-range: entry` also means an element already on screen at load
+ * resolves to 100% progress immediately, so the hero and the first section
+ * never animate in behind the fold.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 46%;
+    }
+
+    /* Same curve, applied per card, so a grid staggers itself as the row
+       crosses the fold instead of snapping in as one block. */
+    .reveal-item {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 40%;
+    }
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Belt and braces: any transition/animation in the sheet collapses to an
+   instant state change when the user asks for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Attention-getting sheen used by the flash-deal band and the sale ribbon. */
+@keyframes sheen-sweep {
+  from {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(320%) skewX(-18deg);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes float-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -16px, 0);
+  }
 }
 
 /* ---------------------------------------------------------------- header -- */
@@ -142,6 +323,34 @@ img {
   background: linear-gradient(180deg, var(--brand-navy) 0%, var(--brand-navy-deep) 100%);
   color: #fff;
   box-shadow: 0 8px 28px rgba(10, 27, 46, 0.24);
+  transition: box-shadow 0.3s var(--ease-out);
+}
+
+/**
+ * Condensed header.
+ *
+ * `SiteHeader` sets `data-scrolled` on `<html>` once the page moves, and the
+ * strip's height token is zeroed *there* rather than on the header — because
+ * `--header-strip-h` feeds `--header-height`, which `.page`, `.buy-box` and
+ * every `.sticky-*` element read. Changing it at the root is what keeps those
+ * offsets matching the header's real measured height while it collapses.
+ */
+:root[data-scrolled="true"] {
+  --header-strip-h: 0px;
+  --header-borders: 1px;
+}
+
+.site-header[data-condensed="true"] {
+  box-shadow: 0 10px 34px rgba(10, 27, 46, 0.42);
+}
+
+.site-header[data-condensed="true"] .header-strip {
+  opacity: 0;
+  pointer-events: none;
+  /* The hairline is real layout height. Zeroing the *width* (not just the
+     colour) is what keeps the header's true height equal to --header-height,
+     whose condensed value budgets for one border, not two. */
+  border-bottom-width: 0;
 }
 
 /* A hairline of brand colour so the header reads as deliberate against the
@@ -166,8 +375,11 @@ img {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 12.5px;
   color: rgba(255, 255, 255, 0.78);
+  transition: opacity 0.2s var(--ease-out), border-bottom-width 0.28s var(--ease-out);
 }
 
+/* The height lives here, so this is the element whose transition turns the
+   condense into a glide rather than a jump. */
 .header-strip-inner {
   display: flex;
   align-items: center;
@@ -176,6 +388,7 @@ img {
   height: var(--header-strip-h);
   overflow: hidden;
   white-space: nowrap;
+  transition: height 0.28s var(--ease-out);
 }
 
 .header-strip .anticon {
@@ -213,9 +426,196 @@ img {
 }
 
 .header-search {
+  position: relative;
   flex: 1;
   min-width: 0;
   max-width: 720px;
+}
+
+/* A brand halo behind the field when it has focus, so the search reads as the
+   active thing on the header rather than a passive box. */
+.header-search:focus-within .ant-input-affix-wrapper {
+  box-shadow: 0 0 0 3px rgba(255, 177, 0, 0.28);
+  border-color: var(--brand-amber);
+}
+
+/* ------------------------------------------------------- search panel -- */
+
+/**
+ * Typeahead dropdown.
+ *
+ * Anchored to `.header-search` (which is `position: relative`) so it tracks the
+ * field at every breakpoint, including the phone layout where the field drops
+ * to its own row.
+ */
+.search-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  max-height: min(70vh, 460px);
+  overflow-y: auto;
+  padding: 12px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+  color: var(--ink);
+  animation: panel-drop 0.18s var(--ease-out);
+}
+
+@keyframes panel-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.search-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 2px 0 10px;
+  padding-inline: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-subtle);
+}
+
+.search-panel-head .anticon {
+  color: var(--brand-orange);
+}
+
+.search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.search-chip {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+
+.search-chip:hover {
+  background: var(--grad-brand);
+  border-color: transparent;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: var(--radius-md);
+  transition: background 0.16s var(--ease-out);
+}
+
+/* Driven by `data-active` rather than `:hover` alone so the keyboard highlight
+   and the pointer highlight are the same visual state. */
+.search-result:hover,
+.search-result[data-active="true"] {
+  background: var(--canvas);
+}
+
+.search-result-media {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: #fff;
+  overflow: hidden;
+}
+
+.search-result-media img {
+  object-fit: contain;
+  padding: 4px;
+  mix-blend-mode: multiply;
+}
+
+.search-result-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.search-result-copy strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  /* Long catalogue titles must not push the price out of the row. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search-result-copy small {
+  font-size: 11.5px;
+  color: var(--ink-subtle);
+  text-transform: capitalize;
+}
+
+.search-result-price {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand-navy);
+}
+
+.search-panel-all {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: none;
+  border-top: 1px solid var(--line);
+  background: transparent;
+  color: var(--brand-orange);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  transition: background 0.18s var(--ease-out);
+}
+
+.search-panel-all:hover {
+  background: rgba(226, 87, 31, 0.08);
+}
+
+.search-empty {
+  margin: 0;
+  padding: 18px 8px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink-muted);
 }
 
 .header-actions {
@@ -229,20 +629,196 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 12px;
-  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
   color: rgba(255, 255, 255, 0.92);
   font-size: 13px;
   line-height: 1.15;
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.18s ease;
+  transition: background 0.22s var(--ease-out), border-color 0.22s var(--ease-out),
+    transform 0.22s var(--ease-out);
 }
 
 .header-action:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.18);
   color: #fff;
+  transform: translateY(-1px);
+}
+
+.header-action .anticon {
+  transition: transform 0.28s var(--ease-spring);
+}
+
+.header-action:hover > .anticon,
+.header-action:hover .ant-badge .anticon {
+  transform: scale(1.14);
+}
+
+/* One-shot pop when the cart count increases. The class is added for the
+   animation's duration by MiniCart and then removed, so it can re-fire on
+   every add rather than only the first. */
+.ant-badge.is-bumping .ant-badge-count {
+  animation: badge-pop 0.42s var(--ease-spring);
+}
+
+@keyframes badge-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ----------------------------------------------------------- mini cart -- */
+
+/* Width only — the surrounding gutter comes from antd's Popover `innerPadding`
+   token, so adding padding here would double it. */
+.mini-cart {
+  width: min(340px, 86vw);
+}
+
+.mini-cart-empty {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 18px 8px 8px;
+  text-align: center;
+}
+
+.mini-cart-empty .anticon {
+  font-size: 30px;
+  color: var(--ink-subtle);
+}
+
+.mini-cart-empty p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 14px;
+}
+
+.mini-cart-ship {
+  margin-bottom: 12px;
+  font-size: 12.5px;
+  color: var(--ink-muted);
+}
+
+.mini-cart-ship strong {
+  color: var(--brand-orange);
+}
+
+.mini-cart-ship-done {
+  color: var(--brand-mint);
+  font-weight: 600;
+}
+
+.mini-cart-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.mini-cart-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.mini-cart-line:last-child {
+  border-bottom: none;
+}
+
+.mini-cart-thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: #fff;
+  overflow: hidden;
+}
+
+.mini-cart-thumb img {
+  object-fit: contain;
+  padding: 4px;
+  mix-blend-mode: multiply;
+}
+
+.mini-cart-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.mini-cart-copy a {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.18s var(--ease-out);
+}
+
+.mini-cart-copy a:hover {
+  color: var(--brand-orange);
+}
+
+.mini-cart-copy small {
+  font-size: 12px;
+  color: var(--ink-subtle);
+}
+
+.mini-cart-more {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--ink-subtle);
+  text-align: center;
+}
+
+.mini-cart-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.mini-cart-total strong {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--brand-navy);
+}
+
+.mini-cart-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* The links are grid items; without this the buttons inside them collapse to
+   their text width instead of filling each column. */
+.mini-cart-actions > a {
+  display: block;
 }
 
 .header-action-label {
@@ -267,17 +843,76 @@ img {
 }
 
 /* The strip scrolls with its scrollbar hidden, so a fade on the trailing edge
-   is the only cue that there is more to reach. */
+   is the only cue that there is more to reach. Sits under the paging buttons
+   (z-index 3) so it never dims them. */
 .category-bar::after {
   content: "";
   position: absolute;
   top: 0;
-  right: 0;
+  /* Tracks the content column for the same reason as the paging buttons. */
+  right: max(0px, calc((100% - var(--page-max)) / 2));
+  z-index: 1;
   width: 48px;
   height: 100%;
   pointer-events: none;
   background: linear-gradient(90deg, transparent, var(--brand-navy-deep));
   opacity: 0.9;
+}
+
+/**
+ * Paging buttons for the category strip.
+ *
+ * `hidden` is toggled from the component at each end, and the `[hidden]` rule
+ * below re-asserts `display: none` — the UA default is only `display: none`,
+ * which any `display` in a later rule would silently override.
+ */
+.category-nav {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 100%;
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+
+.category-nav[hidden] {
+  display: none;
+}
+
+.category-nav:hover {
+  color: var(--brand-amber);
+}
+
+/**
+ * Pinned to the *content* column, not the viewport.
+ *
+ * `.category-bar-inner` is a `.container`, so on a wide screen it stops at
+ * --page-max and is centred. Anchoring the buttons at `left: 0` stranded them
+ * out in the empty margin, nowhere near the tabs they scroll. The gutter
+ * expression reproduces the container's own centring, and `max()` clamps it to
+ * 0 once the viewport is narrower than the container.
+ */
+.category-nav-prev {
+  left: max(0px, calc((100% - var(--page-max)) / 2));
+  background: linear-gradient(90deg, var(--brand-navy-deep) 55%, transparent);
+}
+
+.category-nav-next {
+  right: max(0px, calc((100% - var(--page-max)) / 2));
+  background: linear-gradient(270deg, var(--brand-navy-deep) 55%, transparent);
+}
+
+@media (hover: none) {
+  /* Touch users swipe the strip; the buttons only steal room. */
+  .category-nav {
+    display: none;
+  }
 }
 
 /* Holds the nav's exact height while the client component streams in, so the
@@ -310,22 +945,39 @@ img {
   font-weight: 500;
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.82);
-  transition: background 0.18s ease, color 0.18s ease;
+  transition: background 0.22s var(--ease-out), color 0.22s var(--ease-out),
+    transform 0.22s var(--ease-out);
 }
 
 .category-link:hover {
   background: rgba(255, 255, 255, 0.14);
   color: #fff;
+  transform: translateY(-1px);
+}
+
+.category-link .anticon {
+  transition: transform 0.28s var(--ease-spring);
+}
+
+.category-link:hover .anticon {
+  transform: scale(1.18);
 }
 
 .category-link[data-active="true"] {
   background: #fff;
   color: var(--brand-navy);
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
 }
 
 .category-link[data-active="true"] .anticon {
   color: var(--brand-orange);
+}
+
+/* The deals tab keeps its amber flame while inactive; once active it inherits
+   the orange that every other selected tab uses. */
+.category-link-deals .anticon {
+  color: var(--brand-amber);
 }
 
 /* ------------------------------------------------------ header responsive -- */
@@ -423,6 +1075,40 @@ img {
   pointer-events: none;
 }
 
+/**
+ * Ambient blurred orbs behind the hero copy.
+ *
+ * Purely decorative, so they are rendered as empty `aria-hidden` spans by the
+ * carousel and positioned from the slide edges here. They sit above the flat
+ * gradient but below `.hero-inner` (z-index 1), so type is never dimmed.
+ */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+  opacity: 0.5;
+  animation: float-drift 12s ease-in-out infinite;
+}
+
+.hero-orb-a {
+  top: -80px;
+  left: 8%;
+  width: 320px;
+  height: 320px;
+  background: rgba(255, 177, 0, 0.5);
+}
+
+.hero-orb-b {
+  bottom: -110px;
+  left: 42%;
+  width: 380px;
+  height: 380px;
+  background: rgba(226, 87, 31, 0.42);
+  animation-delay: -5s;
+  animation-duration: 15s;
+}
+
 .hero-inner {
   position: relative;
   z-index: 1;
@@ -512,11 +1198,22 @@ img {
   border: 1px solid rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(10px);
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out);
 }
 
 .hero-art:hover {
-  transform: translateY(-6px);
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(255, 177, 0, 0.5);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 177, 0, 0.28);
+}
+
+.hero-art img {
+  transition: transform 0.5s var(--ease-out);
+}
+
+.hero-art:hover img {
+  transform: scale(1.05) rotate(-2deg);
 }
 
 .hero-art img {
@@ -659,37 +1356,92 @@ img {
 
 /* ----------------------------------------------------------- value props -- */
 
+/**
+ * Four standalone cards rather than one hairline-divided strip — each promise
+ * gets its own surface to lift off, which is what makes the row feel clickable
+ * and alive instead of like a table.
+ */
 .value-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
 }
 
 .value-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 20px;
+  padding: 20px;
   background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out),
+    border-color 0.28s var(--ease-out);
 }
 
-.value-item .anticon {
-  font-size: 22px;
-  color: var(--brand-orange);
+/* A tint that wipes up from the base on hover. Kept on a pseudo-element so the
+   card's own background stays a flat token and the wipe can be transformed
+   (cheap) rather than re-painting a gradient (expensive). */
+.value-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--grad-brand-soft);
+  opacity: 0;
+  transition: opacity 0.28s var(--ease-out);
+}
+
+.value-item:hover {
+  transform: translateY(-4px);
+  border-color: rgba(226, 87, 31, 0.32);
+  box-shadow: var(--shadow-lift);
+}
+
+.value-item:hover::before {
+  opacity: 1;
+}
+
+.value-item > * {
+  position: relative;
+}
+
+.value-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--grad-brand);
+  color: #fff;
+  font-size: 20px;
+  box-shadow: 0 6px 16px rgba(226, 87, 31, 0.32);
+  transition: transform 0.34s var(--ease-spring);
+}
+
+.value-item:hover .value-icon {
+  transform: rotate(-8deg) scale(1.08);
+}
+
+.value-item .value-icon .anticon {
+  font-size: 20px;
+  color: #fff;
 }
 
 .value-item strong {
   display: block;
-  font-size: 14px;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .value-item span {
   font-size: 12.5px;
   color: var(--ink-muted);
+  line-height: 1.45;
 }
 
 /* --------------------------------------------------------- product cards -- */
@@ -701,35 +1453,81 @@ img {
   height: 100%;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lift);
   border-color: rgba(226, 87, 31, 0.35);
+}
+
+/* Accent rule that draws across the top edge on hover — a cheap way to make a
+   dense grid of cards signal focus without every card shouting at rest. */
+.product-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: 100%;
+  height: 3px;
+  background: var(--grad-brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.34s var(--ease-out);
+}
+
+.product-card:hover::after {
+  transform: scaleX(1);
 }
 
 .product-media {
   position: relative;
   aspect-ratio: 1 / 1;
   padding: 18px;
-  background: #fff;
+  background: linear-gradient(160deg, #fbfcfd 0%, #f2f5f8 100%);
   display: grid;
   place-items: center;
+  overflow: hidden;
+}
+
+/* Light sweeping across the product shot on hover. `skewX` plus a wide
+   translate keeps it reading as a specular highlight rather than a wipe. */
+.product-media::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 45%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.85),
+    transparent
+  );
+  transform: translateX(-120%) skewX(-18deg);
+}
+
+.product-card:hover .product-media::after {
+  animation: sheen-sweep 0.85s var(--ease-out);
 }
 
 .product-media img {
   max-height: 100%;
   object-fit: contain;
   mix-blend-mode: multiply;
-  transition: transform 0.28s ease;
+  transition: transform 0.4s var(--ease-out);
 }
 
 .product-card:hover .product-media img {
-  transform: scale(1.05);
+  transform: scale(1.09) translateY(-4px);
 }
 
 /* `fill` images ignore the parent's padding (they inset to the border box), so
@@ -741,22 +1539,40 @@ img {
 
 .product-ribbon {
   position: absolute;
-  top: 0;
+  top: 10px;
   left: 0;
   z-index: 3;
+  overflow: hidden;
   padding: 5px 12px 6px;
-  border-end-end-radius: var(--radius-md);
+  border-start-end-radius: 999px;
+  border-end-end-radius: 999px;
   background: linear-gradient(120deg, var(--brand-orange), #f0743c);
   color: #fff;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.02em;
-  box-shadow: 0 4px 12px rgba(226, 87, 31, 0.35);
+  box-shadow: 0 4px 14px rgba(226, 87, 31, 0.4);
 }
 
-/* The badge sits below the ribbon when both are present. */
+/* Slow highlight travelling across the discount flag so the strongest sales
+   signal on the card keeps a little life at rest, not only on hover. */
+.product-ribbon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: sheen-sweep 2.6s var(--ease-out) infinite;
+}
+
+/* The badge sits below the ribbon when both are present. The offset tracks the
+   ribbon's own `top` (10px) plus its height, so the two never collide. */
 .product-media .product-ribbon ~ .product-badge {
-  top: 40px;
+  top: 48px;
 }
 
 .product-oos {
@@ -774,23 +1590,30 @@ img {
   text-transform: uppercase;
 }
 
+/* The rating is a chip so it reads as a discrete quality marker rather than
+   another line of body text competing with the title. `align-self` keeps it
+   hugging its content inside the card's column flow. */
 .product-rating {
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
   gap: 5px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(255, 177, 0, 0.14);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #8a5a00;
 }
 
 .product-rating .anticon {
   color: var(--brand-amber);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .product-rating-count {
-  font-weight: 400;
-  color: var(--ink-subtle);
+  font-weight: 500;
+  color: #a07a35;
 }
 
 .product-stock {
@@ -798,12 +1621,38 @@ img {
   align-items: center;
   gap: 5px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--brand-orange);
 }
 
+.product-stock .anticon {
+  animation: soft-pulse 1.8s ease-in-out infinite;
+}
+
+/* Scoped to `.product-body` so the gradient and lift outrank antd's own
+   `:where(…).ant-btn-primary`, which ties at one class and lands later. */
 .product-body .product-add {
   margin-top: 12px;
+  border: none;
+  background: var(--grad-brand);
+  box-shadow: 0 6px 16px -6px rgba(226, 87, 31, 0.6);
+  transition: transform 0.24s var(--ease-out), box-shadow 0.24s var(--ease-out),
+    filter 0.24s var(--ease-out);
+}
+
+.product-body .product-add:not(:disabled):hover {
+  transform: translateY(-2px);
+  filter: saturate(1.15);
+  box-shadow: var(--shadow-glow);
+}
+
+.product-body .product-add:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.product-body .product-add:disabled {
+  background: var(--line);
+  box-shadow: none;
 }
 
 /* Scoped to the parent to clear antd's `:where(…).ant-tag{position:relative}`,
@@ -817,42 +1666,80 @@ img {
   margin: 0;
 }
 
+/**
+ * Wishlist toggle.
+ *
+ * It slides in from the right on hover on pointer devices, which keeps the
+ * product shot uncluttered in a dense grid. Touch has no hover state to reveal
+ * it, so the `hover: none` branch below pins it permanently visible — the
+ * control must never become unreachable.
+ */
 .product-wish {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 2;
+  z-index: 3;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.26s var(--ease-out), transform 0.26s var(--ease-out);
 }
 
+.product-card:hover .product-wish,
+.product-wish:focus-within {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: none) {
+  .product-wish {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/**
+ * Card body.
+ *
+ * Spacing is deliberately uneven rather than one flat gap: the brand sits tight
+ * under the title it labels, the price gets air above it, and the button is
+ * pushed to the foot by `margin-top: auto` on the price row so every card in a
+ * grid lines its CTA up regardless of how many lines the title wrapped to.
+ */
 .product-body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 14px 16px 18px;
+  gap: 8px;
+  padding: 18px 18px 20px;
   border-top: 1px solid var(--line);
   flex: 1;
 }
 
 .product-brand {
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-subtle);
+  /* Pulls the brand up against the title beneath it, against the 8px flow gap. */
+  margin-bottom: -4px;
 }
 
 .product-name {
   margin: 0;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 14.5px;
+  font-weight: 600;
   line-height: 1.45;
+  letter-spacing: -0.01em;
   color: var(--ink);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  /* Reserves two lines so single-line titles do not shorten the card and break
+     the grid's rhythm. */
   min-height: 2.9em;
+  transition: color 0.22s var(--ease-out);
 }
 
 .product-card:hover .product-name {
@@ -865,13 +1752,14 @@ img {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: auto;
-  padding-top: 8px;
+  padding-top: 10px;
 }
 
 .price-now {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--brand-navy);
 }
 
 .price-was {
@@ -880,8 +1768,13 @@ img {
   text-decoration: line-through;
 }
 
+/* The saving reads as a small green chip rather than loose text — it is the
+   number shoppers scan for, so it gets a shape of its own. */
 .price-off {
-  font-size: 12px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(15, 157, 118, 0.12);
+  font-size: 11.5px;
   font-weight: 700;
   color: var(--brand-mint);
 }
@@ -893,66 +1786,181 @@ img {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 200px;
-  padding: 22px;
-  border-radius: var(--radius-lg);
+  min-height: 240px;
+  height: 100%;
+  padding: 24px;
+  border-radius: var(--radius-xl);
   color: #fff;
   overflow: hidden;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  isolation: isolate;
+  transition: transform 0.32s var(--ease-out), box-shadow 0.32s var(--ease-out);
+}
+
+/* A drifting light blob behind the copy. It sits under the text via z-index
+   and is blurred wide enough that it reads as depth in the gradient rather
+   than as a distinct shape. */
+.promo-tile::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -30%;
+  right: -20%;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  filter: blur(34px);
+  animation: float-drift 9s ease-in-out infinite;
+}
+
+/* Darkens the foot of the tile so the copy keeps contrast over whichever
+   gradient the tile was given inline. */
+.promo-tile::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(4, 12, 22, 0.55), transparent 62%);
+  opacity: 0.85;
+  transition: opacity 0.32s var(--ease-out);
 }
 
 .promo-tile:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-6px) scale(1.012);
+  box-shadow: 0 26px 54px -16px rgba(10, 27, 46, 0.55);
+}
+
+.promo-tile:hover::after {
+  opacity: 1;
+}
+
+.promo-tile-badge {
+  align-self: flex-start;
+  margin-bottom: auto;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .promo-tile h3 {
-  margin: 0 0 4px;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
 .promo-tile p {
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.86);
   max-width: 30ch;
 }
 
+/* The CTA fills in on hover, turning a text link into a solid button without
+   shifting the layout. */
+.promo-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 700;
+  transition: background 0.26s var(--ease-out), color 0.26s var(--ease-out),
+    border-color 0.26s var(--ease-out), gap 0.26s var(--ease-out);
+}
+
+.promo-tile:hover .promo-cta {
+  gap: 12px;
+  background: #fff;
+  border-color: #fff;
+  color: var(--brand-navy);
+}
+
 .category-tile {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 20px 12px;
+  height: 100%;
+  padding: 22px 12px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+/* Brand wash that rises from the bottom edge on hover. */
+.category-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--grad-brand-soft);
+  transform: translateY(100%);
+  transition: transform 0.36s var(--ease-out);
 }
 
 .category-tile:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lift);
   border-color: rgba(226, 87, 31, 0.4);
+}
+
+.category-tile:hover::before {
+  transform: translateY(0);
+}
+
+.category-tile > * {
+  position: relative;
 }
 
 .category-tile-icon {
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(226, 87, 31, 0.12), rgba(255, 177, 0, 0.18));
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: var(--grad-brand-soft);
+  border: 1px solid rgba(226, 87, 31, 0.16);
   color: var(--brand-orange);
-  font-size: 22px;
+  font-size: 23px;
+  transition: transform 0.36s var(--ease-spring), background 0.3s var(--ease-out),
+    color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.category-tile:hover .category-tile-icon {
+  transform: translateY(-3px) scale(1.1) rotate(-6deg);
+  background: var(--grad-brand);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 10px 22px -6px rgba(226, 87, 31, 0.6);
 }
 
 .category-tile strong {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  transition: color 0.26s var(--ease-out);
+}
+
+.category-tile:hover strong {
+  color: var(--brand-orange);
 }
 
 .category-tile span {
@@ -977,10 +1985,12 @@ img {
 .rail {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(220px, 1fr);
-  gap: 16px;
+  grid-auto-columns: minmax(232px, 1fr);
+  gap: 20px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  /* Vertical padding, not just bottom: the cards translate up on hover and
+     their shadow needs somewhere to land inside the scroller's clip. */
+  padding-block: 6px 14px;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: 4px;
   scrollbar-width: none;
@@ -1550,6 +2560,409 @@ img {
 
 .social-row a:hover {
   background: var(--brand-orange);
+}
+
+/* ----------------------------------------------------------- flash band -- */
+
+/**
+ * Deal band that heads the "Today's deals" rail: a dark panel carrying the
+ * live countdown, so the urgency sits next to the products it applies to.
+ */
+.flash-band {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 22px clamp(20px, 3vw, 30px);
+  margin-bottom: 20px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(255, 177, 0, 0.34), transparent 48%),
+    linear-gradient(120deg, #2a1020 0%, #4a1d18 46%, #7c2d12 100%);
+  box-shadow: 0 18px 40px -18px rgba(124, 45, 18, 0.7);
+}
+
+/* Slow highlight travelling the full width of the band. */
+.flash-band::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 26%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.14),
+    transparent
+  );
+  animation: sheen-sweep 5.5s var(--ease-out) infinite;
+}
+
+.flash-band-copy {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.flash-band-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--grad-brand);
+  color: #fff;
+  font-size: 24px;
+  box-shadow: 0 0 0 8px rgba(226, 87, 31, 0.16);
+  animation: soft-pulse 2.4s ease-in-out infinite;
+}
+
+.flash-band h3 {
+  margin: 0;
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.flash-band p {
+  margin: 3px 0 0;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.flash-timer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/**
+ * A single HH / MM / SS cell.
+ *
+ * The digits use `tabular-nums` and a fixed min-width so the band does not
+ * twitch every second as the glyph widths change — the usual tell of a
+ * hand-rolled countdown.
+ */
+.flash-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 58px;
+  padding: 9px 10px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+.flash-unit strong {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.flash-unit span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.flash-sep {
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 560px) {
+  .flash-band {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .flash-band-copy {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .flash-timer {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* -------------------------------------------------------------- marquee -- */
+
+/**
+ * Continuously scrolling trust strip.
+ *
+ * The track holds the item list twice and translates by exactly -50%, so the
+ * second copy lands where the first began and the loop has no visible seam.
+ * `aria-hidden` on the duplicate (set in the component) keeps the repeat out
+ * of the accessibility tree.
+ */
+.marquee {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  /* Fades both ends so items dissolve rather than clipping at the border. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+/**
+ * `padding-left` must stay equal to `gap`.
+ *
+ * Half the track is one copy of the list plus the single gap that separates it
+ * from the next copy. Matching the leading padding to that gap is what puts
+ * the duplicate's first item exactly where the original's first item started
+ * at -50% — mismatch the two and the loop visibly jumps once per cycle.
+ */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 44px;
+  padding-left: 44px;
+  animation: marquee-scroll 32s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink-muted);
+  transition: color 0.24s var(--ease-out);
+}
+
+.marquee-item:hover {
+  color: var(--brand-orange);
+}
+
+.marquee-item .anticon {
+  font-size: 17px;
+  color: var(--brand-orange);
+}
+
+/* ----------------------------------------------------------- newsletter -- */
+
+.newsletter {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 48px);
+  padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 46px);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 177, 0, 0.3), transparent 50%),
+    radial-gradient(circle at 6% 96%, rgba(226, 87, 31, 0.26), transparent 46%),
+    var(--grad-navy);
+  box-shadow: 0 24px 50px -20px rgba(10, 27, 46, 0.6);
+}
+
+.newsletter::before {
+  content: "";
+  position: absolute;
+  top: -70px;
+  right: 8%;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  animation: float-drift 11s ease-in-out infinite;
+}
+
+.newsletter-copy {
+  position: relative;
+}
+
+.newsletter h2 {
+  margin: 12px 0 8px;
+  font-size: clamp(23px, 2.8vw, 31px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.newsletter p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.newsletter-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 177, 0, 0.16);
+  border: 1px solid rgba(255, 177, 0, 0.4);
+  color: var(--brand-amber);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.newsletter-form {
+  position: relative;
+  display: flex;
+  gap: 10px;
+}
+
+.newsletter-note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 860px) {
+  .newsletter {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ------------------------------------------------------------ back to top -- */
+
+.back-to-top {
+  position: fixed;
+  right: clamp(16px, 3vw, 28px);
+  bottom: clamp(16px, 3vw, 28px);
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--grad-brand);
+  color: #fff;
+  font-size: 17px;
+  cursor: pointer;
+  box-shadow: var(--shadow-glow);
+  /* Off-state is fully transparent *and* out of the way, so it cannot
+     intercept clicks on whatever sits in the corner beneath it. */
+  opacity: 0;
+  transform: translateY(16px) scale(0.85);
+  pointer-events: none;
+  transition: opacity 0.28s var(--ease-out), transform 0.28s var(--ease-spring),
+    box-shadow 0.24s var(--ease-out);
+}
+
+.back-to-top[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(226, 87, 31, 0.5);
+}
+
+/* --------------------------------------------------------- control polish -- */
+
+/**
+ * App-wide interaction pass on antd's controls.
+ *
+ * Every selector here is doubled (`.ant-btn.ant-btn`) to reach 0-2-0. antd's
+ * own rules are `:where(...).ant-btn`, which score 0-1-0, but its CSS-in-JS is
+ * injected *after* this stylesheet — so a plain single-class selector would tie
+ * and lose. Doubling wins on specificity instead of scattering !important.
+ */
+.ant-btn.ant-btn {
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out),
+    background 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+/**
+ * The hover lift must skip the overlay arrows.
+ *
+ * `.gallery-arrow` centres itself with `transform: translateY(-50%)` and
+ * `.rail-arrow` uses transform for its own hover scale. This selector scores
+ * 0-4-0 and would outrank both of their rules, replacing the positioning
+ * transform with the lift — which throws the gallery arrows to the top of the
+ * frame on hover. Excluding them here is cheaper than inflating their
+ * specificity to compete.
+ */
+.ant-btn.ant-btn:not(:disabled):not(.rail-arrow):not(.gallery-arrow):hover {
+  transform: translateY(-2px);
+}
+
+.ant-btn.ant-btn:not(:disabled):not(.rail-arrow):not(.gallery-arrow):active {
+  transform: translateY(0);
+}
+
+.ant-btn-primary.ant-btn-primary:not(:disabled):hover {
+  box-shadow: 0 8px 20px -6px rgba(226, 87, 31, 0.55);
+}
+
+/* A visible focus ring on every interactive surface. The browser default is
+   removed by antd on several of these, and nothing replaces it. */
+.category-link:focus-visible,
+.header-action:focus-visible,
+.search-chip:focus-visible,
+.search-panel-all:focus-visible,
+.back-to-top:focus-visible,
+.product-card:focus-visible,
+.category-tile:focus-visible,
+.promo-tile:focus-visible,
+.value-item:focus-visible {
+  outline: 2px solid var(--brand-amber);
+  outline-offset: 2px;
+}
+
+/* Panels that hold page content lift very slightly on hover, which keeps the
+   cart, checkout and filter columns from feeling inert. */
+.surface-card {
+  transition: box-shadow 0.28s var(--ease-out), border-color 0.28s var(--ease-out);
+}
+
+.surface-card:hover {
+  box-shadow: var(--shadow-md);
 }
 
 /* ----------------------------------------------------------------- misc -- */

@@ -28,7 +28,10 @@ export function ProductGrid({
   }
 
   return (
-    <Row gutter={[16, 16]}>
+    // Vertical gutter runs larger than the horizontal one: cards lift on hover,
+    // and a row gap equal to the column gap left the shadow of one row clipping
+    // into the card below it.
+    <Row gutter={[20, 26]}>
       {products.map((product) => (
         <Col key={product.id} {...spans}>
           <ProductCard product={product} />

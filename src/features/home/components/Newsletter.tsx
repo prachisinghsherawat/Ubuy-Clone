@@ -1,6 +1,6 @@
 "use client";
 
-import { MailOutlined } from "@ant-design/icons";
+import { MailOutlined, SendOutlined } from "@ant-design/icons";
 import { App, Button, Form, Input } from "antd";
 
 interface NewsletterValues {
@@ -18,41 +18,60 @@ export function Newsletter() {
   };
 
   return (
-    <section
-      className="surface-card"
-      style={{
-        display: "grid",
-        gap: 20,
-        gridTemplateColumns: "minmax(0, 1.2fr) minmax(280px, 1fr)",
-        alignItems: "center",
-        padding: "32px clamp(20px, 4vw, 40px)",
-      }}
-    >
-      <div>
-        <h2 className="section-title">Stay updated</h2>
-        <p className="section-subtitle" style={{ maxWidth: "52ch" }}>
-          Get price drops, restock alerts and members-only coupons. One email a week,
-          no filler.
+    <section className="newsletter reveal">
+      <div className="newsletter-copy">
+        <span className="newsletter-kicker">
+          <MailOutlined /> Weekly drop
+        </span>
+        <h2>Get the price drops before they sell out</h2>
+        <p>
+          Restock alerts, members-only coupons and the week&apos;s biggest cuts.
+          One email a week, no filler.
         </p>
       </div>
 
-      <Form form={form} onFinish={handleFinish} layout="inline" style={{ gap: 8 }}>
-        <Form.Item
-          name="email"
-          style={{ flex: 1, marginInlineEnd: 0 }}
-          rules={[
-            { required: true, message: "Enter your email" },
-            { type: "email", message: "Enter a valid email" },
-          ]}
+      <div>
+        <Form
+          form={form}
+          onFinish={handleFinish}
+          layout="inline"
+          className="newsletter-form"
+          // The default inline layout wraps each item at a fixed width; the
+          // flex row set in CSS needs the items to size from their content.
+          style={{ flexWrap: "nowrap" }}
         >
-          <Input size="large" prefix={<MailOutlined />} placeholder="you@example.com" />
-        </Form.Item>
-        <Form.Item style={{ marginInlineEnd: 0 }}>
-          <Button type="primary" size="large" htmlType="submit">
-            Subscribe
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item
+            name="email"
+            style={{ flex: 1, marginInlineEnd: 0 }}
+            rules={[
+              { required: true, message: "Enter your email" },
+              { type: "email", message: "Enter a valid email" },
+            ]}
+          >
+            <Input
+              size="large"
+              prefix={<MailOutlined />}
+              placeholder="you@example.com"
+              autoComplete="email"
+            />
+          </Form.Item>
+          <Form.Item style={{ marginInlineEnd: 0 }}>
+            <Button
+              type="primary"
+              size="large"
+              htmlType="submit"
+              icon={<SendOutlined />}
+              iconPlacement="end"
+            >
+              Subscribe
+            </Button>
+          </Form.Item>
+        </Form>
+
+        <p className="newsletter-note">
+          No spam. Unsubscribe in one click, any time.
+        </p>
+      </div>
     </section>
   );
 }

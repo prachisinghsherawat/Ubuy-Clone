@@ -34,8 +34,8 @@ export function ValueStrip() {
   return (
     <div className="value-strip">
       {VALUES.map((value) => (
-        <div className="value-item" key={value.title}>
-          {value.icon}
+        <div className="value-item reveal-item" key={value.title}>
+          <span className="value-icon">{value.icon}</span>
           <div>
             <strong>{value.title}</strong>
             <span>{value.text}</span>

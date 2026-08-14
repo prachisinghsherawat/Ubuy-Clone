@@ -5,35 +5,61 @@ import {
   GlobalOutlined,
   HeartOutlined,
   LogoutOutlined,
-  SearchOutlined,
-  ShoppingCartOutlined,
   ShoppingOutlined,
   TruckOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { App, Badge, Button, Dropdown, Input, type MenuProps } from "antd";
+import { App, Badge, Dropdown, type MenuProps } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import { CategoryBar } from "@/components/layout/CategoryBar";
+import { HeaderSearch } from "@/components/layout/HeaderSearch";
+import { MiniCart } from "@/components/layout/MiniCart";
 import { useAuth } from "@/features/auth/AuthProvider";
-import { useCart } from "@/features/cart/CartProvider";
 import { useWishlist } from "@/features/wishlist/WishlistProvider";
 import { ROUTES, SITE } from "@/lib/constants";
+
+/** Scroll depth at which the header condenses. */
+const CONDENSE_AT = 40;
 
 export function SiteHeader() {
   const router = useRouter();
   const { message } = App.useApp();
-  const { totals, hydrated } = useCart();
   const { ids: wishlistIds } = useWishlist();
   const { user, signOut } = useAuth();
-  const [term, setTerm] = useState("");
+  const [condensed, setCondensed] = useState(false);
 
-  const submitSearch = () => {
-    const trimmed = term.trim();
-    router.push(trimmed ? `${ROUTES.products}?q=${encodeURIComponent(trimmed)}` : ROUTES.products);
-  };
+  /**
+   * Collapse the promo strip once the page scrolls.
+   *
+   * The flag is written to `<html>` rather than kept in this component's markup
+   * because `--header-strip-h` feeds `--header-height`, and that token is read
+   * by `.page`, `.buy-box` and every `.sticky-*` element *outside* the header.
+   * Toggling it at the document root is what keeps all those sticky offsets in
+   * sync with the height the header actually measures — a class on the header
+   * alone would leave them 34px out.
+   */
+  useEffect(() => {
+    const onScroll = () => setCondensed(window.scrollY > CONDENSE_AT);
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (condensed) root.dataset.scrolled = "true";
+    else delete root.dataset.scrolled;
+
+    // Leaving the attribute behind on unmount would strand every sticky offset
+    // in the condensed geometry with no header to match it.
+    return () => {
+      delete root.dataset.scrolled;
+    };
+  }, [condensed]);
 
   const accountItems: MenuProps["items"] = user
     ? [
@@ -80,7 +106,7 @@ export function SiteHeader() {
       ];
 
   return (
-    <header className="site-header">
+    <header className="site-header" data-condensed={condensed}>
       <div className="header-strip">
         <div className="container header-strip-inner">
           <span>
@@ -96,26 +122,7 @@ export function SiteHeader() {
           U<span>buy</span>
         </Link>
 
-        <div className="header-search">
-          <Input
-            size="large"
-            allowClear
-            value={term}
-            onChange={(event) => setTerm(event.target.value)}
-            onPressEnter={submitSearch}
-            placeholder="Search for products, brands and categories"
-            aria-label="Search products"
-            suffix={
-              <Button
-                type="primary"
-                icon={<SearchOutlined />}
-                onClick={submitSearch}
-                aria-label="Search"
-              />
-            }
-            styles={{ root: { paddingInlineEnd: 4 } }}
-          />
-        </div>
+        <HeaderSearch />
 
         <div className="header-actions">
           <button type="button" className="header-action">
@@ -148,15 +155,7 @@ export function SiteHeader() {
             </Badge>
           </Link>
 
-          <Link href={ROUTES.cart} className="header-action" aria-label="Cart">
-            <Badge count={hydrated ? totals.itemCount : 0} size="small" offset={[2, -2]}>
-              <ShoppingCartOutlined style={{ color: "#fff", fontSize: 20 }} />
-            </Badge>
-            <span className="header-action-label">
-              <small>Cart</small>
-              <strong>{hydrated ? totals.itemCount : 0} items</strong>
-            </span>
-          </Link>
+          <MiniCart />
         </div>
       </div>
 

@@ -1,8 +1,10 @@
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CategoryTiles } from "@/features/home/components/CategoryTiles";
+import { FlashDealBand } from "@/features/home/components/FlashDealBand";
 import { HeroCarousel } from "@/features/home/components/HeroCarousel";
 import { Newsletter } from "@/features/home/components/Newsletter";
 import { PromoTiles } from "@/features/home/components/PromoTiles";
+import { TrustMarquee } from "@/features/home/components/TrustMarquee";
 import { ValueStrip } from "@/features/home/components/ValueStrip";
 import {
   getByCategory,
@@ -35,30 +37,43 @@ export default async function HomePage() {
       <div className="container page">
         <ValueStrip />
 
+        {/* No `reveal` on this section: the tiles inside carry `reveal-item`,
+            and nesting the two timelines multiplies the fades into a muddy
+            double transition. A section either animates as a block or lets its
+            children stagger — never both. */}
         <section className="section">
           <SectionHeading
             title="Shop by category"
             subtitle={`${categorySlugs.length} departments, one international checkout`}
             href={ROUTES.products}
+            linkLabel="All departments"
           />
           <CategoryTiles categories={toCategories(categorySlugs)} />
         </section>
 
-        <section className="section">
+        <section className="section reveal">
+          <FlashDealBand />
           <SectionHeading
+            kicker="Limited time"
             title="Today's deals"
             subtitle="Biggest price drops across the catalogue"
             href={`${ROUTES.products}?sort=discount`}
+            linkLabel="All deals"
           />
           <ProductRail products={deals} />
+        </section>
+
+        <section className="section reveal">
+          <TrustMarquee />
         </section>
 
         <section className="section">
           <PromoTiles />
         </section>
 
-        <section className="section">
+        <section className="section reveal">
           <SectionHeading
+            kicker="Customer favourites"
             title="Top rated this week"
             subtitle="What everyone else is adding to their cart"
             href={`${ROUTES.products}?sort=rating`}
@@ -66,8 +81,9 @@ export default async function HomePage() {
           <ProductGrid products={featured.slice(0, 8)} />
         </section>
 
-        <section className="section">
+        <section className="section reveal">
           <SectionHeading
+            kicker="Ready to ship"
             title="Smartphones"
             subtitle="Flagships and daily drivers, ready to ship"
             href={`${ROUTES.products}?category=smartphones`}
@@ -75,7 +91,7 @@ export default async function HomePage() {
           <ProductRail products={smartphones} />
         </section>
 
-        <section className="section">
+        <section className="section reveal">
           <SectionHeading
             title="Fragrances"
             subtitle="Designer scents sourced from authorised sellers"

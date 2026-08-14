@@ -1,0 +1,163 @@
+"use client";
+
+import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { Badge, Button, Popover } from "antd";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+import { useCart } from "@/features/cart/CartProvider";
+import { FREE_SHIPPING_THRESHOLD, ROUTES } from "@/lib/constants";
+import { formatPrice } from "@/lib/format";
+
+/** Lines shown in the preview before it defers to the full cart page. */
+const PREVIEW_LIMIT = 3;
+
+export function MiniCart() {
+  const { lines, totals, hydrated, removeItem } = useCart();
+  const [open, setOpen] = useState(false);
+  /** Drives the one-shot bump on the badge when the count goes up. */
+  const [bumping, setBumping] = useState(false);
+  /**
+   * Last count we compared against. `null` until the first post-hydration pass,
+   * which is what separates "a saved cart was just restored" — no animation —
+   * from "the shopper added something". A plain `0` sentinel cannot express
+   * that difference, and would swallow the bump on the very first item added.
+   */
+  const baseline = useRef<number | null>(null);
+
+  const count = hydrated ? totals.itemCount : 0;
+
+  useEffect(() => {
+    if (!hydrated) return;
+
+    const previous = baseline.current;
+    baseline.current = count;
+
+    if (previous === null || count <= previous) return;
+
+    setBumping(true);
+    const timer = setTimeout(() => setBumping(false), 420);
+    return () => clearTimeout(timer);
+  }, [count, hydrated]);
+
+  const remaining = FREE_SHIPPING_THRESHOLD - totals.subtotal;
+  const progress = Math.min(100, (totals.subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+
+  const panel = (
+    <div className="mini-cart">
+      {lines.length === 0 ? (
+        <div className="mini-cart-empty">
+          <ShoppingCartOutlined />
+          <p>Your cart is empty</p>
+          <Link href={ROUTES.products} onClick={() => setOpen(false)}>
+            <Button type="primary" block>
+              Start shopping
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        <>
+          <div className="mini-cart-ship">
+            {remaining > 0 ? (
+              <span>
+                Add <strong>{formatPrice(remaining)}</strong> for free delivery
+              </span>
+            ) : (
+              <span className="mini-cart-ship-done">
+                You&apos;ve unlocked free delivery
+              </span>
+            )}
+            <div className="ship-meter">
+              <span style={{ width: `${progress}%` }} />
+            </div>
+          </div>
+
+          <ul className="mini-cart-lines">
+            {lines.slice(0, PREVIEW_LIMIT).map((line) => (
+              <li key={line.productId} className="mini-cart-line">
+                <Link
+                  href={ROUTES.product(line.product.slug)}
+                  className="mini-cart-thumb"
+                  onClick={() => setOpen(false)}
+                >
+                  <Image src={line.product.image} alt="" fill sizes="52px" />
+                </Link>
+                <div className="mini-cart-copy">
+                  <Link
+                    href={ROUTES.product(line.product.slug)}
+                    onClick={() => setOpen(false)}
+                  >
+                    {line.product.name}
+                  </Link>
+                  <small>
+                    {line.quantity} × {formatPrice(line.product.price)}
+                  </small>
+                </div>
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<DeleteOutlined />}
+                  onClick={() => removeItem(line.productId)}
+                  aria-label={`Remove ${line.product.name}`}
+                />
+              </li>
+            ))}
+          </ul>
+
+          {lines.length > PREVIEW_LIMIT ? (
+            <p className="mini-cart-more">
+              + {lines.length - PREVIEW_LIMIT} more in your cart
+            </p>
+          ) : null}
+
+          <div className="mini-cart-total">
+            <span>Subtotal</span>
+            <strong>{formatPrice(totals.subtotal)}</strong>
+          </div>
+
+          <div className="mini-cart-actions">
+            <Link href={ROUTES.cart} onClick={() => setOpen(false)}>
+              <Button block>View cart</Button>
+            </Link>
+            <Link href={ROUTES.checkout} onClick={() => setOpen(false)}>
+              <Button type="primary" block>
+                Checkout
+              </Button>
+            </Link>
+          </div>
+        </>
+      )}
+    </div>
+  );
+
+  return (
+    <Popover
+      content={panel}
+      open={open}
+      onOpenChange={setOpen}
+      trigger={["hover", "click"]}
+      placement="bottomRight"
+      arrow
+      // No `styles` override: antd already pads `.ant-popover-inner` by 12px
+      // from its `innerPadding` token, so `.mini-cart` carries width only and
+      // lets that token own the gutter rather than stacking a second one.
+      mouseEnterDelay={0.15}
+    >
+      <Link href={ROUTES.cart} className="header-action" aria-label="Cart">
+        <Badge
+          count={count}
+          size="small"
+          offset={[2, -2]}
+          className={bumping ? "is-bumping" : undefined}
+        >
+          <ShoppingCartOutlined style={{ color: "#fff", fontSize: 20 }} />
+        </Badge>
+        <span className="header-action-label">
+          <small>Cart</small>
+          <strong>{count} items</strong>
+        </span>
+      </Link>
+    </Popover>
+  );
+}

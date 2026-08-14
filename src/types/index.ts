@@ -114,3 +114,21 @@ export interface PlacedOrder {
   /** Optional: orders written by an earlier build predate this field. */
   paymentMethod?: PaymentMethod;
 }
+
+/**
+ * A single header-search typeahead row.
+ *
+ * Deliberately a narrow projection of `Product` rather than the whole thing —
+ * the suggestion endpoint is hit on every keystroke, and a full product carries
+ * a description, gallery and review list that the dropdown never renders.
+ */
+export interface SearchSuggestion {
+  id: string;
+  slug: string;
+  name: string;
+  brand: string;
+  category: string;
+  price: number;
+  listPrice: number;
+  image: string;
+}

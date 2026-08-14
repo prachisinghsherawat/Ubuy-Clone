@@ -81,6 +81,11 @@ export function HeroCarousel({ products }: { products: Product[] }) {
         return (
           <div key={slide.title}>
             <section className="hero" style={{ background: slide.background }}>
+              {/* Decorative depth only — no content, so kept out of the a11y
+                  tree rather than described. */}
+              <span className="hero-orb hero-orb-a" aria-hidden="true" />
+              <span className="hero-orb hero-orb-b" aria-hidden="true" />
+
               <div className="hero-inner">
                 <div className="hero-copy">
                   <span className="hero-eyebrow">
