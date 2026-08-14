@@ -1311,6 +1311,160 @@ img {
   }
 }
 
+/* --------------------------------------------------------------- listing -- */
+
+.listing-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.listing-title {
+  margin: 0;
+  font-size: clamp(22px, 2.6vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.listing-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* The rail is always on screen from the `lg` breakpoint up, so the drawer
+   trigger is redundant there. */
+.listing-filter-trigger {
+  display: none;
+}
+
+.listing-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.listing-body {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.listing-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+@media (max-width: 992px) {
+  .listing-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Below `lg` the filters move into the drawer. */
+  .listing-rail {
+    display: none;
+  }
+
+  .listing-filter-trigger {
+    display: inline-flex;
+  }
+}
+
+/* ------------------------------------------------------------- checkout -- */
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.checkout-steps {
+  margin-bottom: 28px;
+}
+
+@media (max-width: 992px) {
+  .checkout-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Progress toward the free-shipping threshold, shown in the cart summary. */
+.ship-meter {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+
+.ship-meter span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-mint), var(--brand-amber));
+  transition: width 0.3s ease;
+}
+
+/* --------------------------------------------------------------- detail -- */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 320px;
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .detail-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  /* The buy box drops full-width beneath the gallery and the copy. */
+  .detail-buy {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.detail-title {
+  margin: 6px 0 10px;
+  font-size: clamp(20px, 2.4vw, 27px);
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--ink-muted);
+  font-size: 13.5px;
+}
+
+.review-card {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.review-card:last-child {
+  border-bottom: none;
+}
+
 /* ---------------------------------------------------------------- footer -- */
 
 .site-footer {
@@ -1408,7 +1562,10 @@ img {
   text-align: center;
 }
 
-.sticky-filters {
+/* `.sticky-filters` is the listing's filter rail; `.sticky-panel` is the same
+   behaviour for any other side column (the cart and checkout summaries). */
+.sticky-filters,
+.sticky-panel {
   position: sticky;
   top: calc(var(--header-height) + 16px);
 }
@@ -1417,7 +1574,8 @@ img {
    overridden per breakpoint above — it must not be hardcoded here. */
 @media (max-width: 992px) {
   .buy-box,
-  .sticky-filters {
+  .sticky-filters,
+  .sticky-panel {
     position: static;
   }
 }

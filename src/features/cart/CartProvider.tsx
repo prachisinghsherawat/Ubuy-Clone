@@ -15,7 +15,8 @@ import {
 } from "@/lib/persistentStore";
 import type { CartLine, CartLineView, CartTotals, Product } from "@/types";
 
-const MAX_QUANTITY = 10;
+/** Per-line cap. Exported so quantity pickers stop where the cart would clamp. */
+export const MAX_QUANTITY = 10;
 
 interface CartContextValue {
   lines: CartLineView[];

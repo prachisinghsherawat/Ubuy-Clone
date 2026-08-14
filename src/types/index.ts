@@ -101,11 +101,16 @@ export interface User {
   mobile: string;
 }
 
+export type PaymentMethod = "card" | "upi" | "cod";
+
 export interface PlacedOrder {
   id: string;
   placedAt: string;
   lines: CartLineView[];
   totals: CartTotals;
   address: ShippingAddress;
+  /** Only meaningful for card payments; other methods leave it blank. */
   cardLast4: string;
+  /** Optional: orders written by an earlier build predate this field. */
+  paymentMethod?: PaymentMethod;
 }

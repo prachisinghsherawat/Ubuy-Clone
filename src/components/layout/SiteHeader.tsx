@@ -42,7 +42,9 @@ export function SiteHeader() {
         {
           key: "orders",
           icon: <ShoppingOutlined />,
-          label: <Link href={ROUTES.cart}>Your Orders</Link>,
+          // There is no order history in this build — only the most recent
+          // order is kept, and that is what the success route renders.
+          label: <Link href={ROUTES.success}>Your Last Order</Link>,
         },
         {
           key: "wishlist",
