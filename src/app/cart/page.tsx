@@ -16,12 +16,14 @@ import { MAX_QUANTITY, useCart } from "@/features/cart/CartProvider";
 import { OrderSummary } from "@/features/cart/OrderSummary";
 import { useWishlist } from "@/features/wishlist/WishlistProvider";
 import { ROUTES } from "@/lib/constants";
-import { estimatedDelivery, formatPrice } from "@/lib/format";
+import { useCurrency } from "@/features/currency/CurrencyProvider";
+import { estimatedDelivery } from "@/lib/format";
 import type { CartLineView } from "@/types";
 
 function CartLine({ line }: { line: CartLineView }) {
   const { setQuantity, removeItem } = useCart();
   const { toggle } = useWishlist();
+  const { format } = useCurrency();
   const { message } = App.useApp();
 
   const saveForLater = () => {
@@ -107,7 +109,7 @@ function CartLine({ line }: { line: CartLineView }) {
         <PriceTag price={line.lineTotal} listPrice={line.product.listPrice * line.quantity} />
         {line.quantity > 1 ? (
           <p style={{ margin: "4px 0 0", fontSize: 12.5, color: "var(--ink-muted)" }}>
-            {formatPrice(line.product.price)} each
+            {format(line.product.price)} each
           </p>
         ) : null}
       </div>

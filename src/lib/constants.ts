@@ -27,6 +27,8 @@ export const STORAGE_KEYS = {
   session: "ubuy.session",
   address: "ubuy.address",
   lastOrder: "ubuy.lastOrder",
+  destination: "ubuy.destination",
+  recentSearches: "ubuy.recentSearches",
 } as const;
 
 /** Free shipping above this order value, otherwise FLAT_SHIPPING applies. */

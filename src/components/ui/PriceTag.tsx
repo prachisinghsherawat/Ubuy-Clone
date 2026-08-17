@@ -1,4 +1,7 @@
-import { discountPercent, formatPrice } from "@/lib/format";
+"use client";
+
+import { useCurrency } from "@/features/currency/CurrencyProvider";
+import { discountPercent } from "@/lib/format";
 
 interface PriceTagProps {
   price: number;
@@ -8,16 +11,19 @@ interface PriceTagProps {
 }
 
 export function PriceTag({ price, listPrice, size = "default" }: PriceTagProps) {
+  // Amounts are stored in the base currency; the provider converts to whatever
+  // destination the shopper picked in the header.
+  const { format } = useCurrency();
   const off = discountPercent(price, listPrice);
 
   return (
     <div className="price-row">
       <span className="price-now" style={size === "large" ? { fontSize: 30 } : undefined}>
-        {formatPrice(price)}
+        {format(price)}
       </span>
       {off > 0 ? (
         <>
-          <span className="price-was">{formatPrice(listPrice)}</span>
+          <span className="price-was">{format(listPrice)}</span>
           <span className="price-off">{off}% off</span>
         </>
       ) : null}

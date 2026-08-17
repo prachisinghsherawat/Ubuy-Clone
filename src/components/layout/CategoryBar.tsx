@@ -17,17 +17,6 @@ import {
 import { categoryIcon } from "@/features/products/components/categoryIcons";
 import { ROUTES } from "@/lib/constants";
 
-/**
- * Category navigation.
- *
- * Reads the active category off the query string, so the highlighted tab tracks
- * what the listing page is actually filtered to. That makes this component
- * dependent on URL data — see the Suspense boundary at its mount site.
- *
- * The strip is a native horizontal scroller; the arrows are a progressive
- * enhancement that page it, and they hide themselves at each end so they never
- * sit there inert.
- */
 export function CategoryBar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -45,9 +34,6 @@ export function CategoryBar() {
     if (!track) return;
     const maxScroll = track.scrollWidth - track.clientWidth;
     setAtStart(track.scrollLeft <= 1);
-    // A sub-pixel gap can survive a full scroll, so allow a small tolerance.
-    // `maxScroll <= 1` also covers the case where everything already fits and
-    // neither arrow should appear.
     setAtEnd(track.scrollLeft >= maxScroll - 1);
   }, []);
 
@@ -80,7 +66,9 @@ export function CategoryBar() {
         <LeftOutlined />
       </button>
 
-      <div className="container category-bar-inner" ref={trackRef} onScroll={sync}>
+      {/* Not a `.container`: this now sits inside the nav row's own container,
+          beside the mega-menu trigger, so it fills the remaining width. */}
+      <div className="category-bar-inner" ref={trackRef} onScroll={sync}>
         <Link
           href={ROUTES.products}
           className="category-link"

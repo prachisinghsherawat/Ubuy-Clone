@@ -1,32 +1,49 @@
 "use client";
 
-import { FireOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Input } from "antd";
+import {
+  ClockCircleOutlined,
+  CloseOutlined,
+  FireOutlined,
+  LoadingOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Button, Input, Select } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
-import { ROUTES } from "@/lib/constants";
-import { formatPrice } from "@/lib/format";
-import type { SearchSuggestion } from "@/types";
+import { useCurrency } from "@/features/currency/CurrencyProvider";
+import { ROUTES, STORAGE_KEYS } from "@/lib/constants";
+import { createPersistentStore, usePersistentValue } from "@/lib/persistentStore";
+import type { Category, SearchSuggestion } from "@/types";
 
 /** Keystrokes settle for this long before a request goes out. */
 const DEBOUNCE_MS = 220;
 const MIN_QUERY_LENGTH = 2;
+const MAX_RECENT = 6;
 
-const TRENDING = [
-  "iPhone",
-  "Laptop",
-  "Perfume",
-  "Sunglasses",
-  "Watch",
-  "Groceries",
-];
+const TRENDING = ["iPhone", "Laptop", "Perfume", "Sunglasses", "Watch", "Groceries"];
 
-export function HeaderSearch() {
+/** Recent queries survive reloads and sync across tabs, like a real storefront. */
+const recentStore = createPersistentStore<string[]>(STORAGE_KEYS.recentSearches, []);
+
+function remember(query: string): void {
+  recentStore.set((current) => {
+    // Case-insensitive de-dupe, most recent first, capped.
+    const withoutMatch = current.filter(
+      (entry) => entry.toLowerCase() !== query.toLowerCase(),
+    );
+    return [query, ...withoutMatch].slice(0, MAX_RECENT);
+  });
+}
+
+export function HeaderSearch({ categories }: { categories: Category[] }) {
   const router = useRouter();
+  const { format } = useCurrency();
   const [term, setTerm] = useState("");
+  /** Category slug the search is scoped to; "" means the whole catalogue. */
+  const [scope, setScope] = useState("");
   /**
    * The last completed fetch, tagged with the query that produced it.
    *
@@ -45,6 +62,7 @@ export function HeaderSearch() {
   const [activeIndex, setActiveIndex] = useState(-1);
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const recent = usePersistentValue(recentStore);
   const query = term.trim();
   const showTrending = query.length < MIN_QUERY_LENGTH;
 
@@ -90,7 +108,7 @@ export function HeaderSearch() {
   // Guards the highlight against a result list that shrank under it.
   const highlighted = activeIndex < results.length ? activeIndex : -1;
 
-  // Close when focus or a click lands outside the whole search block.
+  // Close when a click lands outside the whole search block.
   useEffect(() => {
     if (!open) return;
 
@@ -109,7 +127,15 @@ export function HeaderSearch() {
 
   const submit = (value = query) => {
     const trimmed = value.trim();
-    go(trimmed ? `${ROUTES.products}?q=${encodeURIComponent(trimmed)}` : ROUTES.products);
+    if (!trimmed) {
+      go(scope ? `${ROUTES.products}?category=${scope}` : ROUTES.products);
+      return;
+    }
+
+    remember(trimmed);
+    const params = new URLSearchParams({ q: trimmed });
+    if (scope) params.set("category", scope);
+    go(`${ROUTES.products}?${params.toString()}`);
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -122,6 +148,7 @@ export function HeaderSearch() {
       const active = results[highlighted];
       if (active) {
         event.preventDefault();
+        remember(query);
         go(ROUTES.product(active.slug));
       } else {
         submit();
@@ -144,6 +171,14 @@ export function HeaderSearch() {
       return next;
     });
   };
+
+  const scopeOptions = [
+    { value: "", label: "All" },
+    ...categories.map((category) => ({
+      value: category.slug,
+      label: category.label,
+    })),
+  ];
 
   return (
     <div className="header-search" ref={rootRef}>
@@ -169,6 +204,18 @@ export function HeaderSearch() {
         aria-activedescendant={
           highlighted >= 0 ? `header-search-option-${highlighted}` : undefined
         }
+        addonBefore={
+          <Select
+            value={scope}
+            onChange={setScope}
+            options={scopeOptions}
+            // Scoping the query is a refinement, not a jump — the listing only
+            // filters once the search is actually submitted.
+            popupMatchSelectWidth={220}
+            className="search-scope"
+            aria-label="Search within category"
+          />
+        }
         suffix={
           <Button
             type="primary"
@@ -184,6 +231,48 @@ export function HeaderSearch() {
         <div className="search-panel" id="header-search-panel">
           {showTrending ? (
             <>
+              {recent.length ? (
+                <>
+                  <p className="search-panel-head">
+                    <ClockCircleOutlined /> Recent searches
+                    <button
+                      type="button"
+                      className="search-clear"
+                      onClick={() => recentStore.set([])}
+                    >
+                      Clear
+                    </button>
+                  </p>
+                  <div className="search-chips">
+                    {recent.map((item) => (
+                      <span key={item} className="search-chip search-chip-recent">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTerm(item);
+                            submit(item);
+                          }}
+                        >
+                          {item}
+                        </button>
+                        <button
+                          type="button"
+                          className="search-chip-remove"
+                          aria-label={`Remove ${item} from recent searches`}
+                          onClick={() =>
+                            recentStore.set((current) =>
+                              current.filter((entry) => entry !== item),
+                            )
+                          }
+                        >
+                          <CloseOutlined />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+
               <p className="search-panel-head">
                 <FireOutlined /> Trending searches
               </p>
@@ -218,7 +307,10 @@ export function HeaderSearch() {
                       href={ROUTES.product(item.slug)}
                       className="search-result"
                       data-active={index === highlighted}
-                      onClick={() => setOpen(false)}
+                      onClick={() => {
+                        remember(query);
+                        setOpen(false);
+                      }}
                       onMouseEnter={() => setActiveIndex(index)}
                     >
                       <span className="search-result-media">
@@ -230,9 +322,7 @@ export function HeaderSearch() {
                           {item.brand} · {item.category}
                         </small>
                       </span>
-                      <span className="search-result-price">
-                        {formatPrice(item.price)}
-                      </span>
+                      <span className="search-result-price">{format(item.price)}</span>
                     </Link>
                   </li>
                 ))}

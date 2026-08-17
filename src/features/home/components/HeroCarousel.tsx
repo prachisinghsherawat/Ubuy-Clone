@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ROUTES } from "@/lib/constants";
-import { formatPrice } from "@/lib/format";
+import { useCurrency } from "@/features/currency/CurrencyProvider";
 import type { Product } from "@/types";
 
 interface Slide {
@@ -61,6 +61,8 @@ const SLIDES: Slide[] = [
 ];
 
 export function HeroCarousel({ products }: { products: Product[] }) {
+  const { format } = useCurrency();
+
   return (
     <Carousel
       // `dotDuration` animates the active dot across the autoplay interval, so
@@ -139,7 +141,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
                     />
                     <span className="hero-price">
                       <small>{product.brand}</small>
-                      <strong>{formatPrice(product.price)}</strong>
+                      <strong>{format(product.price)}</strong>
                     </span>
                   </Link>
                 ) : null}

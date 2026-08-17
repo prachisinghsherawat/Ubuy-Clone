@@ -8,22 +8,16 @@ import { useEffect, useRef, useState } from "react";
 
 import { useCart } from "@/features/cart/CartProvider";
 import { FREE_SHIPPING_THRESHOLD, ROUTES } from "@/lib/constants";
-import { formatPrice } from "@/lib/format";
+import { useCurrency } from "@/features/currency/CurrencyProvider";
 
-/** Lines shown in the preview before it defers to the full cart page. */
+
 const PREVIEW_LIMIT = 3;
 
 export function MiniCart() {
   const { lines, totals, hydrated, removeItem } = useCart();
+  const { format } = useCurrency();
   const [open, setOpen] = useState(false);
-  /** Drives the one-shot bump on the badge when the count goes up. */
   const [bumping, setBumping] = useState(false);
-  /**
-   * Last count we compared against. `null` until the first post-hydration pass,
-   * which is what separates "a saved cart was just restored" — no animation —
-   * from "the shopper added something". A plain `0` sentinel cannot express
-   * that difference, and would swallow the bump on the very first item added.
-   */
   const baseline = useRef<number | null>(null);
 
   const count = hydrated ? totals.itemCount : 0;
@@ -61,7 +55,7 @@ export function MiniCart() {
           <div className="mini-cart-ship">
             {remaining > 0 ? (
               <span>
-                Add <strong>{formatPrice(remaining)}</strong> for free delivery
+                Add <strong>{format(remaining)}</strong> for free delivery
               </span>
             ) : (
               <span className="mini-cart-ship-done">
@@ -91,7 +85,7 @@ export function MiniCart() {
                     {line.product.name}
                   </Link>
                   <small>
-                    {line.quantity} × {formatPrice(line.product.price)}
+                    {line.quantity} × {format(line.product.price)}
                   </small>
                 </div>
                 <Button
@@ -113,7 +107,7 @@ export function MiniCart() {
 
           <div className="mini-cart-total">
             <span>Subtotal</span>
-            <strong>{formatPrice(totals.subtotal)}</strong>
+            <strong>{format(totals.subtotal)}</strong>
           </div>
 
           <div className="mini-cart-actions">

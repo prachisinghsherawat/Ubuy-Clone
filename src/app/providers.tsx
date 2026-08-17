@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 
 import { AuthProvider } from "@/features/auth/AuthProvider";
 import { CartProvider } from "@/features/cart/CartProvider";
+import { CurrencyProvider } from "@/features/currency/CurrencyProvider";
 import { WishlistProvider } from "@/features/wishlist/WishlistProvider";
 import { themeConfig } from "@/theme/themeConfig";
 
@@ -21,11 +22,15 @@ export function AppProviders({ children }: { children: ReactNode }) {
     <AntdRegistry>
       <ConfigProvider theme={themeConfig}>
         <AntdApp>
-          <AuthProvider>
-            <WishlistProvider>
-              <CartProvider>{children}</CartProvider>
-            </WishlistProvider>
-          </AuthProvider>
+          {/* Currency wraps the commerce providers: every price the cart and
+              checkout render is formatted through it. */}
+          <CurrencyProvider>
+            <AuthProvider>
+              <WishlistProvider>
+                <CartProvider>{children}</CartProvider>
+              </WishlistProvider>
+            </AuthProvider>
+          </CurrencyProvider>
         </AntdApp>
       </ConfigProvider>
     </AntdRegistry>

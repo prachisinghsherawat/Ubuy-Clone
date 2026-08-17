@@ -10,7 +10,8 @@ import { lastOrderStore } from "@/features/checkout/checkoutStores";
 import { CheckoutSteps } from "@/features/checkout/CheckoutSteps";
 import { EmptyCartNotice } from "@/features/checkout/EmptyCartNotice";
 import { ROUTES } from "@/lib/constants";
-import { estimatedDelivery, formatPrice } from "@/lib/format";
+import { useCurrency } from "@/features/currency/CurrencyProvider";
+import { estimatedDelivery } from "@/lib/format";
 import { useHydrated, usePersistentValue } from "@/lib/persistentStore";
 import type { PlacedOrder } from "@/types";
 
@@ -29,6 +30,7 @@ function paymentLabel(order: PlacedOrder): string {
 export default function SuccessPage() {
   const order = usePersistentValue(lastOrderStore);
   const hydrated = useHydrated();
+  const { format } = useCurrency();
 
   if (!hydrated) {
     return (
@@ -148,7 +150,7 @@ export default function SuccessPage() {
               </div>
 
               <div className="cart-line-total" style={{ textAlign: "right" }}>
-                <strong>{formatPrice(line.lineTotal)}</strong>
+                <strong>{format(line.lineTotal)}</strong>
               </div>
             </div>
           ))}

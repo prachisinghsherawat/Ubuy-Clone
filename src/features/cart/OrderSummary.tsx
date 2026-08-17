@@ -5,7 +5,7 @@ import { Divider } from "antd";
 import type { ReactNode } from "react";
 
 import { FREE_SHIPPING_THRESHOLD } from "@/lib/constants";
-import { formatPrice } from "@/lib/format";
+import { useCurrency } from "@/features/currency/CurrencyProvider";
 import type { CartTotals } from "@/types";
 
 interface OrderSummaryProps {
@@ -27,6 +27,7 @@ export function OrderSummary({
   action,
   showShippingMeter = true,
 }: OrderSummaryProps) {
+  const { format } = useCurrency();
   const remaining = FREE_SHIPPING_THRESHOLD - totals.subtotal;
   const qualifies = remaining <= 0;
   const progress = Math.min(100, (totals.subtotal / FREE_SHIPPING_THRESHOLD) * 100);
@@ -39,14 +40,14 @@ export function OrderSummary({
         <span>
           Items ({totals.itemCount})
         </span>
-        <strong>{formatPrice(totals.subtotal)}</strong>
+        <strong>{format(totals.subtotal)}</strong>
       </div>
 
       {totals.savings > 0 ? (
         <div className="summary-row">
           <span>Discount</span>
           <strong style={{ color: "var(--brand-mint)" }}>
-            −{formatPrice(totals.savings)}
+            −{format(totals.savings)}
           </strong>
         </div>
       ) : null}
@@ -54,20 +55,20 @@ export function OrderSummary({
       <div className="summary-row">
         <span>Shipping</span>
         <strong style={{ color: totals.shipping === 0 ? "var(--brand-mint)" : undefined }}>
-          {totals.shipping === 0 ? "Free" : formatPrice(totals.shipping)}
+          {totals.shipping === 0 ? "Free" : format(totals.shipping)}
         </strong>
       </div>
 
       <div className="summary-row">
         <span>Estimated tax</span>
-        <strong>{formatPrice(totals.tax)}</strong>
+        <strong>{format(totals.tax)}</strong>
       </div>
 
       <Divider style={{ margin: "12px 0" }} />
 
       <div className="summary-row summary-total">
         <span>Total</span>
-        <span>{formatPrice(totals.total)}</span>
+        <span>{format(totals.total)}</span>
       </div>
 
       {showShippingMeter && totals.itemCount > 0 ? (
@@ -79,7 +80,7 @@ export function OrderSummary({
             </span>
           ) : (
             <>
-              Add <strong>{formatPrice(remaining)}</strong> more for free shipping.
+              Add <strong>{format(remaining)}</strong> more for free shipping.
             </>
           )}
           <div className="ship-meter" aria-hidden="true">

@@ -16,7 +16,7 @@ import { PriceTag } from "@/components/ui/PriceTag";
 import { MAX_QUANTITY, useCart } from "@/features/cart/CartProvider";
 import { WishlistButton } from "@/features/wishlist/WishlistButton";
 import { ROUTES } from "@/lib/constants";
-import { formatPrice } from "@/lib/format";
+import { useCurrency } from "@/features/currency/CurrencyProvider";
 import type { Product } from "@/types";
 
 interface ProductBuyBoxProps {
@@ -30,6 +30,7 @@ const LOW_STOCK_THRESHOLD = 20;
 export function ProductBuyBox({ product, deliveryDate }: ProductBuyBoxProps) {
   const router = useRouter();
   const { addItem, isInCart } = useCart();
+  const { format } = useCurrency();
   const { message } = App.useApp();
 
   const minQuantity = Math.max(1, product.minimumOrderQuantity ?? 1);
@@ -56,7 +57,7 @@ export function ProductBuyBox({ product, deliveryDate }: ProductBuyBoxProps) {
       <PriceTag price={product.price} listPrice={product.listPrice} size="large" />
 
       <p style={{ margin: "6px 0 14px", fontSize: 13, color: "var(--ink-muted)" }}>
-        Inclusive of all taxes · {formatPrice(product.price * quantity)} for {quantity}{" "}
+        Inclusive of all taxes · {format(product.price * quantity)} for {quantity}{" "}
         {quantity === 1 ? "unit" : "units"}
       </p>
 

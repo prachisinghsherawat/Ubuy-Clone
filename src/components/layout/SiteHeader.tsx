@@ -2,11 +2,9 @@
 
 import {
   DownOutlined,
-  GlobalOutlined,
   HeartOutlined,
   LogoutOutlined,
   ShoppingOutlined,
-  TruckOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { App, Badge, Dropdown, type MenuProps } from "antd";
@@ -14,17 +12,29 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { CategoryBar } from "@/components/layout/CategoryBar";
+import { DeliverTo } from "@/components/layout/DeliverTo";
 import { HeaderSearch } from "@/components/layout/HeaderSearch";
+import { MegaMenu } from "@/components/layout/MegaMenu";
 import { MiniCart } from "@/components/layout/MiniCart";
+import { MobileNav } from "@/components/layout/MobileNav";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { useWishlist } from "@/features/wishlist/WishlistProvider";
 import { ROUTES, SITE } from "@/lib/constants";
+import type { Category, SearchSuggestion } from "@/types";
 
 /** Scroll depth at which the header condenses. */
 const CONDENSE_AT = 40;
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  /** Live catalogue taxonomy, fetched once in the root layout. */
+  categories: Category[];
+  /** Top-rated products for the mega menu's merchandising strip. */
+  trending: SearchSuggestion[];
+}
+
+export function SiteHeader({ categories, trending }: SiteHeaderProps) {
   const router = useRouter();
   const { message } = App.useApp();
   const { ids: wishlistIds } = useWishlist();
@@ -109,30 +119,24 @@ export function SiteHeader() {
     <header className="site-header" data-condensed={condensed}>
       <div className="header-strip">
         <div className="container header-strip-inner">
-          <span>
-            <TruckOutlined /> Free delivery on orders above ₹25,000 · Ships from 100+
-            countries
+          <AnnouncementBar />
+          <span className="header-strip-support">
+            Customer care {SITE.supportPhone}
           </span>
-          <span>Customer care {SITE.supportPhone}</span>
         </div>
       </div>
 
       <div className="container header-main">
+        <MobileNav categories={categories} />
+
         <Link href={ROUTES.home} className="header-brand" aria-label="Ubuy home">
           U<span>buy</span>
         </Link>
 
-        <HeaderSearch />
+        <HeaderSearch categories={categories} />
 
         <div className="header-actions">
-          <button type="button" className="header-action">
-            <GlobalOutlined />
-            <span className="header-action-label">
-              <small>Deliver to</small>
-              <strong>India</strong>
-            </span>
-            <DownOutlined style={{ fontSize: 10, opacity: 0.7 }} />
-          </button>
+          <DeliverTo />
 
           <Dropdown menu={{ items: accountItems }} placement="bottomRight" arrow>
             <button type="button" className="header-action">
@@ -159,12 +163,19 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* CategoryBar reads the query string to mark the active tab. Isolating it
-          behind Suspense keeps the rest of the header prerenderable — without a
-          boundary, a static route calling useSearchParams fails the build. */}
-      <Suspense fallback={<div className="category-bar category-bar-placeholder" />}>
-        <CategoryBar />
-      </Suspense>
+      <div className="header-nav">
+        <div className="container header-nav-inner">
+          <MegaMenu categories={categories} trending={trending} />
+
+          {/* CategoryBar reads the query string to mark the active tab.
+              Isolating it behind Suspense keeps the rest of the header
+              prerenderable — without a boundary, a static route calling
+              useSearchParams fails the build. */}
+          <Suspense fallback={<div className="category-bar-placeholder" />}>
+            <CategoryBar />
+          </Suspense>
+        </div>
+      </div>
     </header>
   );
 }
