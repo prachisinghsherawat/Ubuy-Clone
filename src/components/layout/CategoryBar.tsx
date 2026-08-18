@@ -42,7 +42,6 @@ export function CategoryBar() {
     const track = trackRef.current;
     if (!track) return;
 
-    // The tab list is fixed, but the viewport that has to hold it is not.
     const observer = new ResizeObserver(sync);
     observer.observe(track);
     return () => observer.disconnect();
@@ -66,8 +65,6 @@ export function CategoryBar() {
         <LeftOutlined />
       </button>
 
-      {/* Not a `.container`: this now sits inside the nav row's own container,
-          beside the mega-menu trigger, so it fills the remaining width. */}
       <div className="category-bar-inner" ref={trackRef} onScroll={sync}>
         <Link
           href={ROUTES.products}

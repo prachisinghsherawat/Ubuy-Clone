@@ -7,15 +7,6 @@ import { useState } from "react";
 import { useCurrency } from "@/features/currency/CurrencyProvider";
 import { DESTINATIONS } from "@/features/currency/destinations";
 
-/**
- * Shipping destination and currency picker.
- *
- * Choosing a country switches the currency every price on the site is quoted
- * in, converted at the live rate the `/api/rates` handler fetched. The panel
- * says which of those two it is showing — a live quote or the built-in
- * indicative table — because quoting a stale rate as fact is worse than
- * admitting the feed is down.
- */
 export function DeliverTo() {
   const { destination, setCountry, live, updatedAt } = useCurrency();
   const [open, setOpen] = useState(false);
