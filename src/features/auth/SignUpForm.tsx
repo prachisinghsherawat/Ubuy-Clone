@@ -44,7 +44,7 @@ export function SignUpForm() {
       <h1 style={{ margin: "0 0 6px", fontSize: 26, fontWeight: 700 }}>Create account</h1>
       <p style={{ margin: "0 0 24px", color: "var(--ink-muted)" }}>
         Already registered?{" "}
-        <Link href={ROUTES.signIn} style={{ color: "var(--brand-orange)", fontWeight: 600 }}>
+        <Link href={ROUTES.signIn} style={{ color: "var(--brand-coral)", fontWeight: 600 }}>
           Sign in
         </Link>
       </p>

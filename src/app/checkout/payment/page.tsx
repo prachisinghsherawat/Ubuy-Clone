@@ -133,7 +133,7 @@ export default function PaymentPage() {
           <p style={{ margin: "0 0 16px", color: "var(--ink-muted)", fontSize: 14 }}>
             Delivering to <strong>{address.fullName}</strong>, {address.addressLine},{" "}
             {address.city}, {address.state} {address.pincode}{" "}
-            <Link href={ROUTES.checkout} style={{ color: "var(--brand-orange)" }}>
+            <Link href={ROUTES.checkout} style={{ color: "var(--brand-coral)" }}>
               Change
             </Link>
           </p>

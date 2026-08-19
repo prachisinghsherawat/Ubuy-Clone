@@ -7,7 +7,7 @@ import {
   LoadingOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Select } from "antd";
+import { Button, Input, Select, Space } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -64,7 +64,7 @@ export function HeaderSearch({ categories }: { categories: Category[] }) {
       try {
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
           signal: controller.signal,
-        });
+          });
         const data = (await response.json()) as { results: SearchSuggestion[] };
         setFetched({ query, results: data.results });
       } catch {
@@ -152,46 +152,50 @@ export function HeaderSearch({ categories }: { categories: Category[] }) {
 
   return (
     <div className="header-search" ref={rootRef}>
-      <Input
-        size="large"
-        allowClear
-        value={term}
-        onChange={(event) => {
-          setTerm(event.target.value);
-          setOpen(true);
-          setActiveIndex(-1);
-        }}
-        onFocus={() => setOpen(true)}
-        onKeyDown={onKeyDown}
-        placeholder="Search for products, brands and categories"
-        aria-label="Search products"
-        role="combobox"
-        aria-expanded={open}
-        aria-controls="header-search-panel"
-        aria-autocomplete="list"
-        aria-activedescendant={
-          highlighted >= 0 ? `header-search-option-${highlighted}` : undefined
-        }
-        addonBefore={
-          <Select
-            value={scope}
-            onChange={setScope}
-            options={scopeOptions}
-            popupMatchSelectWidth={220}
-            className="search-scope"
-            aria-label="Search within category"
-          />
-        }
-        suffix={
-          <Button
-            type="primary"
-            icon={loading ? <LoadingOutlined /> : <SearchOutlined />}
-            onClick={() => submit()}
-            aria-label="Search"
-          />
-        }
-        styles={{ root: { paddingInlineEnd: 4 } }}
-      />
+      {/* `Space.Compact` rather than the Input's `addonBefore`: that prop is
+          deprecated in antd 6 and renders the scope picker as an unstyled
+          block, which showed up as an empty white box beside the field. */}
+      <Space.Compact className="header-search-field">
+        <Select
+          value={scope}
+          onChange={setScope}
+          options={scopeOptions}
+          popupMatchSelectWidth={220}
+          size="large"
+          className="search-scope"
+          aria-label="Search within category"
+        />
+        <Input
+          size="large"
+          allowClear
+          value={term}
+          onChange={(event) => {
+            setTerm(event.target.value);
+            setOpen(true);
+            setActiveIndex(-1);
+          }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={onKeyDown}
+          placeholder="Search for products, brands and categories"
+          aria-label="Search products"
+          role="combobox"
+          aria-expanded={open}
+          aria-controls="header-search-panel"
+          aria-autocomplete="list"
+          aria-activedescendant={
+            highlighted >= 0 ? `header-search-option-${highlighted}` : undefined
+          }
+          suffix={
+            <Button
+              type="primary"
+              icon={loading ? <LoadingOutlined /> : <SearchOutlined />}
+              onClick={() => submit()}
+              aria-label="Search"
+            />
+          }
+          styles={{ root: { paddingInlineEnd: 4 } }}
+        />
+      </Space.Compact>
 
       {open ? (
         <div className="search-panel" id="header-search-panel">

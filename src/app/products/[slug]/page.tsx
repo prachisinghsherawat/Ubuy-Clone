@@ -4,7 +4,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { getProductBySlug, getRelated } from "@/features/products/api/catalogue";
+import {
+  getCatalogue,
+  getProductBySlug,
+  getRelated,
+} from "@/features/products/api/catalogue";
 import { ProductBuyBox } from "@/features/products/components/ProductBuyBox";
 import { ProductGallery } from "@/features/products/components/ProductGallery";
 import { ProductRail } from "@/features/products/components/ProductRail";
@@ -12,6 +16,11 @@ import { ProductTabs } from "@/features/products/components/ProductTabs";
 import { categoryLabel } from "@/features/products/data/categories";
 import { ROUTES } from "@/lib/constants";
 import { estimatedDelivery, formatCount } from "@/lib/format";
+
+export async function generateStaticParams() {
+  const catalogue = await getCatalogue();
+  return catalogue.map((product) => ({ slug: product.slug }));
+}
 
 export async function generateMetadata(
   props: PageProps<"/products/[slug]">,
@@ -62,7 +71,7 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
         <div>
           <Link
             href={`${ROUTES.products}?brand=${encodeURIComponent(product.brand)}`}
-            style={{ color: "var(--brand-orange)", fontWeight: 600, fontSize: 13.5 }}
+            style={{ color: "var(--brand-coral)", fontWeight: 600, fontSize: 13.5 }}
           >
             {product.brand}
           </Link>

@@ -38,7 +38,7 @@ export function SignInForm() {
       <h1 style={{ margin: "0 0 6px", fontSize: 26, fontWeight: 700 }}>Sign in</h1>
       <p style={{ margin: "0 0 24px", color: "var(--ink-muted)" }}>
         New here?{" "}
-        <Link href={ROUTES.signUp} style={{ color: "var(--brand-orange)", fontWeight: 600 }}>
+        <Link href={ROUTES.signUp} style={{ color: "var(--brand-coral)", fontWeight: 600 }}>
           Create an account
         </Link>
       </p>
@@ -86,7 +86,7 @@ export function SignInForm() {
           }}
         >
           <Checkbox defaultChecked>Keep me signed in</Checkbox>
-          <Link href="#" style={{ fontSize: 13, color: "var(--brand-orange)" }}>
+          <Link href="#" style={{ fontSize: 13, color: "var(--brand-coral)" }}>
             Forgot password?
           </Link>
         </div>

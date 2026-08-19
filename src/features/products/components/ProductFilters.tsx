@@ -116,7 +116,7 @@ export function ProductFilters({
                 padding: "4px 8px",
                 border: "1px solid",
                 borderColor:
-                  state.minRating === value ? "var(--brand-orange)" : "transparent",
+                  state.minRating === value ? "var(--brand-coral)" : "transparent",
                 borderRadius: "var(--radius-sm)",
                 background: "transparent",
                 cursor: "pointer",

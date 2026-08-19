@@ -115,7 +115,7 @@ export function ProductBuyBox({ product, deliveryDate }: ProductBuyBoxProps) {
           style={{
             background: "var(--brand-amber)",
             borderColor: "var(--brand-amber)",
-            color: "var(--brand-navy-deep)",
+            color: "var(--brand-plum-deep)",
             fontWeight: 600,
           }}
         >

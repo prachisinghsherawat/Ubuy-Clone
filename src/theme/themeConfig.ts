@@ -2,42 +2,47 @@ import type { ThemeConfig } from "antd";
 
 /** Brand palette. Mirrored as CSS variables in globals.css for plain elements. */
 export const brand = {
-  navy: "#0f2540",
-  navyDeep: "#0a1b2e",
-  orange: "#e2571f",
-  amber: "#ffb100",
-  mint: "#0f9d76",
-  ink: "#1a2434",
-  muted: "#63707f",
-  line: "#e6eaef",
+  plum: "#4a2743",
+  plumDeep: "#331a2e",
+  coral: "#ff6a3d",
+  amber: "#ffb43d",
+  mint: "#17b98a",
+  ink: "#33262e",
+  muted: "#7c6b75",
+  line: "#f2e6e4",
   surface: "#ffffff",
-  canvas: "#f5f7fa",
+  canvas: "#fff6f1",
 } as const;
 
 export const themeConfig: ThemeConfig = {
   token: {
-    colorPrimary: brand.orange,
-    colorInfo: brand.navy,
+    colorPrimary: brand.coral,
+    colorInfo: brand.plum,
     colorSuccess: brand.mint,
-    colorLink: brand.navy,
+    colorLink: brand.plum,
     colorTextBase: brand.ink,
     colorBgLayout: brand.canvas,
-    borderRadius: 10,
-    fontSize: 15,
+    borderRadius: 16,
+    fontSize: 16,
     fontFamily: "var(--font-geist-sans), system-ui, -apple-system, sans-serif",
-    controlHeight: 40,
+    controlHeight: 44,
     wireframe: false,
   },
   components: {
     Button: {
-      fontWeight: 600,
+      fontWeight: 650,
+      borderRadius: 999,
+      borderRadiusLG: 999,
+      borderRadiusSM: 999,
+      paddingInline: 22,
+      paddingInlineLG: 30,
       primaryShadow: "none",
       defaultShadow: "none",
       controlHeightLG: 48,
     },
     Card: {
       paddingLG: 20,
-      headerFontSize: 16,
+      headerFontSize: 17,
     },
     // Hero carousel chrome. Sizing and offsets are real design tokens in antd 6,
     // so they belong here rather than in a stylesheet override; globals.css only
@@ -52,20 +57,22 @@ export const themeConfig: ThemeConfig = {
       dotOffset: 28,
     },
     Input: {
-      paddingBlock: 8,
+      paddingBlock: 10,
+      borderRadius: 14,
     },
     Menu: {
-      itemBorderRadius: 8,
+      itemBorderRadius: 12,
       itemHeight: 40,
     },
     Steps: {
-      colorPrimary: brand.orange,
+      colorPrimary: brand.coral,
     },
     Tag: {
-      borderRadiusSM: 6,
+      borderRadiusSM: 999,
+      defaultBg: "#fff1ea",
     },
     Table: {
-      headerBg: "#f7f9fb",
+      headerBg: "#fff3ec",
     },
   },
 };

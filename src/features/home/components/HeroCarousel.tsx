@@ -38,7 +38,7 @@ const SLIDES: Slide[] = [
     cta: "Start shopping",
     href: ROUTES.products,
     background:
-      "radial-gradient(circle at 80% 20%, rgba(255,177,0,0.32), transparent 55%), linear-gradient(135deg, #0f2540 0%, #1d4f7c 100%)",
+      "radial-gradient(circle at 80% 20%, rgba(255,180,61,0.34), transparent 55%), linear-gradient(135deg, #3d1f36 0%, #a4432f 100%)",
   },
   {
     eyebrow: "Tech week",
@@ -47,7 +47,7 @@ const SLIDES: Slide[] = [
     cta: "Shop electronics",
     href: `${ROUTES.products}?category=smartphones`,
     background:
-      "radial-gradient(circle at 75% 30%, rgba(226,87,31,0.38), transparent 55%), linear-gradient(135deg, #2a1a4d 0%, #4b2a86 100%)",
+      "radial-gradient(circle at 75% 30%, rgba(255,106,61,0.40), transparent 55%), linear-gradient(135deg, #40203c 0%, #8c3a6b 100%)",
   },
   {
     eyebrow: "Beauty & fragrance",
@@ -56,7 +56,7 @@ const SLIDES: Slide[] = [
     cta: "Shop beauty",
     href: `${ROUTES.products}?category=fragrances`,
     background:
-      "radial-gradient(circle at 78% 25%, rgba(255,177,0,0.28), transparent 52%), linear-gradient(135deg, #6d1b3f 0%, #a83a63 100%)",
+      "radial-gradient(circle at 78% 25%, rgba(255,180,61,0.30), transparent 52%), linear-gradient(135deg, #7a1f3e 0%, #c95570 100%)",
   },
 ];
 

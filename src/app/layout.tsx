@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { BackToTop } from "@/components/layout/BackToTop";
@@ -10,6 +10,7 @@ import {
 } from "@/features/products/api/catalogue";
 import { toCategories } from "@/features/products/data/categories";
 import { SITE } from "@/lib/constants";
+import { siteUrl } from "@/lib/site-url";
 import { AppProviders } from "./providers";
 import "./globals.css";
 
@@ -24,12 +25,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // Makes every relative OG/canonical URL in child metadata resolve absolutely.
+  metadataBase: new URL(siteUrl()),
   title: {
     default: `${SITE.name} — ${SITE.tagline}`,
     template: `%s · ${SITE.name}`,
   },
   description:
     "A Next.js and Ant Design rebuild of the Ubuy storefront: browse the catalogue, filter by brand and price, and run through a full cart and checkout flow.",
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    locale: "en_IN",
+  },
+};
+
+/** Split from `metadata`: Next serves these as their own meta tags. */
+export const viewport: Viewport = {
+  themeColor: "#ff6a00",
+  colorScheme: "light",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

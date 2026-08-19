@@ -63,10 +63,12 @@ export function AnnouncementBar() {
         </span>
       ))}
       {/* Holds the strip's width and height while every line above is
-          absolutely positioned out of flow. Uses the longest message so the
-          reserved box never clips a rotation. */}
+          absolutely positioned out of flow. It mirrors an item exactly — icon,
+          gap and the longest message — because reserving the text alone left
+          the icon's width unaccounted for and `.announce` clipped the tail of
+          the longest line. */}
       <span className="announce-spacer" aria-hidden="true">
-        {LONGEST}
+        {MESSAGES[0].icon} {LONGEST}
       </span>
     </span>
   );

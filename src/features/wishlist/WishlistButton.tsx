@@ -44,7 +44,7 @@ export function WishlistButton({
         aria-pressed={saved}
         aria-label={saved ? "Remove from wishlist" : "Save to wishlist"}
         icon={
-          saved ? <HeartFilled style={{ color: "var(--brand-orange)" }} /> : <HeartOutlined />
+          saved ? <HeartFilled style={{ color: "var(--brand-coral)" }} /> : <HeartOutlined />
         }
       >
         {shape === "default" ? (saved ? "Saved" : "Save") : null}

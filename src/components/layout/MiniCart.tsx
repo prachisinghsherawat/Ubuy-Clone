@@ -1,12 +1,17 @@
 "use client";
 
-import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  MinusOutlined,
+  PlusOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import { Badge, Button, Popover } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { useCart } from "@/features/cart/CartProvider";
+import { MAX_QUANTITY, useCart } from "@/features/cart/CartProvider";
 import { FREE_SHIPPING_THRESHOLD, ROUTES } from "@/lib/constants";
 import { useCurrency } from "@/features/currency/CurrencyProvider";
 
@@ -14,7 +19,7 @@ import { useCurrency } from "@/features/currency/CurrencyProvider";
 const PREVIEW_LIMIT = 3;
 
 export function MiniCart() {
-  const { lines, totals, hydrated, removeItem } = useCart();
+  const { lines, totals, hydrated, removeItem, setQuantity } = useCart();
   const { format } = useCurrency();
   const [open, setOpen] = useState(false);
   const [bumping, setBumping] = useState(false);
@@ -84,9 +89,29 @@ export function MiniCart() {
                   >
                     {line.product.name}
                   </Link>
-                  <small>
-                    {line.quantity} × {format(line.product.price)}
-                  </small>
+                  <small>{format(line.product.price)} each</small>
+
+                  {/* Adjusting here saves a trip to the cart page for the most
+                      common correction — one too many of something. */}
+                  <div className="mini-cart-qty">
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<MinusOutlined />}
+                      disabled={line.quantity <= 1}
+                      onClick={() => setQuantity(line.productId, line.quantity - 1)}
+                      aria-label={`Decrease quantity of ${line.product.name}`}
+                    />
+                    <span aria-live="polite">{line.quantity}</span>
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<PlusOutlined />}
+                      disabled={line.quantity >= MAX_QUANTITY}
+                      onClick={() => setQuantity(line.productId, line.quantity + 1)}
+                      aria-label={`Increase quantity of ${line.product.name}`}
+                    />
+                  </div>
                 </div>
                 <Button
                   type="text"

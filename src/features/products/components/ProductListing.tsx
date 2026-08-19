@@ -165,7 +165,7 @@ export function ProductListing({ catalogue, categories, brands }: ProductListing
         <div>
           <h1 className="listing-title">
             {state.savedOnly ? (
-              <HeartFilled style={{ color: "var(--brand-orange)", marginRight: 8 }} />
+              <HeartFilled style={{ color: "var(--brand-coral)", marginRight: 8 }} />
             ) : null}
             {heading}
           </h1>
