@@ -127,7 +127,7 @@ export default function CheckoutPage() {
             >
               <Input
                 size="large"
-                addonBefore="+91"
+                prefix={<span className="input-dial-code">+91</span>}
                 placeholder="9876543210"
                 maxLength={10}
                 autoComplete="tel-national"

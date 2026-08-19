@@ -95,7 +95,7 @@ export function ProductBuyBox({ product, deliveryDate }: ProductBuyBoxProps) {
         </p>
       ) : null}
 
-      <Space direction="vertical" size={10} style={{ width: "100%" }}>
+      <Space orientation="vertical" size={10} style={{ width: "100%" }}>
         <Button
           type="primary"
           size="large"

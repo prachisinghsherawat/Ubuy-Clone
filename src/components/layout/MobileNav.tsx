@@ -9,26 +9,22 @@ import {
   ShoppingOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
-import { App, Button, Divider, Drawer } from "antd";
+import { App, Button, Divider, Drawer, Select } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useAuth } from "@/features/auth/AuthProvider";
+import { useCurrency } from "@/features/currency/CurrencyProvider";
+import { DESTINATIONS } from "@/features/currency/destinations";
 import { categoryIcon } from "@/features/products/components/categoryIcons";
 import { ROUTES } from "@/lib/constants";
 import type { Category } from "@/types";
 
-/**
- * Hamburger navigation for phone widths.
- *
- * The desktop header hides the account dropdown's labels and the category strip
- * scrolls off-screen, so on a phone this drawer is the only place the full
- * taxonomy and the account actions are reachable.
- */
 export function MobileNav({ categories }: { categories: Category[] }) {
   const [open, setOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { destination, setCountry } = useCurrency();
   const { message } = App.useApp();
   const router = useRouter();
 
@@ -50,7 +46,7 @@ export function MobileNav({ categories }: { categories: Category[] }) {
         placement="left"
         open={open}
         onClose={close}
-        width={310}
+        size={310}
         styles={{ body: { padding: "12px 0" } }}
       >
         <div className="drawer-account">
@@ -102,6 +98,24 @@ export function MobileNav({ categories }: { categories: Category[] }) {
             <ShoppingOutlined /> All Products
           </Link>
         </nav>
+
+        <Divider style={{ margin: "12px 0" }} />
+
+        {/* The header's "Deliver to" control is hidden at phone widths so the
+            cart and account still fit the row, so it lives here instead —
+            hiding it outright would strand the currency on mobile. */}
+        <p className="drawer-heading">Ship to &amp; currency</p>
+        <div style={{ padding: "0 16px 4px" }}>
+          <Select
+            value={destination.country}
+            onChange={setCountry}
+            style={{ width: "100%" }}
+            options={DESTINATIONS.map((entry) => ({
+              value: entry.country,
+              label: `${entry.flag}  ${entry.country} · ${entry.currency}`,
+            }))}
+          />
+        </div>
 
         <Divider style={{ margin: "12px 0" }} />
 

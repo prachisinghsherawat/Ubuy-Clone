@@ -52,16 +52,14 @@
   /* The header is three stacked rows. Keeping each row's height in a token and
      summing them means --header-height can never drift out of sync with what
      the header actually measures — every sticky offset depends on it. */
-  --header-strip-h: 34px;
-  --header-main-h: 68px;
-  --header-nav-h: 46px;
+  --header-main-h: 72px;
+  --header-nav-h: 48px;
   /* The strip's bottom hairline and the nav's top hairline are real layout
      height; leaving them out made the header measure 2px taller than the token
      and pushed the hero past the fold. */
   --header-borders: 2px;
   --header-height: calc(
-    var(--header-strip-h) + var(--header-main-h) + var(--header-nav-h) +
-      var(--header-borders)
+    var(--header-main-h) + var(--header-nav-h) + var(--header-borders)
   );
 
   --page-max: 1280px;
@@ -80,8 +78,18 @@ body {
 body {
   background: var(--canvas);
   color: var(--ink);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Prices and counts sit in columns that must not jitter as digits change. */
+.price-now,
+.price-was,
+.hero-stat strong,
+.mini-cart-qty span {
+  font-variant-numeric: tabular-nums;
 }
 
 a {
@@ -126,7 +134,7 @@ img {
   position: relative;
   margin: 0;
   padding-left: 14px;
-  font-size: clamp(23px, 2.7vw, 31px);
+  font-size: clamp(25px, 2.9vw, 34px);
   font-weight: 750;
   letter-spacing: -0.015em;
   color: var(--ink);
@@ -323,46 +331,19 @@ img {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: linear-gradient(180deg, var(--brand-plum) 0%, var(--brand-plum-deep) 100%);
-  color: #fff;
-  box-shadow: 0 8px 28px rgba(10, 27, 46, 0.24);
-  transition: box-shadow 0.3s var(--ease-out);
+  background: var(--surface);
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 1px 3px rgba(74, 39, 67, 0.05);
 }
 
-/**
- * Condensed header.
- *
- * `SiteHeader` sets `data-scrolled` on `<html>` once the page moves, and the
- * strip's height token is zeroed *there* rather than on the header — because
- * `--header-strip-h` feeds `--header-height`, which `.page`, `.buy-box` and
- * every `.sticky-*` element read. Changing it at the root is what keeps those
- * offsets matching the header's real measured height while it collapses.
- */
-:root[data-scrolled="true"] {
-  --header-strip-h: 0px;
-  --header-borders: 1px;
-}
-
-.site-header[data-condensed="true"] {
-  box-shadow: 0 10px 34px rgba(10, 27, 46, 0.42);
-}
-
-.site-header[data-condensed="true"] .header-strip {
-  opacity: 0;
-  pointer-events: none;
-  /* The hairline is real layout height. Zeroing the *width* (not just the
-     colour) is what keeps the header's true height equal to --header-height,
-     whose condensed value budgets for one border, not two. */
-  border-bottom-width: 0;
-}
-
-/* A hairline of brand colour so the header reads as deliberate against the
-   canvas rather than as a plain dark band. */
+/* A hairline of brand colour along the bottom edge — the only decoration the
+   header carries now that the promo strip is gone. */
 .site-header::after {
   content: "";
   position: absolute;
   inset-inline: 0;
-  bottom: 0;
+  bottom: -1px;
   height: 2px;
   background: linear-gradient(
     90deg,
@@ -370,49 +351,24 @@ img {
     var(--brand-amber) 45%,
     var(--brand-blossom)
   );
-  opacity: 0.9;
-}
-
-.header-strip {
-  background: rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.78);
-  transition: opacity 0.2s var(--ease-out), border-bottom-width 0.28s var(--ease-out);
-}
-
-/* The height lives here, so this is the element whose transition turns the
-   condense into a glide rather than a jump. */
-.header-strip-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  height: var(--header-strip-h);
-  overflow: hidden;
-  white-space: nowrap;
-  transition: height 0.28s var(--ease-out);
-}
-
-.header-strip .anticon {
-  color: var(--brand-amber);
 }
 
 .header-main {
   display: flex;
   align-items: center;
   gap: 20px;
-  height: var(--header-main-h);
+  min-height: var(--header-main-h);
+  padding-block: 10px;
 }
 
 .header-brand {
   display: inline-flex;
   align-items: baseline;
   gap: 2px;
-  font-size: 28px;
+  font-size: 27px;
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: #fff;
+  color: var(--brand-plum);
   flex-shrink: 0;
   transition: transform 0.18s ease;
 }
@@ -432,58 +388,80 @@ img {
   position: relative;
   flex: 1;
   min-width: 0;
-  max-width: 720px;
+  max-width: 580px;
 }
 
 /* A brand halo behind the field when it has focus, so the search reads as the
    active thing on the header rather than a passive box. */
-.header-search:focus-within .ant-input-affix-wrapper {
-  box-shadow: 0 0 0 3px rgba(255, 180, 61, 0.28);
-  border-color: var(--brand-amber);
+.header-search:focus-within .header-search-field {
+  border-color: var(--brand-coral);
+  box-shadow: 0 0 0 3px rgba(255, 106, 61, 0.16);
 }
 
 /**
  * Scope picker + field as one pill.
  *
- * `Space.Compact` squares off the inner edges for us; these rules only round
- * the outer ones and give the picker a tinted, borderless look so it reads as
- * part of the field rather than a separate control.
+ * The border lives on the group, and the two antd controls inside are stripped
+ * back to transparent. Left to their own borders they read as three bolted-on
+ * parts — a boxed dropdown, a boxed input and a button — rather than one field.
  */
 .header-search-field {
   display: flex;
   width: 100%;
+  max-width: 100%;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 
-.header-search-field .ant-input-affix-wrapper {
-  border-start-end-radius: 999px;
-  border-end-end-radius: 999px;
+.header-search-field > * {
+  min-width: 0;
 }
 
+.header-search-field > .ant-input-affix-wrapper {
+  flex: 1 1 auto;
+  width: auto;
+}
+
+/* One border for the group means none for the controls. */
+.header-search-field .ant-input-affix-wrapper,
+.header-search-field .search-scope .ant-select-selector {
+  height: 44px;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* A hairline is enough to separate scope from query. */
 .search-scope {
   flex: 0 0 auto;
-  width: 136px;
+  width: 108px;
+  border-right: 1px solid var(--line);
 }
 
 .search-scope .ant-select-selector {
-  border-start-start-radius: 999px !important;
-  border-end-start-radius: 999px !important;
-  background: #fff3ec !important;
-  border-color: var(--line) !important;
   padding-inline-start: 18px !important;
   font-weight: 600;
   color: var(--brand-plum);
 }
 
+/* The submit control reads as a disc sitting inside the field. */
+.header-search-field .ant-input-affix-wrapper .ant-btn {
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 999px;
+}
+
 @media (max-width: 720px) {
   /* The picker eats too much of a phone-width field; the category nav covers
-     the same ground there. */
-  .search-scope {
+     the same ground there. Scoped through the parent so it outranks antd's own
+     `.ant-space-compact > .ant-select` display rule. */
+  .header-search-field .search-scope {
     display: none;
-  }
-
-  .header-search-field .ant-input-affix-wrapper {
-    border-start-start-radius: 999px;
-    border-end-start-radius: 999px;
   }
 }
 
@@ -678,9 +656,9 @@ img {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-radius: var(--radius-md);
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 13px;
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 14px;
   line-height: 1.15;
   background: transparent;
   border: 1px solid transparent;
@@ -690,9 +668,9 @@ img {
 }
 
 .header-action:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #fff;
+  background: #fff3ec;
+  border-color: transparent;
+  color: var(--brand-coral);
   transform: translateY(-1px);
 }
 
@@ -915,15 +893,16 @@ img {
  */
 .header-nav {
   position: relative;
-  background: rgba(255, 255, 255, 0.04);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
 }
 
 .header-nav-inner {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   gap: 10px;
-  height: var(--header-nav-h);
+  min-height: var(--header-nav-h);
+  padding-block: 6px;
 }
 
 .category-bar {
@@ -949,8 +928,7 @@ img {
   width: 48px;
   height: 100%;
   pointer-events: none;
-  background: linear-gradient(90deg, transparent, var(--brand-plum-deep));
-  opacity: 0.9;
+  background: linear-gradient(90deg, transparent, var(--surface));
 }
 
 /**
@@ -969,7 +947,7 @@ img {
   width: 34px;
   height: 100%;
   border: none;
-  color: #fff;
+  color: var(--ink-muted);
   font-size: 12px;
   cursor: pointer;
   transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out);
@@ -980,17 +958,17 @@ img {
 }
 
 .category-nav:hover {
-  color: var(--brand-amber);
+  color: var(--brand-coral);
 }
 
 .category-nav-prev {
   left: 0;
-  background: linear-gradient(90deg, var(--brand-plum-deep) 55%, transparent);
+  background: linear-gradient(90deg, var(--surface) 55%, transparent);
 }
 
 .category-nav-next {
   right: 0;
-  background: linear-gradient(270deg, var(--brand-plum-deep) 55%, transparent);
+  background: linear-gradient(270deg, var(--surface) 55%, transparent);
 }
 
 @media (hover: none) {
@@ -1010,7 +988,6 @@ img {
   display: flex;
   align-items: center;
   gap: 4px;
-  height: 100%;
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
@@ -1026,17 +1003,17 @@ img {
   gap: 7px;
   padding: 7px 13px;
   border-radius: 999px;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 550;
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--ink-muted);
   transition: background 0.22s var(--ease-out), color 0.22s var(--ease-out),
     transform 0.22s var(--ease-out);
 }
 
 .category-link:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: #fff;
+  background: #fff3ec;
+  color: var(--brand-coral);
   transform: translateY(-1px);
 }
 
@@ -1049,14 +1026,13 @@ img {
 }
 
 .category-link[data-active="true"] {
-  background: #fff;
-  color: var(--brand-plum);
-  font-weight: 700;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+  background: var(--brand-plum);
+  color: #fff;
+  font-weight: 650;
 }
 
 .category-link[data-active="true"] .anticon {
-  color: var(--brand-coral);
+  color: var(--brand-amber);
 }
 
 /* The deals tab keeps its amber flame while inactive; once active it inherits
@@ -1082,19 +1058,18 @@ img {
   padding: 0 16px;
   border: none;
   border-radius: 999px;
-  background: var(--grad-brand);
-  color: #fff;
-  font-size: 13.5px;
-  font-weight: 700;
+  background: #fff3ec;
+  color: var(--brand-coral);
+  font-size: 14px;
+  font-weight: 650;
   white-space: nowrap;
   cursor: pointer;
-  box-shadow: 0 6px 16px -6px rgba(255, 106, 61, 0.7);
   transition: filter 0.22s var(--ease-out), transform 0.22s var(--ease-out);
 }
 
 .mega-trigger:hover {
-  filter: saturate(1.15) brightness(1.05);
-  transform: translateY(-1px);
+  background: var(--brand-coral);
+  color: #fff;
 }
 
 .mega-caret {
@@ -1120,8 +1095,8 @@ img {
   left: 0;
   z-index: 70;
   display: block;
-  width: min(940px, calc(100vw - 40px));
-  padding: 18px;
+  width: min(1040px, calc(100vw - 40px));
+  padding: 22px;
   border-radius: var(--radius-lg);
   background: var(--surface);
   border: 1px solid var(--line);
@@ -1134,6 +1109,61 @@ img {
   display: none;
 }
 
+/**
+ * Staggered entrance for the panel's rows.
+ *
+ * `hidden` toggles display, so the animation replays on every open. Only the
+ * first ten rows carry a delay — beyond that the cascade would read as lag
+ * rather than polish, and `backwards` keeps the rest from flashing at full
+ * opacity before their turn. The global reduced-motion block disables it.
+ */
+@keyframes mega-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.mega-panel:not([hidden]) .mega-cats li,
+.mega-panel:not([hidden]) .mega-trending li {
+  animation: mega-item-in 0.26s var(--ease-out) backwards;
+}
+
+.mega-panel:not([hidden]) .mega-cats li:nth-child(1),
+.mega-panel:not([hidden]) .mega-trending li:nth-child(1) {
+  animation-delay: 20ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(2),
+.mega-panel:not([hidden]) .mega-trending li:nth-child(2) {
+  animation-delay: 40ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(3),
+.mega-panel:not([hidden]) .mega-trending li:nth-child(3) {
+  animation-delay: 60ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(4),
+.mega-panel:not([hidden]) .mega-trending li:nth-child(4) {
+  animation-delay: 80ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(5) {
+  animation-delay: 100ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(6) {
+  animation-delay: 120ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(7) {
+  animation-delay: 140ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(8) {
+  animation-delay: 160ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(9) {
+  animation-delay: 180ms;
+}
+.mega-panel:not([hidden]) .mega-cats li:nth-child(n + 10) {
+  animation-delay: 200ms;
+}
+
 .mega-inner {
   display: grid;
   grid-template-columns: minmax(0, 1.9fr) minmax(240px, 1fr);
@@ -1144,12 +1174,12 @@ img {
   display: flex;
   align-items: center;
   gap: 7px;
-  margin: 0 0 12px;
-  font-size: 11.5px;
+  margin: 0 0 14px;
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-subtle);
+  color: var(--ink-muted);
 }
 
 .mega-heading .anticon {
@@ -1161,43 +1191,66 @@ img {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
   gap: 2px;
   /* The catalogue has ~24 departments; cap the panel and let it scroll rather
      than growing past the viewport. */
-  max-height: 340px;
+  max-height: 380px;
   overflow-y: auto;
 }
 
 .mega-cats a {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 12px;
+  padding: 10px 30px 10px 10px;
   border-radius: var(--radius-md);
-  transition: background 0.18s var(--ease-out);
+  transition: background 0.18s var(--ease-out), transform 0.18s var(--ease-out);
 }
 
 .mega-cats a:hover {
   background: var(--canvas);
+  transform: translateX(3px);
+}
+
+/* An arrow that arrives on hover, so the row reads as something you can enter
+   rather than a static label. Reserved for in `padding-right`, so nothing
+   shifts when it appears. */
+.mega-cats a::after {
+  content: "→";
+  position: absolute;
+  right: 12px;
+  color: var(--brand-coral);
+  font-size: 14px;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.18s var(--ease-out), transform 0.18s var(--ease-out);
+}
+
+.mega-cats a:hover::after {
+  opacity: 1;
+  transform: none;
 }
 
 .mega-cat-icon {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  border-radius: 11px;
+  width: 38px;
+  height: 38px;
+  border-radius: 13px;
   background: var(--grad-brand-soft);
   color: var(--brand-coral);
-  font-size: 15px;
-  transition: background 0.22s var(--ease-out), color 0.22s var(--ease-out);
+  font-size: 17px;
+  transition: background 0.22s var(--ease-out), color 0.22s var(--ease-out),
+    transform 0.28s var(--ease-spring);
 }
 
 .mega-cats a:hover .mega-cat-icon {
   background: var(--grad-brand);
   color: #fff;
+  transform: scale(1.1) rotate(-4deg);
 }
 
 .mega-cat-copy {
@@ -1207,12 +1260,12 @@ img {
 }
 
 .mega-cat-copy strong {
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 600;
 }
 
 .mega-cat-copy small {
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--ink-subtle);
   white-space: nowrap;
   overflow: hidden;
@@ -1235,14 +1288,23 @@ img {
 .mega-trending a {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px;
+  gap: 12px;
+  padding: 8px;
   border-radius: var(--radius-md);
-  transition: background 0.18s var(--ease-out);
+  transition: background 0.18s var(--ease-out), transform 0.18s var(--ease-out);
 }
 
 .mega-trending a:hover {
   background: var(--canvas);
+  transform: translateX(3px);
+}
+
+.mega-trending img {
+  transition: transform 0.35s var(--ease-out);
+}
+
+.mega-trending a:hover img {
+  transform: scale(1.09);
 }
 
 .mega-trend-media {
@@ -1270,7 +1332,7 @@ img {
 }
 
 .mega-trend-copy strong {
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
   display: -webkit-box;
@@ -1281,7 +1343,7 @@ img {
 }
 
 .mega-trend-copy small {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--brand-coral);
 }
@@ -1305,15 +1367,27 @@ img {
 }
 
 .mega-promo strong {
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 700;
   line-height: 1.3;
 }
 
 .mega-promo span {
-  font-size: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--brand-amber);
+}
+
+/* The arrow travels on hover — the promo is the panel's one call to action. */
+.mega-promo .anticon {
+  transition: transform 0.26s var(--ease-out);
+}
+
+.mega-promo:hover .anticon {
+  transform: translateX(4px);
 }
 
 /* ---------------------------------------------------------- deliver to -- */
@@ -1398,53 +1472,57 @@ img {
   color: var(--ink-subtle);
 }
 
-/* -------------------------------------------------------- announcement -- */
+/* ------------------------------------------------------- filter panel -- */
 
 /**
- * Crossfading promo line.
+ * The listing's filter rail.
  *
- * Every message is absolutely stacked and only the active one is opaque, so
- * the transition is a true crossfade. `.announce-spacer` is an invisible copy
- * of the longest line that stays in flow and holds the box open — without it
- * the strip would collapse to zero width.
+ * Deliberately chrome-free: no card border or shadow, just type and space. The
+ * rail sits against the canvas, so a boxed panel next to a grid of boxed cards
+ * was one frame too many.
  */
-.announce {
-  position: relative;
-  display: inline-block;
-  min-width: 0;
-  overflow: hidden;
+.filter-panel {
+  padding-right: 8px;
 }
 
-.announce-item {
-  position: absolute;
-  inset-inline-start: 0;
-  top: 0;
-  display: inline-flex;
+.filter-panel-head {
+  display: flex;
   align-items: center;
-  gap: 7px;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+  justify-content: space-between;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--line);
 }
 
-.announce-item[data-active="true"] {
-  opacity: 1;
-  transform: none;
+.filter-panel-head strong {
+  font-size: 16px;
+  letter-spacing: -0.01em;
 }
 
-/* Mirrors `.announce-item`'s box exactly so the reserved width includes the
-   icon and its gap, not just the text. */
-.announce-spacer {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  visibility: hidden;
-  white-space: nowrap;
+/* antd's ghost Collapse pads for a boxed panel; this rail wants the label flush
+   with the heading above it. */
+.filter-panel .ant-collapse-ghost > .ant-collapse-item {
+  border-bottom: 1px solid var(--line);
 }
 
-.header-strip-support {
-  white-space: nowrap;
+.filter-panel .ant-collapse-ghost > .ant-collapse-item:last-child {
+  border-bottom: none;
+}
+
+.filter-panel .ant-collapse-ghost > .ant-collapse-item > .ant-collapse-header {
+  padding-inline: 0;
+  padding-block: 14px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.filter-panel
+  .ant-collapse-ghost
+  > .ant-collapse-item
+  > .ant-collapse-content
+  > .ant-collapse-content-box {
+  padding-inline: 0;
+  padding-block: 0 18px;
 }
 
 /* ---------------------------------------------------------- mobile nav -- */
@@ -1503,18 +1581,11 @@ img {
 
 /* ------------------------------------------------------ header responsive -- */
 
-/* Tablet: the promo strip is the first thing to go, and the search field stops
-   competing with the action cluster for the same row. */
+/* Tablet: the action labels go first, so the search field stops competing with
+   the action cluster for the same row. */
 @media (max-width: 992px) {
   :root {
-    --header-strip-h: 0px;
     --header-main-h: 64px;
-    /* Only the nav's top hairline survives once the strip is hidden. */
-    --header-borders: 1px;
-  }
-
-  .header-strip {
-    display: none;
   }
 
   .header-action-label {
@@ -1558,7 +1629,14 @@ img {
   }
 
   .header-action {
-    padding: 7px 9px;
+    padding: 7px 8px;
+  }
+
+  /* Currency is the least urgent control in a phone-width row, and dropping it
+     is what lets account, wishlist and cart all stay on screen. `MobileNav`
+     carries the same picker in its drawer. */
+  .header-action-deliver {
+    display: none;
   }
 
   .header-brand {
@@ -1676,7 +1754,7 @@ img {
 
 .hero-title {
   margin: 18px 0 12px;
-  font-size: clamp(32px, 4.8vw, 54px);
+  font-size: clamp(34px, 5vw, 58px);
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -3522,4 +3600,73 @@ img {
   .sticky-panel {
     position: static;
   }
+}
+
+
+/* ------------------------------------------------------- interactions -- */
+
+/**
+ * Shared motion rules.
+ *
+ * Everything here is a transform or an opacity change so it stays on the
+ * compositor, and every one is disabled wholesale under reduced-motion.
+ */
+
+/* Product art leans in on hover. The image scales inside the card's clipped
+   media box, so nothing around it reflows. */
+.product-card .product-card-media img,
+.product-card img {
+  transition: transform 0.45s var(--ease-out);
+}
+
+.product-card:hover img {
+  transform: scale(1.06);
+}
+
+/* Buttons acknowledge the press, not just the hover. */
+.ant-btn:active {
+  transform: translateY(1px);
+}
+
+/* Category chips and header actions share one lift curve. */
+.category-link,
+.header-action,
+.mega-trigger {
+  will-change: transform;
+}
+
+/* A quiet focus ring that matches the brand rather than the UA default. */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--brand-coral);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .product-card:hover img,
+  .ant-btn:active {
+    transform: none;
+  }
+}
+
+/* Dial code sits inside the field, so it needs its own gutter — without one it
+   runs straight into the number and reads as "+919876543210". */
+.input-dial-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 10px;
+  margin-right: 10px;
+  border-right: 1px solid var(--line);
+  color: var(--ink-muted);
+  white-space: nowrap;
 }

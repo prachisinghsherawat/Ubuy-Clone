@@ -150,16 +150,9 @@ export function ProductFilters({
   ];
 
   return (
-    <aside className="surface-card sticky-filters" style={{ padding: "8px 4px 12px" }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "10px 16px 4px",
-        }}
-      >
-        <strong style={{ fontSize: 15 }}>Filters</strong>
+    <aside className="sticky-filters filter-panel">
+      <div className="filter-panel-head">
+        <strong>Filters</strong>
         <Button
           type="link"
           size="small"
@@ -171,11 +164,14 @@ export function ProductFilters({
         </Button>
       </div>
 
+      {/* Only Category opens by default. Expanding three groups at once filled
+          the rail past the fold, which is what made the sidebar feel dense —
+          the rest are one click away. */}
       <Collapse
         ghost
         items={items}
-        defaultActiveKey={["category", "brand", "price"]}
-        expandIconPosition="end"
+        defaultActiveKey={["category"]}
+        expandIconPlacement="end"
       />
     </aside>
   );

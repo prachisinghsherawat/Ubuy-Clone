@@ -267,7 +267,7 @@ export function ProductListing({ catalogue, categories, brands }: ProductListing
         placement="left"
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}
-        width={320}
+        size={320}
         styles={{ body: { padding: 12 } }}
       >
         {filters}

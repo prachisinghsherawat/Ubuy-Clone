@@ -66,7 +66,11 @@ export function DeliverTo() {
       placement="bottomRight"
       arrow
     >
-      <button type="button" className="header-action" aria-label="Change delivery country">
+      <button
+        type="button"
+        className="header-action header-action-deliver"
+        aria-label="Change delivery country"
+      >
         <GlobalOutlined />
         <span className="header-action-label">
           <small>Deliver to</small>

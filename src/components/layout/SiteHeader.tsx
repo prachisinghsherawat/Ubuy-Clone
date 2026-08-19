@@ -10,9 +10,8 @@ import {
 import { App, Badge, Dropdown, type MenuProps } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 
-import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { CategoryBar } from "@/components/layout/CategoryBar";
 import { DeliverTo } from "@/components/layout/DeliverTo";
 import { HeaderSearch } from "@/components/layout/HeaderSearch";
@@ -21,11 +20,8 @@ import { MiniCart } from "@/components/layout/MiniCart";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { useWishlist } from "@/features/wishlist/WishlistProvider";
-import { ROUTES, SITE } from "@/lib/constants";
+import { ROUTES } from "@/lib/constants";
 import type { Category, SearchSuggestion } from "@/types";
-
-/** Scroll depth at which the header condenses. */
-const CONDENSE_AT = 40;
 
 interface SiteHeaderProps {
   /** Live catalogue taxonomy, fetched once in the root layout. */
@@ -39,38 +35,6 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
   const { message } = App.useApp();
   const { ids: wishlistIds } = useWishlist();
   const { user, signOut } = useAuth();
-  const [condensed, setCondensed] = useState(false);
-
-  /**
-   * Collapse the promo strip once the page scrolls.
-   *
-   * The flag is written to `<html>` rather than kept in this component's markup
-   * because `--header-strip-h` feeds `--header-height`, and that token is read
-   * by `.page`, `.buy-box` and every `.sticky-*` element *outside* the header.
-   * Toggling it at the document root is what keeps all those sticky offsets in
-   * sync with the height the header actually measures — a class on the header
-   * alone would leave them 34px out.
-   */
-  useEffect(() => {
-    const onScroll = () => setCondensed(window.scrollY > CONDENSE_AT);
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (condensed) root.dataset.scrolled = "true";
-    else delete root.dataset.scrolled;
-
-    // Leaving the attribute behind on unmount would strand every sticky offset
-    // in the condensed geometry with no header to match it.
-    return () => {
-      delete root.dataset.scrolled;
-    };
-  }, [condensed]);
-
   const accountItems: MenuProps["items"] = user
     ? [
         { key: "greeting", label: `Hi, ${user.name.split(" ")[0]}`, disabled: true },
@@ -116,16 +80,7 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
       ];
 
   return (
-    <header className="site-header" data-condensed={condensed}>
-      <div className="header-strip">
-        <div className="container header-strip-inner">
-          <AnnouncementBar />
-          <span className="header-strip-support">
-            Customer care {SITE.supportPhone}
-          </span>
-        </div>
-      </div>
-
+    <header className="site-header">
       <div className="container header-main">
         <MobileNav categories={categories} />
 
@@ -155,7 +110,7 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
             aria-label="Wishlist"
           >
             <Badge count={wishlistIds.length} size="small" offset={[2, -2]}>
-              <HeartOutlined style={{ color: "#fff", fontSize: 18 }} />
+              <HeartOutlined style={{ fontSize: 18 }} />
             </Badge>
           </Link>
 

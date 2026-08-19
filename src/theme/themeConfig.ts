@@ -23,9 +23,9 @@ export const themeConfig: ThemeConfig = {
     colorTextBase: brand.ink,
     colorBgLayout: brand.canvas,
     borderRadius: 16,
-    fontSize: 16,
-    fontFamily: "var(--font-geist-sans), system-ui, -apple-system, sans-serif",
-    controlHeight: 44,
+    fontSize: 17,
+    fontFamily: "var(--font-sans), system-ui, -apple-system, sans-serif",
+    controlHeight: 46,
     wireframe: false,
   },
   components: {
@@ -42,7 +42,7 @@ export const themeConfig: ThemeConfig = {
     },
     Card: {
       paddingLG: 20,
-      headerFontSize: 17,
+      headerFontSize: 18,
     },
     // Hero carousel chrome. Sizing and offsets are real design tokens in antd 6,
     // so they belong here rather than in a stylesheet override; globals.css only

@@ -111,15 +111,18 @@ export function toCategories(slugs: string[]): Category[] {
  * Slugs promoted into the header strip, in merchandising order. Filtered
  * against what the API actually returns before rendering.
  */
+/**
+ * Departments promoted to the header strip.
+ *
+ * Deliberately short. The strip used to carry ten, which overflowed the row at
+ * common widths and left the last tab clipped behind the scroll fade — the
+ * full taxonomy is one click away in the mega menu and the listing filters.
+ */
 export const FEATURED_CATEGORY_SLUGS = [
   "smartphones",
   "laptops",
-  "tablets",
   "mens-watches",
   "womens-bags",
   "fragrances",
   "beauty",
-  "sunglasses",
-  "groceries",
-  "furniture",
 ];

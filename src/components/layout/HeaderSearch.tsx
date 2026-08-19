@@ -64,7 +64,7 @@ export function HeaderSearch({ categories }: { categories: Category[] }) {
       try {
         const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
           signal: controller.signal,
-          });
+        });
         const data = (await response.json()) as { results: SearchSuggestion[] };
         setFetched({ query, results: data.results });
       } catch {
@@ -176,7 +176,7 @@ export function HeaderSearch({ categories }: { categories: Category[] }) {
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          placeholder="Search for products, brands and categories"
+          placeholder="Search products, brands…"
           aria-label="Search products"
           role="combobox"
           aria-expanded={open}

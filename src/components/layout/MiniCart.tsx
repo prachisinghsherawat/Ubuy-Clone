@@ -170,7 +170,7 @@ export function MiniCart() {
           offset={[2, -2]}
           className={bumping ? "is-bumping" : undefined}
         >
-          <ShoppingCartOutlined style={{ color: "#fff", fontSize: 20 }} />
+          <ShoppingCartOutlined style={{ fontSize: 20 }} />
         </Badge>
         <span className="header-action-label">
           <small>Cart</small>

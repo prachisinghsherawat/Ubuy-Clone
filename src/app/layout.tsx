@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import { BackToTop } from "@/components/layout/BackToTop";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -14,14 +14,19 @@ import { siteUrl } from "@/lib/site-url";
 import { AppProviders } from "./providers";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+/**
+ * Inter, self-hosted by `next/font`.
+ *
+ * Replaces Geist, whose wide geometric forms read oddly at UI sizes and made
+ * dense rows (prices, filter labels, nav) look uneven. Inter is designed for
+ * exactly this: tight vertical metrics, unambiguous digits and a large x-height
+ * that stays legible at 12-13px. The mono face that shipped alongside Geist was
+ * never referenced anywhere, so it is gone rather than downloaded for nothing.
+ */
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -69,7 +74,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   }));
 
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body>
         <AppProviders>
           <SiteHeader categories={categories} trending={trending} />

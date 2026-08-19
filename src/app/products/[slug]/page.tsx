@@ -17,9 +17,21 @@ import { categoryLabel } from "@/features/products/data/categories";
 import { ROUTES } from "@/lib/constants";
 import { estimatedDelivery, formatCount } from "@/lib/format";
 
+/**
+ * Prerender the head of the catalogue and leave the long tail to render on
+ * demand, then stay cached until the next revalidation.
+ *
+ * Building all ~200 SKUs meant ~200 build-time requests to a public demo API.
+ * That is a lot of upstream traffic for a deploy to depend on, and a throttled
+ * response part-way through bakes a 404 into that page for the whole
+ * revalidation window. Prerendering a slice keeps the common entry points
+ * instant without making the build hostage to the API.
+ */
+const PRERENDER_COUNT = 24;
+
 export async function generateStaticParams() {
   const catalogue = await getCatalogue();
-  return catalogue.map((product) => ({ slug: product.slug }));
+  return catalogue.slice(0, PRERENDER_COUNT).map((product) => ({ slug: product.slug }));
 }
 
 export async function generateMetadata(

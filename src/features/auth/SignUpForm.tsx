@@ -93,8 +93,11 @@ export function SignUpForm() {
         >
           <Input
             size="large"
-            prefix={<MobileOutlined />}
-            addonBefore="+91"
+            prefix={
+              <span className="input-dial-code">
+                <MobileOutlined /> +91
+              </span>
+            }
             maxLength={10}
             placeholder="9876543210"
             autoComplete="tel-national"
