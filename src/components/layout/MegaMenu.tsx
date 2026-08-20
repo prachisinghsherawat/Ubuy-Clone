@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  AppstoreOutlined,
-  ArrowRightOutlined,
-  DownOutlined,
-  FireFilled,
-} from "@ant-design/icons";
+import { ArrowRight, ChevronDown, Flame, LayoutGrid } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
@@ -14,6 +9,15 @@ import { useCurrency } from "@/features/currency/CurrencyProvider";
 import { categoryIcon } from "@/features/products/components/categoryIcons";
 import { ROUTES } from "@/lib/constants";
 import type { Category, SearchSuggestion } from "@/types";
+
+/**
+ * Departments listed in the panel.
+ *
+ * The catalogue carries ~24. Showing them all made the panel taller than the
+ * viewport; capping it and scrolling instead put a scrollbar inside a dropdown.
+ * A short list plus a link to the full listing avoids both.
+ */
+const PANEL_LIMIT = 12;
 
 interface MegaMenuProps {
   /** Every category the catalogue API returned, already mapped for display. */
@@ -91,9 +95,9 @@ export function MegaMenu({ categories, trending }: MegaMenuProps) {
         aria-controls={panelId}
         onClick={() => setOpen((current) => !current)}
       >
-        <AppstoreOutlined />
+        <LayoutGrid />
         <span>All Categories</span>
-        <DownOutlined className="mega-caret" />
+        <ChevronDown className="mega-caret" />
       </button>
 
       <div className="mega-panel" id={panelId} hidden={!open}>
@@ -101,13 +105,13 @@ export function MegaMenu({ categories, trending }: MegaMenuProps) {
           <div className="mega-cats">
             <p className="mega-heading">Shop by department</p>
             <ul>
-              {categories.map((category) => (
+              {categories.slice(0, PANEL_LIMIT).map((category) => (
                 <li key={category.slug}>
                   <Link
                     href={`${ROUTES.products}?category=${category.slug}`}
                     onClick={() => setOpen(false)}
                   >
-                    <span className="mega-cat-icon">{categoryIcon(category.icon)}</span>
+                    <span className="mega-cat-icon">{categoryIcon(category.slug)}</span>
                     <span className="mega-cat-copy">
                       <strong>{category.label}</strong>
                       <small>{category.blurb}</small>
@@ -116,11 +120,21 @@ export function MegaMenu({ categories, trending }: MegaMenuProps) {
                 </li>
               ))}
             </ul>
+
+            {categories.length > PANEL_LIMIT ? (
+              <Link
+                href={ROUTES.products}
+                className="mega-all"
+                onClick={() => setOpen(false)}
+              >
+                View all {categories.length} departments <ArrowRight />
+              </Link>
+            ) : null}
           </div>
 
           <div className="mega-side">
             <p className="mega-heading">
-              <FireFilled /> Trending right now
+              <Flame /> Trending right now
             </p>
 
             <ul className="mega-trending">
@@ -149,7 +163,7 @@ export function MegaMenu({ categories, trending }: MegaMenuProps) {
             >
               <strong>Today&apos;s biggest price drops</strong>
               <span>
-                Up to 30% off <ArrowRightOutlined />
+                Up to 30% off <ArrowRight />
               </span>
             </Link>
           </div>

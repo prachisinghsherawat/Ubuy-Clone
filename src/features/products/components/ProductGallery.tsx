@@ -1,6 +1,6 @@
 "use client";
 
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "antd";
 import Image from "next/image";
 import { useState } from "react";
@@ -31,14 +31,14 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
           <>
             <Button
               shape="circle"
-              icon={<LeftOutlined />}
+              icon={<ChevronLeft />}
               className="gallery-arrow gallery-arrow-prev"
               onClick={() => step(-1)}
               aria-label="Previous image"
             />
             <Button
               shape="circle"
-              icon={<RightOutlined />}
+              icon={<ChevronRight />}
               className="gallery-arrow gallery-arrow-next"
               onClick={() => step(1)}
               aria-label="Next image"

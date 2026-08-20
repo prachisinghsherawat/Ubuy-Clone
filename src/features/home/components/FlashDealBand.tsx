@@ -1,6 +1,6 @@
 "use client";
 
-import { ThunderboltFilled } from "@ant-design/icons";
+import { Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Remaining {
@@ -61,7 +61,7 @@ export function FlashDealBand() {
     <div className="flash-band">
       <div className="flash-band-copy">
         <span className="flash-band-icon">
-          <ThunderboltFilled />
+          <Zap fill="currentColor" />
         </span>
         <div>
           <h3>Flash deals end tonight</h3>

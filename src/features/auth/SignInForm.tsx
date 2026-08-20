@@ -1,6 +1,6 @@
 "use client";
 
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Lock, Mail } from "lucide-react";
 import { Alert, App, Button, Checkbox, Divider, Form, Input } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -58,7 +58,7 @@ export function SignInForm() {
         >
           <Input
             size="large"
-            prefix={<MailOutlined />}
+            prefix={<Mail />}
             placeholder="you@example.com"
             autoComplete="email"
           />
@@ -71,7 +71,7 @@ export function SignInForm() {
         >
           <Input.Password
             size="large"
-            prefix={<LockOutlined />}
+            prefix={<Lock />}
             placeholder="••••••••"
             autoComplete="current-password"
           />

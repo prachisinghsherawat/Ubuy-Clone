@@ -9,8 +9,6 @@ export type CategorySlug = string;
 export interface Category {
   slug: CategorySlug;
   label: string;
-  /** Ant Design icon name rendered by the category strip. */
-  icon: string;
   blurb: string;
 }
 

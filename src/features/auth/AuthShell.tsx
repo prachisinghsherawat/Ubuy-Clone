@@ -1,23 +1,18 @@
 "use client";
 
-import {
-  GlobalOutlined,
-  SafetyCertificateOutlined,
-  TruckOutlined,
-  UndoOutlined,
-} from "@ant-design/icons";
+import { Globe, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { SITE } from "@/lib/constants";
 
 const POINTS = [
   {
-    icon: <GlobalOutlined />,
+    icon: <Globe />,
     text: "Shop from 100+ countries with a single Indian checkout",
   },
-  { icon: <TruckOutlined />, text: "Free delivery on every order above ₹25,000" },
-  { icon: <UndoOutlined />, text: "30-day returns on most of the catalogue" },
-  { icon: <SafetyCertificateOutlined />, text: "Genuine products from authorised sellers" },
+  { icon: <Truck />, text: "Free delivery on every order above ₹25,000" },
+  { icon: <RotateCcw />, text: "30-day returns on most of the catalogue" },
+  { icon: <ShieldCheck />, text: "Genuine products from authorised sellers" },
 ];
 
 /** Split-screen frame shared by the sign-in and sign-up routes. */

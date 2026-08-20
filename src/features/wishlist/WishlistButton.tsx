@@ -1,6 +1,6 @@
 "use client";
 
-import { HeartFilled, HeartOutlined } from "@ant-design/icons";
+import { Heart } from "lucide-react";
 import { App, Button, Tooltip } from "antd";
 import type { MouseEvent } from "react";
 
@@ -44,7 +44,7 @@ export function WishlistButton({
         aria-pressed={saved}
         aria-label={saved ? "Remove from wishlist" : "Save to wishlist"}
         icon={
-          saved ? <HeartFilled style={{ color: "var(--brand-coral)" }} /> : <HeartOutlined />
+          saved ? <Heart fill="currentColor" style={{ color: "var(--brand-coral)" }} /> : <Heart />
         }
       >
         {shape === "default" ? (saved ? "Saved" : "Save") : null}

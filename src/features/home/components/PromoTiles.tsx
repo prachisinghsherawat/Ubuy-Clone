@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightOutlined } from "@ant-design/icons";
+import { ArrowRight } from "lucide-react";
 import { Col, Row } from "antd";
 import Link from "next/link";
 
@@ -50,7 +50,7 @@ export function PromoTiles() {
             <h3>{tile.title}</h3>
             <p>{tile.text}</p>
             <span className="promo-cta">
-              {tile.cta} <ArrowRightOutlined />
+              {tile.cta} <ArrowRight />
             </span>
           </Link>
         </Col>

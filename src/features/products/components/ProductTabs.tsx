@@ -66,32 +66,20 @@ function Reviews({ product }: { product: Product }) {
   }));
 
   return (
-    <div style={{ display: "grid", gap: 24 }}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "auto minmax(0, 320px)",
-          gap: 28,
-          alignItems: "center",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 40, fontWeight: 700, lineHeight: 1.1 }}>
-            {product.rating.toFixed(1)}
-          </div>
+    <div className="reviews">
+      <div className="reviews-summary">
+        <div className="reviews-score">
+          <div className="reviews-score-value">{product.rating.toFixed(1)}</div>
           <Rate disabled allowHalf value={product.rating} style={{ fontSize: 15 }} />
-          <div style={{ fontSize: 13, color: "var(--ink-muted)", marginTop: 4 }}>
+          <div className="reviews-score-count">
             {formatCount(product.reviewCount)} ratings
           </div>
         </div>
 
         <div>
           {buckets.map((bucket) => (
-            <div
-              key={bucket.star}
-              style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}
-            >
-              <span style={{ width: 30 }}>{bucket.star}★</span>
+            <div key={bucket.star} className="reviews-bar">
+              <span className="reviews-bar-star">{bucket.star}★</span>
               <Progress
                 percent={Math.round((bucket.count / reviews.length) * 100)}
                 showInfo={false}
@@ -99,7 +87,7 @@ function Reviews({ product }: { product: Product }) {
                 size="small"
                 style={{ flex: 1, margin: 0 }}
               />
-              <span style={{ width: 24, color: "var(--ink-muted)" }}>{bucket.count}</span>
+              <span className="reviews-bar-count">{bucket.count}</span>
             </div>
           ))}
         </div>
@@ -108,16 +96,12 @@ function Reviews({ product }: { product: Product }) {
       <div>
         {reviews.map((review, index) => (
           <div className="review-card" key={`${review.reviewerName}-${index}`}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <strong style={{ fontSize: 14 }}>{review.reviewerName}</strong>
+            <div className="review-head">
+              <strong>{review.reviewerName}</strong>
               <Rate disabled value={review.rating} style={{ fontSize: 12 }} />
-              <span style={{ fontSize: 12.5, color: "var(--ink-subtle)" }}>
-                {reviewDate(review.date)}
-              </span>
+              <span className="review-date">{reviewDate(review.date)}</span>
             </div>
-            <p style={{ margin: "6px 0 0", color: "var(--ink-muted)", fontSize: 14 }}>
-              {review.comment}
-            </p>
+            <p className="review-body">{review.comment}</p>
           </div>
         ))}
       </div>
@@ -134,8 +118,8 @@ export function ProductTabs({ product }: { product: Product }) {
           key: "description",
           label: "Description",
           children: (
-            <div style={{ maxWidth: "72ch" }}>
-              <p style={{ color: "var(--ink-muted)", lineHeight: 1.8 }}>
+            <div className="prose">
+              <p>
                 {product.description}
               </p>
               {product.highlights.length > 0 ? (

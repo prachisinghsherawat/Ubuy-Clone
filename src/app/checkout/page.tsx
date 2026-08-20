@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightOutlined } from "@ant-design/icons";
+import { ArrowRight } from "lucide-react";
 import { Button, Form, Input, Select, Skeleton } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ import { addressStore } from "@/features/checkout/checkoutStores";
 import { CheckoutSteps } from "@/features/checkout/CheckoutSteps";
 import { EmptyCartNotice } from "@/features/checkout/EmptyCartNotice";
 import { useAuth } from "@/features/auth/AuthProvider";
+import { PanelHeading } from "@/components/ui/PanelHeading";
 import { ROUTES } from "@/lib/constants";
 import { usePersistentValue } from "@/lib/persistentStore";
 import type { ShippingAddress } from "@/types";
@@ -74,12 +75,9 @@ export default function CheckoutPage() {
 
       <div className="checkout-grid">
         <div className="surface-card" style={{ padding: 24 }}>
-          <h1 style={{ margin: "0 0 4px", fontSize: 20, fontWeight: 700 }}>
-            Shipping address
-          </h1>
-          <p style={{ margin: "0 0 20px", color: "var(--ink-muted)", fontSize: 14 }}>
+          <PanelHeading title="Shipping address">
             We ship internationally — this is where your order will land.
-          </p>
+          </PanelHeading>
 
           <Form<ShippingAddress>
             layout="vertical"
@@ -194,7 +192,7 @@ export default function CheckoutPage() {
                 type="primary"
                 size="large"
                 htmlType="submit"
-                icon={<ArrowRightOutlined />}
+                icon={<ArrowRight />}
                 iconPosition="end"
               >
                 Continue to payment

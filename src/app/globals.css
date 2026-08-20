@@ -62,7 +62,7 @@
     var(--header-main-h) + var(--header-nav-h) + var(--header-borders)
   );
 
-  --page-max: 1280px;
+  --page-max: 1440px;
 }
 
 * {
@@ -399,68 +399,120 @@ img {
 }
 
 /**
- * Scope picker + field as one pill.
+ * The search field.
  *
- * The border lives on the group, and the two antd controls inside are stripped
- * back to transparent. Left to their own borders they read as three bolted-on
- * parts — a boxed dropdown, a boxed input and a button — rather than one field.
+ * One bordered flex row that owns its own layout: scope picker, input, an
+ * optional clear button and the submit disc. Everything inside is borderless,
+ * so the group reads as a single control rather than three stacked ones.
  */
 .header-search-field {
   display: flex;
+  align-items: center;
+  gap: 2px;
   width: 100%;
   max-width: 100%;
-  align-items: center;
+  height: 46px;
+  padding: 0 5px 0 0;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--surface);
-  transition: border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+  transition: border-color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
 }
 
-.header-search-field > * {
-  min-width: 0;
+.header-search:focus-within .header-search-field {
+  border-color: var(--brand-coral);
+  box-shadow: 0 0 0 3px rgba(255, 106, 61, 0.14);
 }
 
-.header-search-field > .ant-input-affix-wrapper {
-  flex: 1 1 auto;
-  width: auto;
-}
-
-/* One border for the group means none for the controls. */
-.header-search-field .ant-input-affix-wrapper,
-.header-search-field .search-scope .ant-select-selector {
-  height: 44px;
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* A hairline is enough to separate scope from query. */
 .search-scope {
   flex: 0 0 auto;
-  width: 108px;
+  width: 116px;
+  height: 100%;
   border-right: 1px solid var(--line);
 }
 
 .search-scope .ant-select-selector {
-  padding-inline-start: 18px !important;
+  height: 100% !important;
+  padding-inline: 18px 4px !important;
   font-weight: 600;
   color: var(--brand-plum);
 }
 
-/* The submit control reads as a disc sitting inside the field. */
-.header-search-field .ant-input-affix-wrapper .ant-btn {
-  width: 34px;
-  min-width: 34px;
-  height: 34px;
-  padding: 0;
+.search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  padding: 0 10px 0 14px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.search-input::placeholder {
+  color: var(--ink-subtle);
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+/* The browser's own search affordances duplicate our clear button. */
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-decoration {
+  appearance: none;
+}
+
+.search-clear-btn,
+.search-submit {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 0;
+  cursor: pointer;
+  transition: background 0.18s var(--ease-out), color 0.18s var(--ease-out),
+    transform 0.18s var(--ease-out);
+}
+
+.search-clear-btn {
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
+  background: transparent;
+  color: var(--ink-subtle);
+  font-size: 11px;
+}
+
+.search-clear-btn:hover {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+/* A true disc — the previous slab was antd's compact wrapper squaring off the
+   button's leading corners. */
+.search-submit {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--brand-coral);
+  color: #fff;
+  font-size: 15px;
+}
+
+.search-submit:hover {
+  background: #ff804f;
+  transform: scale(1.06);
+}
+
+.search-submit:active {
+  transform: scale(0.96);
 }
 
 @media (max-width: 720px) {
   /* The picker eats too much of a phone-width field; the category nav covers
-     the same ground there. Scoped through the parent so it outranks antd's own
-     `.ant-space-compact > .ant-select` display rule. */
-  .header-search-field .search-scope {
+     the same ground there. */
+  .search-scope {
     display: none;
   }
 }
@@ -1193,13 +1245,11 @@ img {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
   gap: 2px;
-  /* The catalogue has ~24 departments; cap the panel and let it scroll rather
-     than growing past the viewport. */
-  max-height: 380px;
-  overflow-y: auto;
+  /* Two columns of ~12 fit without a scroll box; capping the strip at the
+     panel's own height was what put a scrollbar inside a dropdown. */
 }
 
-.mega-cats a {
+.mega-cats ul a {
   position: relative;
   display: flex;
   align-items: center;
@@ -1209,7 +1259,7 @@ img {
   transition: background 0.18s var(--ease-out), transform 0.18s var(--ease-out);
 }
 
-.mega-cats a:hover {
+.mega-cats ul a:hover {
   background: var(--canvas);
   transform: translateX(3px);
 }
@@ -1217,7 +1267,7 @@ img {
 /* An arrow that arrives on hover, so the row reads as something you can enter
    rather than a static label. Reserved for in `padding-right`, so nothing
    shifts when it appears. */
-.mega-cats a::after {
+.mega-cats ul a::after {
   content: "→";
   position: absolute;
   right: 12px;
@@ -1228,7 +1278,7 @@ img {
   transition: opacity 0.18s var(--ease-out), transform 0.18s var(--ease-out);
 }
 
-.mega-cats a:hover::after {
+.mega-cats ul a:hover::after {
   opacity: 1;
   transform: none;
 }
@@ -1247,7 +1297,7 @@ img {
     transform 0.28s var(--ease-spring);
 }
 
-.mega-cats a:hover .mega-cat-icon {
+.mega-cats ul a:hover .mega-cat-icon {
   background: var(--grad-brand);
   color: #fff;
   transform: scale(1.1) rotate(-4deg);
@@ -1481,9 +1531,10 @@ img {
  * rail sits against the canvas, so a boxed panel next to a grid of boxed cards
  * was one frame too many.
  */
-.filter-panel {
-  padding-right: 8px;
-}
+/* The panel also carries `.sticky-filters`, which pins it and — importantly —
+   releases it again below 992px, where this same component is rendered inside
+   the filter Drawer. Re-declaring `position` here would win on specificity
+   order and leave it stuck inside that drawer, so the pinning stays there. */
 
 .filter-panel-head {
   display: flex;
@@ -2938,12 +2989,12 @@ img {
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 22px;
 }
 
 .listing-title {
   margin: 0;
-  font-size: clamp(22px, 2.6vw, 28px);
+  font-size: clamp(24px, 2.8vw, 32px);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -2970,15 +3021,46 @@ img {
 
 .listing-body {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
+  grid-template-columns: 284px minmax(0, 1fr);
+  gap: 32px;
+  /* Rows stretch by default. `align-items: start` used to collapse the rail to
+     its own content height, which left a short filter column beside a very
+     tall grid; letting it stretch means the two columns end together at the
+     pagination and the divider between them runs the whole way down. */
+}
+
+.listing-rail {
+  border-right: 1px solid var(--line);
+  padding-right: 28px;
 }
 
 .listing-pagination {
   display: flex;
-  justify-content: center;
-  margin-top: 32px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.listing-range {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
+.listing-range strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Centre the control on its own row once the range no longer fits beside it. */
+@media (max-width: 640px) {
+  .listing-pagination {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 992px) {
@@ -3579,9 +3661,27 @@ img {
 .empty-state {
   display: grid;
   place-items: center;
-  gap: 6px;
+  gap: 10px;
   padding: 64px 24px;
   text-align: center;
+}
+
+.empty-state-hint {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+/* Panel title pair, shared by the checkout steps. */
+.panel-heading {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.panel-subheading {
+  margin: 0 0 20px;
+  color: var(--ink-muted);
+  font-size: 14px;
 }
 
 /* `.sticky-filters` is the listing's filter rail; `.sticky-panel` is the same
@@ -3669,4 +3769,327 @@ img {
   border-right: 1px solid var(--line);
   color: var(--ink-muted);
   white-space: nowrap;
+}
+
+
+/* ------------------------------------------------------------- icons -- */
+
+/**
+ * Lucide sizing.
+ *
+ * Lucide emits `width="24" height="24" stroke-width="2"` as attributes, which
+ * next to 13-14px UI text is both far too large and far too heavy — that
+ * mismatch is what threw icon/label baselines out across the nav, the mega
+ * menu and the drawer. CSS beats presentation attributes, so sizing in `em`
+ * here ties every glyph to the type it sits beside, and one lighter stroke
+ * matches the weight of the surrounding text.
+ */
+.lucide {
+  width: 1.15em;
+  height: 1.15em;
+  stroke-width: 1.75;
+  flex-shrink: 0;
+}
+
+/* Icon and label share a baseline row wherever they sit together. */
+.category-link,
+.mega-cats a,
+.drawer-links a,
+.header-action,
+.mega-trigger,
+.mega-heading,
+.filter-panel-head {
+  line-height: 1.2;
+}
+
+
+/* Filter rail controls. */
+.filter-more,
+.filter-rating {
+  border: 1px solid transparent;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.16s var(--ease-out), color 0.16s var(--ease-out),
+    border-color 0.16s var(--ease-out);
+}
+
+.filter-more {
+  margin-top: 12px;
+  padding: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--brand-coral);
+}
+
+.filter-more:hover {
+  text-decoration: underline;
+}
+
+.filter-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  text-align: left;
+}
+
+.filter-rating:hover {
+  background: var(--canvas);
+}
+
+.filter-rating[data-selected="true"] {
+  background: #fff3ec;
+  border-color: var(--brand-coral);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------- scrollbars -- */
+
+/**
+ * Slim, low-contrast scrollbars.
+ *
+ * Several panels scroll (the drawer, the deliver-to list, the category strip),
+ * and the platform default gutter is wide enough to read as a piece of UI in
+ * its own right — inside a dropdown or a rail it just looks like clutter.
+ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 107, 117, 0.32) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+  background-color: rgba(124, 107, 117, 0.32);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(124, 107, 117, 0.55);
+}
+
+.detail-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--brand-amber);
+  font-weight: 600;
+}
+
+.mega-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #fff3ec;
+  color: var(--brand-coral);
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: background 0.18s var(--ease-out), color 0.18s var(--ease-out);
+}
+
+.mega-all:hover {
+  background: var(--brand-coral);
+  color: #fff;
+}
+
+.mega-all .lucide {
+  transition: transform 0.22s var(--ease-out);
+}
+
+.mega-all:hover .lucide {
+  transform: translateX(3px);
+}
+
+/* ------------------------------------------------- filter rail detail -- */
+
+.filter-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Count of what a group is narrowing. Sized in `em` so it tracks whichever
+   label it sits in — the panel heading runs a step larger than a section. */
+.filter-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5em;
+  height: 1.5em;
+  padding: 0 0.4em;
+  border-radius: 999px;
+  background: var(--brand-coral);
+  color: #fff;
+  font-size: 0.72em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.filter-count-total {
+  margin-left: 8px;
+}
+
+/* Roomier hit targets — the rail has the width for them now. */
+.filter-panel .ant-checkbox-wrapper {
+  align-items: center;
+  padding: 2px 0;
+  font-size: 14.5px;
+}
+
+.filter-panel .ant-checkbox-wrapper:hover {
+  color: var(--brand-coral);
+}
+
+/* The rail scrolls with the page; only pin it once there is room to. */
+
+
+/* ----------------------------------------------------------- reviews -- */
+
+.reviews {
+  display: grid;
+  gap: 24px;
+}
+
+.reviews-summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 320px);
+  gap: 28px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .reviews-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.reviews-score {
+  text-align: center;
+}
+
+.reviews-score-value {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.reviews-score-count {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.reviews-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.reviews-bar-star {
+  width: 30px;
+}
+
+.reviews-bar-count {
+  width: 24px;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.review-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-head strong {
+  font-size: 14px;
+}
+
+.review-date {
+  font-size: 12.5px;
+  color: var(--ink-subtle);
+}
+
+.review-body {
+  margin: 6px 0 0;
+  color: var(--ink-muted);
+  font-size: 14px;
+}
+
+/* Readable measure for long-form copy (descriptions, policy text). */
+.prose {
+  max-width: 72ch;
+  color: var(--ink-muted);
+  line-height: 1.8;
+}
+
+
+/* --------------------------------------------------- shared card bits -- */
+
+/* Padding steps for `.surface-card`. These were inline on every panel, which
+   is how 20px and 24px ended up mixed across the same flow. */
+.card-pad {
+  padding: 20px;
+}
+
+.card-pad-lg {
+  padding: 24px;
+}
+
+.card-heading {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.card-heading-tight {
+  margin-bottom: 4px;
+}
+
+.text-mint {
+  color: var(--brand-mint);
+}
+
+.min-w-0 {
+  min-width: 0;
+}
+
+.summary-note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.summary-action {
+  margin-top: 16px;
+}
+
+.receipt-line-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.receipt-line-meta {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--ink-muted);
 }

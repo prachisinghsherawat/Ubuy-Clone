@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckOutlined, DownOutlined, GlobalOutlined } from "@ant-design/icons";
+import { Check, ChevronDown, Globe } from "lucide-react";
 import { Popover, Tag } from "antd";
 import { useState } from "react";
 
@@ -34,7 +34,7 @@ export function DeliverTo() {
                 </span>
                 <span className="deliver-country">{entry.country}</span>
                 <span className="deliver-code">{entry.currency}</span>
-                {selected ? <CheckOutlined className="deliver-check" /> : null}
+                {selected ? <Check className="deliver-check" /> : null}
               </button>
             </li>
           );
@@ -71,14 +71,14 @@ export function DeliverTo() {
         className="header-action header-action-deliver"
         aria-label="Change delivery country"
       >
-        <GlobalOutlined />
+        <Globe />
         <span className="header-action-label">
           <small>Deliver to</small>
           <strong>
             <span aria-hidden="true">{destination.flag}</span> {destination.currency}
           </strong>
         </span>
-        <DownOutlined style={{ fontSize: 10, opacity: 0.7 }} />
+        <ChevronDown style={{ fontSize: 10, opacity: 0.7 }} />
       </button>
     </Popover>
   );

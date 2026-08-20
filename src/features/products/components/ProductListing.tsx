@@ -1,6 +1,6 @@
 "use client";
 
-import { CloseOutlined, FilterOutlined, HeartFilled } from "@ant-design/icons";
+import { Heart, ListFilter, X } from "lucide-react";
 import {
   Alert,
   Button,
@@ -165,7 +165,7 @@ export function ProductListing({ catalogue, categories, brands }: ProductListing
         <div>
           <h1 className="listing-title">
             {state.savedOnly ? (
-              <HeartFilled style={{ color: "var(--brand-coral)", marginRight: 8 }} />
+              <Heart fill="currentColor" style={{ color: "var(--brand-coral)", marginRight: 8 }} />
             ) : null}
             {heading}
           </h1>
@@ -179,7 +179,7 @@ export function ProductListing({ catalogue, categories, brands }: ProductListing
 
         <div className="listing-tools">
           <Button
-            icon={<FilterOutlined />}
+            icon={<ListFilter />}
             onClick={() => setFiltersOpen(true)}
             className="listing-filter-trigger"
           >
@@ -202,7 +202,7 @@ export function ProductListing({ catalogue, categories, brands }: ProductListing
             <Tag
               key={chip.key}
               closable
-              closeIcon={<CloseOutlined />}
+              closeIcon={<X />}
               onClose={(event) => {
                 event.preventDefault();
                 chip.clear();
@@ -248,6 +248,15 @@ export function ProductListing({ catalogue, categories, brands }: ProductListing
 
               {pageCount > 1 ? (
                 <div className="listing-pagination">
+                  {/* Which slice of the results is on screen. A bare page
+                      number does not say how far through the catalogue you
+                      are, and that is the question the control is asked. */}
+                  <p className="listing-range">
+                    Showing <strong>{(page - 1) * PAGE_SIZE + 1}</strong>–
+                    <strong>{Math.min(page * PAGE_SIZE, results.length)}</strong> of{" "}
+                    <strong>{results.length}</strong> products
+                  </p>
+
                   <Pagination
                     current={page}
                     total={results.length}

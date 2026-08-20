@@ -1,30 +1,25 @@
 "use client";
 
-import {
-  CustomerServiceOutlined,
-  SafetyCertificateOutlined,
-  SyncOutlined,
-  TruckOutlined,
-} from "@ant-design/icons";
+import { Headset, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 
 const VALUES = [
   {
-    icon: <TruckOutlined />,
+    icon: <Truck />,
     title: "Free delivery",
     text: "On every order above ₹25,000",
   },
   {
-    icon: <SafetyCertificateOutlined />,
+    icon: <ShieldCheck />,
     title: "Secure payments",
     text: "Cards, UPI and net banking",
   },
   {
-    icon: <SyncOutlined />,
+    icon: <RefreshCw />,
     title: "Easy returns",
     text: "30-day return window",
   },
   {
-    icon: <CustomerServiceOutlined />,
+    icon: <Headset />,
     title: "Support 24×7",
     text: "Real humans, any time zone",
   },

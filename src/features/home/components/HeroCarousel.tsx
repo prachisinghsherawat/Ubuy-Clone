@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightOutlined, ThunderboltFilled } from "@ant-design/icons";
+import { ArrowRight, Zap } from "lucide-react";
 import { Button, Carousel } from "antd";
 import Image from "next/image";
 import Link from "next/link";
@@ -91,7 +91,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
               <div className="hero-inner">
                 <div className="hero-copy">
                   <span className="hero-eyebrow">
-                    <ThunderboltFilled /> {slide.eyebrow}
+                    <Zap fill="currentColor" /> {slide.eyebrow}
                   </span>
                   <h1 className="hero-title">{slide.title}</h1>
                   <p className="hero-text">{slide.text}</p>
@@ -101,7 +101,7 @@ export function HeroCarousel({ products }: { products: Product[] }) {
                       <Button
                         type="primary"
                         size="large"
-                        icon={<ArrowRightOutlined />}
+                        icon={<ArrowRight />}
                         iconPlacement="end"
                       >
                         {slide.cta}

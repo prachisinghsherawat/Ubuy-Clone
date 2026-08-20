@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  DeleteOutlined,
-  MinusOutlined,
-  PlusOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
+import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { Badge, Button, Popover } from "antd";
 import Image from "next/image";
 import Link from "next/link";
@@ -47,7 +42,7 @@ export function MiniCart() {
     <div className="mini-cart">
       {lines.length === 0 ? (
         <div className="mini-cart-empty">
-          <ShoppingCartOutlined />
+          <ShoppingCart />
           <p>Your cart is empty</p>
           <Link href={ROUTES.products} onClick={() => setOpen(false)}>
             <Button type="primary" block>
@@ -97,7 +92,7 @@ export function MiniCart() {
                     <Button
                       type="text"
                       size="small"
-                      icon={<MinusOutlined />}
+                      icon={<Minus />}
                       disabled={line.quantity <= 1}
                       onClick={() => setQuantity(line.productId, line.quantity - 1)}
                       aria-label={`Decrease quantity of ${line.product.name}`}
@@ -106,7 +101,7 @@ export function MiniCart() {
                     <Button
                       type="text"
                       size="small"
-                      icon={<PlusOutlined />}
+                      icon={<Plus />}
                       disabled={line.quantity >= MAX_QUANTITY}
                       onClick={() => setQuantity(line.productId, line.quantity + 1)}
                       aria-label={`Increase quantity of ${line.product.name}`}
@@ -116,7 +111,7 @@ export function MiniCart() {
                 <Button
                   type="text"
                   size="small"
-                  icon={<DeleteOutlined />}
+                  icon={<Trash2 />}
                   onClick={() => removeItem(line.productId)}
                   aria-label={`Remove ${line.product.name}`}
                 />
@@ -170,7 +165,7 @@ export function MiniCart() {
           offset={[2, -2]}
           className={bumping ? "is-bumping" : undefined}
         >
-          <ShoppingCartOutlined style={{ fontSize: 20 }} />
+          <ShoppingCart style={{ fontSize: 20 }} />
         </Badge>
         <span className="header-action-label">
           <small>Cart</small>

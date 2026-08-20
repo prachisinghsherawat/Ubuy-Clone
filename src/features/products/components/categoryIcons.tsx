@@ -1,63 +1,71 @@
 "use client";
 
 import {
-  AppstoreOutlined,
-  BgColorsOutlined,
-  CarOutlined,
-  ClockCircleOutlined,
-  CoffeeOutlined,
-  CrownOutlined,
-  DashboardOutlined,
-  ExperimentOutlined,
-  EyeOutlined,
-  FieldTimeOutlined,
-  GiftOutlined,
-  HeartOutlined,
-  HomeOutlined,
-  LaptopOutlined,
-  ManOutlined,
-  MobileOutlined,
-  ShoppingCartOutlined,
-  ShoppingOutlined,
-  SkinOutlined,
-  SmileOutlined,
-  StarOutlined,
-  TabletOutlined,
-  ThunderboltOutlined,
-  TrophyOutlined,
-  WomanOutlined,
-} from "@ant-design/icons";
+  Armchair,
+  Bike,
+  Cable,
+  Car,
+  Dumbbell,
+  Flower,
+  Footprints,
+  Gem,
+  Glasses,
+  Lamp,
+  Laptop,
+  LayoutGrid,
+  ShoppingBag,
+  ShoppingBasket,
+  Shirt,
+  Smartphone,
+  Sparkles,
+  SprayCan,
+  Tablet,
+  Utensils,
+  Watch,
+} from "lucide-react";
 import type { ReactNode } from "react";
 
-/** Maps the `icon` key on a Category to a rendered antd icon. */
-export const CATEGORY_ICONS: Record<string, ReactNode> = {
-  smile: <SmileOutlined />,
-  experiment: <ExperimentOutlined />,
-  home: <HomeOutlined />,
-  cart: <ShoppingCartOutlined />,
-  decor: <BgColorsOutlined />,
-  coffee: <CoffeeOutlined />,
-  laptop: <LaptopOutlined />,
-  man: <ManOutlined />,
-  shopping: <ShoppingOutlined />,
-  clock: <ClockCircleOutlined />,
-  thunderbolt: <ThunderboltOutlined />,
-  dashboard: <DashboardOutlined />,
-  heart: <HeartOutlined />,
-  mobile: <MobileOutlined />,
-  trophy: <TrophyOutlined />,
-  eye: <EyeOutlined />,
-  tablet: <TabletOutlined />,
-  skin: <SkinOutlined />,
-  car: <CarOutlined />,
-  gift: <GiftOutlined />,
-  woman: <WomanOutlined />,
-  crown: <CrownOutlined />,
-  star: <StarOutlined />,
-  fieldTime: <FieldTimeOutlined />,
-  appstore: <AppstoreOutlined />,
+/**
+ * Department icons, keyed by the catalogue's own slug.
+ *
+ * Previously this mapped an abstract key (`smile`, `gift`, `experiment`) that
+ * each category chose for itself, and the indirection is what made the icons
+ * read wrong — Beauty got a smiley face, Women's Bags a wrapped present and
+ * Fragrances a laboratory flask. Keying on the slug means there is exactly one
+ * place to look, and no way for a department to point at an unrelated glyph.
+ *
+ * Lucide rather than `@ant-design/icons`: its set actually covers retail nouns
+ * (a handbag, a watch, a perfume bottle) where antd's product-UI set only had
+ * approximations.
+ */
+const CATEGORY_ICONS: Record<string, ReactNode> = {
+  beauty: <Sparkles />,
+  fragrances: <SprayCan />,
+  furniture: <Armchair />,
+  groceries: <ShoppingBasket />,
+  "home-decoration": <Lamp />,
+  "kitchen-accessories": <Utensils />,
+  laptops: <Laptop />,
+  "mens-shirts": <Shirt />,
+  "mens-shoes": <Footprints />,
+  "mens-watches": <Watch />,
+  "mobile-accessories": <Cable />,
+  motorcycle: <Bike />,
+  "skin-care": <Flower />,
+  smartphones: <Smartphone />,
+  "sports-accessories": <Dumbbell />,
+  sunglasses: <Glasses />,
+  tablets: <Tablet />,
+  tops: <Shirt />,
+  vehicle: <Car />,
+  "womens-bags": <ShoppingBag />,
+  "womens-dresses": <Shirt />,
+  "womens-jewellery": <Gem />,
+  "womens-shoes": <Footprints />,
+  "womens-watches": <Watch />,
 };
 
-export function categoryIcon(key: string): ReactNode {
-  return CATEGORY_ICONS[key] ?? CATEGORY_ICONS.appstore;
+/** Falls back to a neutral grid for any slug the catalogue adds later. */
+export function categoryIcon(slug: string): ReactNode {
+  return CATEGORY_ICONS[slug] ?? <LayoutGrid />;
 }

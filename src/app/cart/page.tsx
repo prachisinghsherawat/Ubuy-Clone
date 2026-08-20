@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  ArrowRightOutlined,
-  DeleteOutlined,
-  HeartOutlined,
-  ShoppingOutlined,
-} from "@ant-design/icons";
-import { App, Button, Empty, InputNumber, Popconfirm, Skeleton, Tag } from "antd";
+import { ArrowRight, Heart, Package, Trash2 } from "lucide-react";
+import { App, Button, InputNumber, Popconfirm, Skeleton, Tag } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,6 +10,7 @@ import { PriceTag } from "@/components/ui/PriceTag";
 import { MAX_QUANTITY, useCart } from "@/features/cart/CartProvider";
 import { OrderSummary } from "@/features/cart/OrderSummary";
 import { useWishlist } from "@/features/wishlist/WishlistProvider";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { ROUTES } from "@/lib/constants";
 import { useCurrency } from "@/features/currency/CurrencyProvider";
 import { estimatedDelivery } from "@/lib/format";
@@ -85,7 +81,7 @@ function CartLine({ line }: { line: CartLineView }) {
             aria-label={`Quantity for ${line.product.name}`}
           />
 
-          <Button type="text" icon={<HeartOutlined />} onClick={saveForLater} size="small">
+          <Button type="text" icon={<Heart />} onClick={saveForLater} size="small">
             Save for later
           </Button>
 
@@ -98,7 +94,7 @@ function CartLine({ line }: { line: CartLineView }) {
               message.success("Item removed from cart");
             }}
           >
-            <Button type="text" danger icon={<DeleteOutlined />} size="small">
+            <Button type="text" danger icon={<Trash2 />} size="small">
               Remove
             </Button>
           </Popconfirm>
@@ -134,20 +130,15 @@ export default function CartPage() {
   if (lines.length === 0) {
     return (
       <div className="container page">
-        <div className="surface-card empty-state">
-          <Empty
-            image={Empty.PRESENTED_IMAGE_DEFAULT}
-            description="Your cart is empty"
-          />
-          <p style={{ color: "var(--ink-muted)", margin: 0 }}>
-            Browse the catalogue and add something you like.
-          </p>
-          <Link href={ROUTES.products}>
-            <Button type="primary" size="large" icon={<ShoppingOutlined />}>
-              Start shopping
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          description="Your cart is empty"
+          hint="Browse the catalogue and add something you like."
+          action={{
+            href: ROUTES.products,
+            label: "Start shopping",
+            icon: <Package />,
+          }}
+        />
       </div>
     );
   }
@@ -172,7 +163,7 @@ export default function CartPage() {
             message.success("Cart emptied");
           }}
         >
-          <Button danger type="text" icon={<DeleteOutlined />}>
+          <Button danger type="text" icon={<Trash2 />}>
             Empty cart
           </Button>
         </Popconfirm>
@@ -193,7 +184,7 @@ export default function CartPage() {
                 type="primary"
                 size="large"
                 block
-                icon={<ArrowRightOutlined />}
+                icon={<ArrowRight />}
                 iconPosition="end"
                 onClick={() => router.push(ROUTES.checkout)}
               >

@@ -1,6 +1,6 @@
 "use client";
 
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "antd";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -52,7 +52,7 @@ export function ProductRail({ products }: { products: Product[] }) {
     <div className="rail-wrap">
       <Button
         shape="circle"
-        icon={<LeftOutlined />}
+        icon={<ChevronLeft />}
         className="rail-arrow rail-arrow-prev"
         onClick={() => page(-1)}
         disabled={atStart}
@@ -67,7 +67,7 @@ export function ProductRail({ products }: { products: Product[] }) {
 
       <Button
         shape="circle"
-        icon={<RightOutlined />}
+        icon={<ChevronRight />}
         className="rail-arrow rail-arrow-next"
         onClick={() => page(1)}
         disabled={atEnd}

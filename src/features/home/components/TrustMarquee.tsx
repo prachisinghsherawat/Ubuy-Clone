@@ -1,26 +1,16 @@
-// `@ant-design/icons` builds a React context at module scope, so it only
-// evaluates inside a client bundle — any component importing it must be one.
 "use client";
 
-import {
-  CheckCircleFilled,
-  CreditCardFilled,
-  CrownFilled,
-  GlobalOutlined,
-  RocketFilled,
-  SafetyCertificateFilled,
-  TagFilled,
-} from "@ant-design/icons";
+import { CircleCheck, CreditCard, Crown, Globe, Rocket, ShieldCheck, Tag } from "lucide-react";
 import type { ReactNode } from "react";
 
 const ITEMS: { icon: ReactNode; label: string }[] = [
-  { icon: <GlobalOutlined />, label: "Sourced from 100+ countries" },
-  { icon: <RocketFilled />, label: "Express air shipping" },
-  { icon: <SafetyCertificateFilled />, label: "100% genuine products" },
-  { icon: <CreditCardFilled />, label: "Pay in rupees" },
-  { icon: <TagFilled />, label: "Customs & duties included" },
-  { icon: <CheckCircleFilled />, label: "Buyer protection" },
-  { icon: <CrownFilled />, label: "Authorised sellers only" },
+  { icon: <Globe />, label: "Sourced from 100+ countries" },
+  { icon: <Rocket fill="currentColor" />, label: "Express air shipping" },
+  { icon: <ShieldCheck fill="currentColor" />, label: "100% genuine products" },
+  { icon: <CreditCard fill="currentColor" />, label: "Pay in rupees" },
+  { icon: <Tag fill="currentColor" />, label: "Customs & duties included" },
+  { icon: <CircleCheck fill="currentColor" />, label: "Buyer protection" },
+  { icon: <Crown fill="currentColor" />, label: "Authorised sellers only" },
 ];
 
 /**

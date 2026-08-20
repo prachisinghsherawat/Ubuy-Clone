@@ -1,6 +1,6 @@
 "use client";
 
-import { LockOutlined, MailOutlined, MobileOutlined, UserOutlined } from "@ant-design/icons";
+import { Lock, Mail, Smartphone, User } from "lucide-react";
 import { Alert, App, Button, Checkbox, Form, Input } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -61,7 +61,7 @@ export function SignUpForm() {
         >
           <Input
             size="large"
-            prefix={<UserOutlined />}
+            prefix={<User />}
             placeholder="Priya Sharma"
             autoComplete="name"
           />
@@ -77,7 +77,7 @@ export function SignUpForm() {
         >
           <Input
             size="large"
-            prefix={<MailOutlined />}
+            prefix={<Mail />}
             placeholder="you@example.com"
             autoComplete="email"
           />
@@ -95,7 +95,7 @@ export function SignUpForm() {
             size="large"
             prefix={
               <span className="input-dial-code">
-                <MobileOutlined /> +91
+                <Smartphone /> +91
               </span>
             }
             maxLength={10}
@@ -114,7 +114,7 @@ export function SignUpForm() {
         >
           <Input.Password
             size="large"
-            prefix={<LockOutlined />}
+            prefix={<Lock />}
             placeholder="At least 8 characters"
             autoComplete="new-password"
           />
@@ -136,7 +136,7 @@ export function SignUpForm() {
         >
           <Input.Password
             size="large"
-            prefix={<LockOutlined />}
+            prefix={<Lock />}
             autoComplete="new-password"
           />
         </Form.Item>

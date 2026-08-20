@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpOutlined } from "@ant-design/icons";
+import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const SHOW_AFTER = 600;
@@ -26,7 +26,7 @@ export function BackToTop() {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Back to top"
     >
-      <ArrowUpOutlined />
+      <ArrowUp />
     </button>
   );
 }

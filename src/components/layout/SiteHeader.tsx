@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  DownOutlined,
-  HeartOutlined,
-  LogoutOutlined,
-  ShoppingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { ChevronDown, Heart, LogOut, Package, User } from "lucide-react";
 import { App, Badge, Dropdown, type MenuProps } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,20 +35,20 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
         { type: "divider" },
         {
           key: "orders",
-          icon: <ShoppingOutlined />,
+          icon: <Package />,
           // There is no order history in this build — only the most recent
           // order is kept, and that is what the success route renders.
           label: <Link href={ROUTES.success}>Your Last Order</Link>,
         },
         {
           key: "wishlist",
-          icon: <HeartOutlined />,
+          icon: <Heart />,
           label: <Link href={`${ROUTES.products}?saved=1`}>Your Wishlist</Link>,
         },
         { type: "divider" },
         {
           key: "signout",
-          icon: <LogoutOutlined />,
+          icon: <LogOut />,
           danger: true,
           label: "Sign out",
           onClick: () => {
@@ -69,12 +63,12 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
         { type: "divider" },
         {
           key: "signin",
-          icon: <UserOutlined />,
+          icon: <User />,
           label: <Link href={ROUTES.signIn}>Sign in</Link>,
         },
         {
           key: "signup",
-          icon: <ShoppingOutlined />,
+          icon: <Package />,
           label: <Link href={ROUTES.signUp}>Create an account</Link>,
         },
       ];
@@ -95,12 +89,12 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
 
           <Dropdown menu={{ items: accountItems }} placement="bottomRight" arrow>
             <button type="button" className="header-action">
-              <UserOutlined />
+              <User />
               <span className="header-action-label">
                 <small>{user ? "Account" : "Sign in"}</small>
                 <strong>{user ? user.name.split(" ")[0] : "Account"}</strong>
               </span>
-              <DownOutlined style={{ fontSize: 10, opacity: 0.7 }} />
+              <ChevronDown style={{ fontSize: 10, opacity: 0.7 }} />
             </button>
           </Dropdown>
 
@@ -110,7 +104,7 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
             aria-label="Wishlist"
           >
             <Badge count={wishlistIds.length} size="small" offset={[2, -2]}>
-              <HeartOutlined style={{ fontSize: 18 }} />
+              <Heart style={{ fontSize: 18 }} />
             </Badge>
           </Link>
 

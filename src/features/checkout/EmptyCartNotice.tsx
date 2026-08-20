@@ -1,9 +1,8 @@
 "use client";
 
-import { ShoppingOutlined } from "@ant-design/icons";
-import { Button, Empty } from "antd";
-import Link from "next/link";
+import { Package } from "lucide-react";
 
+import { EmptyState } from "@/components/ui/EmptyState";
 import { ROUTES } from "@/lib/constants";
 
 /**
@@ -18,13 +17,9 @@ export function EmptyCartNotice({
   message?: string;
 }) {
   return (
-    <div className="surface-card empty-state">
-      <Empty description={message} />
-      <Link href={ROUTES.products}>
-        <Button type="primary" size="large" icon={<ShoppingOutlined />}>
-          Browse products
-        </Button>
-      </Link>
-    </div>
+    <EmptyState
+      description={message}
+      action={{ href: ROUTES.products, label: "Browse products", icon: <Package /> }}
+    />
   );
 }

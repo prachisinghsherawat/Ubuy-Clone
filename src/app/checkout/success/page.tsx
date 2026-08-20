@@ -1,6 +1,6 @@
 "use client";
 
-import { HomeOutlined, PrinterOutlined, ShoppingOutlined } from "@ant-design/icons";
+import { House, Package, Printer } from "lucide-react";
 import { Button, Descriptions, Divider, Result, Skeleton } from "antd";
 import Image from "next/image";
 import Link from "next/link";
@@ -70,19 +70,19 @@ export default function SuccessPage() {
           }
           extra={[
             <Link key="shop" href={ROUTES.products}>
-              <Button type="primary" size="large" icon={<ShoppingOutlined />}>
+              <Button type="primary" size="large" icon={<Package />}>
                 Continue shopping
               </Button>
             </Link>,
             <Link key="home" href={ROUTES.home}>
-              <Button size="large" icon={<HomeOutlined />}>
+              <Button size="large" icon={<House />}>
                 Back to home
               </Button>
             </Link>,
             <Button
               key="print"
               size="large"
-              icon={<PrinterOutlined />}
+              icon={<Printer />}
               onClick={() => window.print()}
             >
               Print receipt
@@ -92,8 +92,8 @@ export default function SuccessPage() {
       </div>
 
       <div className="checkout-grid">
-        <div className="surface-card" style={{ padding: 24 }}>
-          <h2 style={{ margin: "0 0 16px", fontSize: 17, fontWeight: 700 }}>
+        <div className="surface-card card-pad-lg">
+          <h2 className="card-heading">
             Delivery details
           </h2>
 
@@ -122,7 +122,7 @@ export default function SuccessPage() {
 
           <Divider />
 
-          <h2 style={{ margin: "0 0 4px", fontSize: 17, fontWeight: 700 }}>
+          <h2 className="card-heading card-heading-tight">
             {order.totals.itemCount} {order.totals.itemCount === 1 ? "item" : "items"}
           </h2>
 
@@ -138,13 +138,13 @@ export default function SuccessPage() {
                 />
               </Link>
 
-              <div style={{ minWidth: 0 }}>
+              <div className="min-w-0">
                 <Link href={ROUTES.product(line.product.slug)}>
-                  <h3 style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>
+                  <h3 className="receipt-line-name">
                     {line.product.name}
                   </h3>
                 </Link>
-                <p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--ink-muted)" }}>
+                <p className="receipt-line-meta">
                   {line.product.brand} · Qty {line.quantity}
                 </p>
               </div>

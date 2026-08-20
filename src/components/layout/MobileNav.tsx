@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  FireOutlined,
-  HeartOutlined,
-  LoginOutlined,
-  LogoutOutlined,
-  MenuOutlined,
-  ShoppingOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
+import { Flame, Heart, LogIn, LogOut, Menu, Package, UserPlus } from "lucide-react";
 import { App, Button, Divider, Drawer, Select } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -38,7 +30,7 @@ export function MobileNav({ categories }: { categories: Category[] }) {
         onClick={() => setOpen(true)}
         aria-label="Open menu"
       >
-        <MenuOutlined style={{ fontSize: 18 }} />
+        <Menu style={{ fontSize: 18 }} />
       </button>
 
       <Drawer
@@ -56,7 +48,7 @@ export function MobileNav({ categories }: { categories: Category[] }) {
                 Signed in as <strong>{user.name}</strong>
               </p>
               <Button
-                icon={<LogoutOutlined />}
+                icon={<LogOut />}
                 danger
                 block
                 onClick={() => {
@@ -72,12 +64,12 @@ export function MobileNav({ categories }: { categories: Category[] }) {
           ) : (
             <div className="drawer-auth-actions">
               <Link href={ROUTES.signIn} onClick={close}>
-                <Button type="primary" icon={<LoginOutlined />} block>
+                <Button type="primary" icon={<LogIn />} block>
                   Sign in
                 </Button>
               </Link>
               <Link href={ROUTES.signUp} onClick={close}>
-                <Button icon={<UserAddOutlined />} block>
+                <Button icon={<UserPlus />} block>
                   Register
                 </Button>
               </Link>
@@ -89,13 +81,13 @@ export function MobileNav({ categories }: { categories: Category[] }) {
 
         <nav className="drawer-links" aria-label="Quick links">
           <Link href={`${ROUTES.products}?sort=discount`} onClick={close}>
-            <FireOutlined /> Today&apos;s Deals
+            <Flame /> Today&apos;s Deals
           </Link>
           <Link href={`${ROUTES.products}?saved=1`} onClick={close}>
-            <HeartOutlined /> Your Wishlist
+            <Heart /> Your Wishlist
           </Link>
           <Link href={ROUTES.products} onClick={close}>
-            <ShoppingOutlined /> All Products
+            <Package /> All Products
           </Link>
         </nav>
 
@@ -127,7 +119,7 @@ export function MobileNav({ categories }: { categories: Category[] }) {
               href={`${ROUTES.products}?category=${category.slug}`}
               onClick={close}
             >
-              {categoryIcon(category.icon)} {category.label}
+              {categoryIcon(category.slug)} {category.label}
             </Link>
           ))}
         </nav>

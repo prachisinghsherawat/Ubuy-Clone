@@ -16,7 +16,7 @@ export function CategoryTiles({ categories }: { categories: Category[] }) {
             href={`${ROUTES.products}?category=${category.slug}`}
             className="category-tile reveal-item"
           >
-            <span className="category-tile-icon">{categoryIcon(category.icon)}</span>
+            <span className="category-tile-icon">{categoryIcon(category.slug)}</span>
             <strong>{category.label}</strong>
             <span>{category.blurb}</span>
           </Link>

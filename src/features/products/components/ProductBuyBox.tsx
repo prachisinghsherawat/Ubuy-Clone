@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  CheckCircleFilled,
-  SafetyCertificateOutlined,
-  ShoppingCartOutlined,
-  ThunderboltFilled,
-  TruckOutlined,
-  UndoOutlined,
-} from "@ant-design/icons";
+import { CircleCheck, RotateCcw, ShieldCheck, ShoppingCart, Truck, Zap } from "lucide-react";
 import { App, Button, Divider, InputNumber, Space, Tag } from "antd";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -62,7 +55,7 @@ export function ProductBuyBox({ product, deliveryDate }: ProductBuyBoxProps) {
       </p>
 
       {product.inStock ? (
-        <Tag icon={<CheckCircleFilled />} color="success">
+        <Tag icon={<CircleCheck fill="currentColor" />} color="success">
           In stock
         </Tag>
       ) : (
@@ -70,7 +63,7 @@ export function ProductBuyBox({ product, deliveryDate }: ProductBuyBoxProps) {
       )}
 
       {lowStock ? (
-        <Tag icon={<ThunderboltFilled />} color="warning">
+        <Tag icon={<Zap fill="currentColor" />} color="warning">
           Only {product.stock} left
         </Tag>
       ) : null}
@@ -100,7 +93,7 @@ export function ProductBuyBox({ product, deliveryDate }: ProductBuyBoxProps) {
           type="primary"
           size="large"
           block
-          icon={<ShoppingCartOutlined />}
+          icon={<ShoppingCart />}
           onClick={add}
           disabled={!product.inStock}
         >
@@ -129,21 +122,21 @@ export function ProductBuyBox({ product, deliveryDate }: ProductBuyBoxProps) {
 
       <ul className="spec-list" style={{ listStyle: "none", paddingLeft: 0 }}>
         <li>
-          <TruckOutlined /> Delivery by <strong>{deliveryDate}</strong>
+          <Truck /> Delivery by <strong>{deliveryDate}</strong>
         </li>
         {product.shippingInfo ? (
           <li>
-            <TruckOutlined /> {product.shippingInfo}
+            <Truck /> {product.shippingInfo}
           </li>
         ) : null}
         {product.returnPolicy ? (
           <li>
-            <UndoOutlined /> {product.returnPolicy}
+            <RotateCcw /> {product.returnPolicy}
           </li>
         ) : null}
         {product.warranty ? (
           <li>
-            <SafetyCertificateOutlined /> {product.warranty}
+            <ShieldCheck /> {product.warranty}
           </li>
         ) : null}
       </ul>

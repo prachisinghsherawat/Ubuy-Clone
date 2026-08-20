@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCartOutlined, StarFilled, ThunderboltFilled } from "@ant-design/icons";
+import { ShoppingCart, Star, Zap } from "lucide-react";
 import { App, Button, Tag } from "antd";
 import Image from "next/image";
 import Link from "next/link";
@@ -69,7 +69,7 @@ export function ProductCard({ product }: { product: Product }) {
         <h3 className="product-name">{product.name}</h3>
 
         <span className="product-rating">
-          <StarFilled />
+          <Star fill="currentColor" />
           {product.rating.toFixed(1)}
           <span className="product-rating-count">
             ({formatCount(product.reviewCount)})
@@ -80,13 +80,13 @@ export function ProductCard({ product }: { product: Product }) {
 
         {lowStock ? (
           <span className="product-stock">
-            <ThunderboltFilled /> Only {product.stock} left
+            <Zap fill="currentColor" /> Only {product.stock} left
           </span>
         ) : null}
 
         <Button
           type="primary"
-          icon={<ShoppingCartOutlined />}
+          icon={<ShoppingCart />}
           onClick={handleAdd}
           disabled={!product.inStock}
           block

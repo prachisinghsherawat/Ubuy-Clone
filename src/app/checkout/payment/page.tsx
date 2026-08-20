@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  BankOutlined,
-  CreditCardOutlined,
-  DollarOutlined,
-  LockOutlined,
-} from "@ant-design/icons";
+import { CreditCard, IndianRupee, Landmark, Lock } from "lucide-react";
 import { Alert, App, Button, Form, Input, Radio, Skeleton, Typography } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,6 +11,7 @@ import { OrderSummary } from "@/features/cart/OrderSummary";
 import { addressStore, lastOrderStore } from "@/features/checkout/checkoutStores";
 import { CheckoutSteps } from "@/features/checkout/CheckoutSteps";
 import { EmptyCartNotice } from "@/features/checkout/EmptyCartNotice";
+import { PanelHeading } from "@/components/ui/PanelHeading";
 import { ROUTES } from "@/lib/constants";
 import { maskCardNumber } from "@/lib/format";
 import { usePersistentValue } from "@/lib/persistentStore";
@@ -129,8 +125,8 @@ export default function PaymentPage() {
 
       <div className="checkout-grid">
         <div className="surface-card" style={{ padding: 24 }}>
-          <h1 style={{ margin: "0 0 4px", fontSize: 20, fontWeight: 700 }}>Payment</h1>
-          <p style={{ margin: "0 0 16px", color: "var(--ink-muted)", fontSize: 14 }}>
+          <PanelHeading title="Payment" />
+          <p className="panel-subheading">
             Delivering to <strong>{address.fullName}</strong>, {address.addressLine},{" "}
             {address.city}, {address.state} {address.pincode}{" "}
             <Link href={ROUTES.checkout} style={{ color: "var(--brand-coral)" }}>
@@ -156,13 +152,13 @@ export default function PaymentPage() {
             <Form.Item name="method" label="Payment method">
               <Radio.Group style={{ display: "grid", gap: 10 }}>
                 <Radio value="card">
-                  <CreditCardOutlined /> Credit or debit card
+                  <CreditCard /> Credit or debit card
                 </Radio>
                 <Radio value="upi">
-                  <BankOutlined /> UPI
+                  <Landmark /> UPI
                 </Radio>
                 <Radio value="cod">
-                  <DollarOutlined /> Cash on delivery
+                  <IndianRupee /> Cash on delivery
                 </Radio>
               </Radio.Group>
             </Form.Item>
@@ -196,7 +192,7 @@ export default function PaymentPage() {
                     inputMode="numeric"
                     placeholder="4242 4242 4242 4242"
                     autoComplete="cc-number"
-                    suffix={<LockOutlined style={{ color: "var(--ink-subtle)" }} />}
+                    suffix={<Lock style={{ color: "var(--ink-subtle)" }} />}
                   />
                 </Form.Item>
 
@@ -270,7 +266,7 @@ export default function PaymentPage() {
                 type="primary"
                 size="large"
                 htmlType="submit"
-                icon={<LockOutlined />}
+                icon={<Lock />}
                 loading={placing}
               >
                 Place order

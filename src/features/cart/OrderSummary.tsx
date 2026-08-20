@@ -1,6 +1,6 @@
 "use client";
 
-import { TruckOutlined } from "@ant-design/icons";
+import { Truck } from "lucide-react";
 import { Divider } from "antd";
 import type { ReactNode } from "react";
 
@@ -33,8 +33,8 @@ export function OrderSummary({
   const progress = Math.min(100, (totals.subtotal / FREE_SHIPPING_THRESHOLD) * 100);
 
   return (
-    <aside className="surface-card sticky-panel" style={{ padding: 20 }}>
-      <h2 style={{ margin: "0 0 12px", fontSize: 17, fontWeight: 700 }}>{title}</h2>
+    <aside className="surface-card sticky-panel card-pad">
+      <h2 className="card-heading">{title}</h2>
 
       <div className="summary-row">
         <span>
@@ -46,15 +46,13 @@ export function OrderSummary({
       {totals.savings > 0 ? (
         <div className="summary-row">
           <span>Discount</span>
-          <strong style={{ color: "var(--brand-mint)" }}>
-            −{format(totals.savings)}
-          </strong>
+          <strong className="text-mint">−{format(totals.savings)}</strong>
         </div>
       ) : null}
 
       <div className="summary-row">
         <span>Shipping</span>
-        <strong style={{ color: totals.shipping === 0 ? "var(--brand-mint)" : undefined }}>
+        <strong className={totals.shipping === 0 ? "text-mint" : undefined}>
           {totals.shipping === 0 ? "Free" : format(totals.shipping)}
         </strong>
       </div>
@@ -72,12 +70,10 @@ export function OrderSummary({
       </div>
 
       {showShippingMeter && totals.itemCount > 0 ? (
-        <div style={{ marginTop: 14, fontSize: 13, color: "var(--ink-muted)" }}>
-          <TruckOutlined />{" "}
+        <div className="summary-note">
+          <Truck />{" "}
           {qualifies ? (
-            <span style={{ color: "var(--brand-mint)" }}>
-              Your order ships free.
-            </span>
+            <span className="text-mint">Your order ships free.</span>
           ) : (
             <>
               Add <strong>{format(remaining)}</strong> more for free shipping.
@@ -89,7 +85,7 @@ export function OrderSummary({
         </div>
       ) : null}
 
-      {action ? <div style={{ marginTop: 16 }}>{action}</div> : null}
+      {action ? <div className="summary-action">{action}</div> : null}
     </aside>
   );
 }

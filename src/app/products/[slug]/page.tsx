@@ -1,4 +1,5 @@
 import { Breadcrumb, Tag } from "antd";
+import { Star } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -91,11 +92,8 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
           <h1 className="detail-title">{product.name}</h1>
 
           <div className="detail-meta">
-            {/* A glyph rather than `@ant-design/icons`: that package creates a
-                React context at module scope and cannot be imported from a
-                Server Component. */}
-            <span style={{ color: "var(--brand-amber)" }}>
-              ★ {product.rating.toFixed(1)}
+            <span className="detail-rating">
+              <Star fill="currentColor" /> {product.rating.toFixed(1)}
             </span>
             <span>{formatCount(product.reviewCount)} ratings</span>
             <span>·</span>

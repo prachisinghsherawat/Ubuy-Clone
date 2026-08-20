@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  FacebookFilled,
-  InstagramFilled,
-  SafetyCertificateOutlined,
-  TwitterOutlined,
-  YoutubeFilled,
-} from "@ant-design/icons";
+import { FacebookFilled, InstagramFilled, TwitterOutlined, YoutubeFilled } from "@ant-design/icons";
+import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 import {
@@ -46,7 +41,7 @@ export function SiteFooter() {
               delivered to your door with customs and duties handled for you.
             </p>
             <p style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-              <SafetyCertificateOutlined style={{ color: "var(--brand-amber)" }} />
+              <ShieldCheck style={{ color: "var(--brand-amber)" }} />
               100% secure payments
             </p>
           </div>

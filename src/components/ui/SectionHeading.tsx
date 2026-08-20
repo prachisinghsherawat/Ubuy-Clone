@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightOutlined } from "@ant-design/icons";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -44,7 +44,7 @@ export function SectionHeading({
 
       {href ? (
         <Link href={href} className="section-link">
-          {linkLabel} <ArrowRightOutlined />
+          {linkLabel} <ArrowRight />
         </Link>
       ) : null}
     </div>

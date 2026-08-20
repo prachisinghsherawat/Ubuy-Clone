@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Checkbox, Collapse, Rate, Select, Switch } from "antd";
+import { useState } from "react";
 
 import { categoryLabel } from "@/features/products/data/categories";
 import type { ListingState } from "@/features/products/utils/searchParams";
@@ -17,6 +18,9 @@ interface ProductFiltersProps {
 
 const RATING_STEPS = [4.5, 4, 3.5, 3];
 
+/** Departments shown before the list asks to be expanded. */
+const CATEGORY_PREVIEW = 8;
+
 /**
  * The listing's filter panel.
  *
@@ -31,34 +35,63 @@ export function ProductFilters({
   onReset,
   activeCount,
 }: ProductFiltersProps) {
+  const [showAllCategories, setShowAllCategories] = useState(false);
+
+  // The taxonomy runs to ~24 departments. It used to sit in a 260px scroll box,
+  // which put a second scrollbar inside a page that already had one; showing a
+  // preview and letting the reader ask for the rest keeps the rail flat.
+  const visibleCategories = showAllCategories
+    ? categories
+    : categories.slice(0, CATEGORY_PREVIEW);
+
+  /**
+   * A section's heading, with a count of what is narrowing it.
+   *
+   * Collapsed groups otherwise hide the fact that they are filtering at all —
+   * the reader had to open each one to find out where the results went.
+   */
+  const sectionLabel = (title: string, count: number) => (
+    <span className="filter-section-label">
+      {title}
+      {count > 0 ? <span className="filter-count">{count}</span> : null}
+    </span>
+  );
+
   const items = [
     {
       key: "category",
-      label: "Category",
+      label: sectionLabel("Category", state.categories.length),
       children: (
-        <Checkbox.Group
-          value={state.categories}
-          onChange={(values) => onChange({ categories: values as string[] })}
-          // The taxonomy runs to ~24 departments; a capped scroll area keeps the
-          // rest of the panel reachable without collapsing the group.
-          style={{
-            display: "grid",
-            gap: 8,
-            maxHeight: 260,
-            overflowY: "auto",
-          }}
-        >
-          {categories.map((slug) => (
-            <Checkbox key={slug} value={slug}>
-              {categoryLabel(slug)}
-            </Checkbox>
-          ))}
-        </Checkbox.Group>
+        <>
+          <Checkbox.Group
+            value={state.categories}
+            onChange={(values) => onChange({ categories: values as string[] })}
+            style={{ display: "grid", gap: 10 }}
+          >
+            {visibleCategories.map((slug) => (
+              <Checkbox key={slug} value={slug}>
+                {categoryLabel(slug)}
+              </Checkbox>
+            ))}
+          </Checkbox.Group>
+
+          {categories.length > CATEGORY_PREVIEW ? (
+            <button
+              type="button"
+              className="filter-more"
+              onClick={() => setShowAllCategories((current) => !current)}
+            >
+              {showAllCategories
+                ? "Show fewer"
+                : `Show all ${categories.length} departments`}
+            </button>
+          ) : null}
+        </>
       ),
     },
     {
       key: "brand",
-      label: "Brand",
+      label: sectionLabel("Brand", state.brands.length),
       children: (
         // There are far too many brands for a checkbox list, so this is a
         // type-ahead multi-select instead.
@@ -77,7 +110,7 @@ export function ProductFilters({
     },
     {
       key: "price",
-      label: "Price",
+      label: sectionLabel("Price", state.buckets.length),
       children: (
         <Checkbox.Group
           value={state.buckets}
@@ -96,37 +129,23 @@ export function ProductFilters({
     },
     {
       key: "rating",
-      label: "Customer rating",
+      label: sectionLabel("Customer rating", state.minRating > 0 ? 1 : 0),
       children: (
         <div style={{ display: "grid", gap: 8 }}>
           {RATING_STEPS.map((value) => (
             <button
               key={value}
               type="button"
+              className="filter-rating"
               onClick={() =>
                 // Clicking the active step clears it, so the group needs no
                 // separate "any rating" row.
                 onChange({ minRating: state.minRating === value ? 0 : value })
               }
               aria-pressed={state.minRating === value}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "4px 8px",
-                border: "1px solid",
-                borderColor:
-                  state.minRating === value ? "var(--brand-coral)" : "transparent",
-                borderRadius: "var(--radius-sm)",
-                background: "transparent",
-                cursor: "pointer",
-                font: "inherit",
-                fontSize: 13,
-                color: "var(--ink-muted)",
-                textAlign: "left",
-              }}
+              data-selected={state.minRating === value}
             >
-              <Rate disabled allowHalf value={value} style={{ fontSize: 13 }} />
+              <Rate disabled allowHalf value={value} style={{ fontSize: 14 }} />
               &amp; up
             </button>
           ))}
@@ -135,7 +154,7 @@ export function ProductFilters({
     },
     {
       key: "availability",
-      label: "Availability",
+      label: sectionLabel("Availability", state.inStockOnly ? 1 : 0),
       children: (
         <label style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14 }}>
           <Switch
@@ -152,7 +171,12 @@ export function ProductFilters({
   return (
     <aside className="sticky-filters filter-panel">
       <div className="filter-panel-head">
-        <strong>Filters</strong>
+        <strong>
+          Filters
+          {activeCount > 0 ? (
+            <span className="filter-count filter-count-total">{activeCount}</span>
+          ) : null}
+        </strong>
         <Button
           type="link"
           size="small"

@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  AppstoreOutlined,
-  FireOutlined,
-  LeftOutlined,
-  RightOutlined,
-} from "@ant-design/icons";
+import { ChevronLeft, ChevronRight, Flame, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -62,7 +57,7 @@ export function CategoryBar() {
         hidden={atStart}
         aria-label="Scroll categories left"
       >
-        <LeftOutlined />
+        <ChevronLeft />
       </button>
 
       <div className="category-bar-inner" ref={trackRef} onScroll={sync}>
@@ -71,7 +66,7 @@ export function CategoryBar() {
           className="category-link"
           data-active={onListing && !activeCategory && !activeSort}
         >
-          <AppstoreOutlined /> All Products
+          <LayoutGrid /> All Products
         </Link>
 
         {FEATURED_CATEGORY_SLUGS.map(categoryMeta).map((category) => (
@@ -81,7 +76,7 @@ export function CategoryBar() {
             className="category-link"
             data-active={onListing && activeCategory === category.slug}
           >
-            {categoryIcon(category.icon)} {category.label}
+            {categoryIcon(category.slug)} {category.label}
           </Link>
         ))}
 
@@ -90,7 +85,7 @@ export function CategoryBar() {
           className="category-link category-link-deals"
           data-active={onDeals}
         >
-          <FireOutlined /> Today&apos;s Deals
+          <Flame /> Today&apos;s Deals
         </Link>
       </div>
 
@@ -101,7 +96,7 @@ export function CategoryBar() {
         hidden={atEnd}
         aria-label="Scroll categories right"
       >
-        <RightOutlined />
+        <ChevronRight />
       </button>
     </nav>
   );

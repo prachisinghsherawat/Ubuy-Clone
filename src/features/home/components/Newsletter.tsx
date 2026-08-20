@@ -1,6 +1,6 @@
 "use client";
 
-import { MailOutlined, SendOutlined } from "@ant-design/icons";
+import { Mail, Send } from "lucide-react";
 import { App, Button, Form, Input } from "antd";
 
 interface NewsletterValues {
@@ -21,7 +21,7 @@ export function Newsletter() {
     <section className="newsletter reveal">
       <div className="newsletter-copy">
         <span className="newsletter-kicker">
-          <MailOutlined /> Weekly drop
+          <Mail /> Weekly drop
         </span>
         <h2>Get the price drops before they sell out</h2>
         <p>
@@ -50,7 +50,7 @@ export function Newsletter() {
           >
             <Input
               size="large"
-              prefix={<MailOutlined />}
+              prefix={<Mail />}
               placeholder="you@example.com"
               autoComplete="email"
             />
@@ -60,7 +60,7 @@ export function Newsletter() {
               type="primary"
               size="large"
               htmlType="submit"
-              icon={<SendOutlined />}
+              icon={<Send />}
               iconPlacement="end"
             >
               Subscribe
