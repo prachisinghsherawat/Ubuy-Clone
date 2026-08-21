@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Heart, LogOut, Package, User } from "lucide-react";
+import { ChevronDown, Heart, LogOut, Package, User, UserRound } from "lucide-react";
 import { App, Badge, Dropdown, type MenuProps } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,16 +34,19 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
         { key: "greeting", label: `Hi, ${user.name.split(" ")[0]}`, disabled: true },
         { type: "divider" },
         {
+          key: "account",
+          icon: <UserRound />,
+          label: <Link href={ROUTES.account}>Your Account</Link>,
+        },
+        {
           key: "orders",
           icon: <Package />,
-          // There is no order history in this build — only the most recent
-          // order is kept, and that is what the success route renders.
-          label: <Link href={ROUTES.success}>Your Last Order</Link>,
+          label: <Link href={ROUTES.orders}>Your Orders</Link>,
         },
         {
           key: "wishlist",
           icon: <Heart />,
-          label: <Link href={`${ROUTES.products}?saved=1`}>Your Wishlist</Link>,
+          label: <Link href={ROUTES.wishlist}>Your Wishlist</Link>,
         },
         { type: "divider" },
         {
@@ -99,7 +102,7 @@ export function SiteHeader({ categories, trending }: SiteHeaderProps) {
           </Dropdown>
 
           <Link
-            href={`${ROUTES.products}?saved=1`}
+            href={ROUTES.wishlist}
             className="header-action"
             aria-label="Wishlist"
           >

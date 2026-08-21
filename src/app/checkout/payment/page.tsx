@@ -8,9 +8,10 @@ import { useState } from "react";
 
 import { useCart } from "@/features/cart/CartProvider";
 import { OrderSummary } from "@/features/cart/OrderSummary";
-import { addressStore, lastOrderStore } from "@/features/checkout/checkoutStores";
+import { addressStore } from "@/features/checkout/checkoutStores";
 import { CheckoutSteps } from "@/features/checkout/CheckoutSteps";
 import { EmptyCartNotice } from "@/features/checkout/EmptyCartNotice";
+import { recordOrder } from "@/features/orders/orderStore";
 import { PanelHeading } from "@/components/ui/PanelHeading";
 import { ROUTES } from "@/lib/constants";
 import { maskCardNumber } from "@/lib/format";
@@ -68,7 +69,7 @@ export default function PaymentPage() {
   const placeOrder = (values: PaymentForm) => {
     setPlacing(true);
 
-    lastOrderStore.set({
+    recordOrder({
       id: `UB${Date.now().toString(36).toUpperCase()}`,
       placedAt: new Date().toISOString(),
       lines,

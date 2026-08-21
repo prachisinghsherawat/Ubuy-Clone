@@ -1,6 +1,16 @@
 "use client";
 
-import { Flame, Heart, LogIn, LogOut, Menu, Package, UserPlus } from "lucide-react";
+import {
+  Flame,
+  Heart,
+  LogIn,
+  LogOut,
+  Menu,
+  Package,
+  ReceiptText,
+  UserPlus,
+  UserRound,
+} from "lucide-react";
 import { App, Button, Divider, Drawer, Select } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -47,6 +57,11 @@ export function MobileNav({ categories }: { categories: Category[] }) {
               <p>
                 Signed in as <strong>{user.name}</strong>
               </p>
+              <Link href={ROUTES.account} onClick={close}>
+                <Button icon={<UserRound />} block style={{ marginBottom: 8 }}>
+                  Your account
+                </Button>
+              </Link>
               <Button
                 icon={<LogOut />}
                 danger
@@ -83,9 +98,14 @@ export function MobileNav({ categories }: { categories: Category[] }) {
           <Link href={`${ROUTES.products}?sort=discount`} onClick={close}>
             <Flame /> Today&apos;s Deals
           </Link>
-          <Link href={`${ROUTES.products}?saved=1`} onClick={close}>
+          <Link href={ROUTES.wishlist} onClick={close}>
             <Heart /> Your Wishlist
           </Link>
+          {user ? (
+            <Link href={ROUTES.orders} onClick={close}>
+              <ReceiptText /> Your Orders
+            </Link>
+          ) : null}
           <Link href={ROUTES.products} onClick={close}>
             <Package /> All Products
           </Link>

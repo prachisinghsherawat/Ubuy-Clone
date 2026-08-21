@@ -1,36 +1,23 @@
 "use client";
 
-import { House, Package, Printer } from "lucide-react";
-import { Button, Descriptions, Divider, Result, Skeleton } from "antd";
-import Image from "next/image";
+import { House, Package, Printer, ReceiptText } from "lucide-react";
+import { Button, Result, Skeleton } from "antd";
 import Link from "next/link";
 
 import { OrderSummary } from "@/features/cart/OrderSummary";
-import { lastOrderStore } from "@/features/checkout/checkoutStores";
 import { CheckoutSteps } from "@/features/checkout/CheckoutSteps";
 import { EmptyCartNotice } from "@/features/checkout/EmptyCartNotice";
+import { OrderReceipt } from "@/features/orders/OrderReceipt";
+import { useLatestOrder } from "@/features/orders/orderStore";
+import { formatPlacedAt } from "@/features/orders/status";
 import { ROUTES } from "@/lib/constants";
-import { useCurrency } from "@/features/currency/CurrencyProvider";
 import { estimatedDelivery } from "@/lib/format";
-import { useHydrated, usePersistentValue } from "@/lib/persistentStore";
-import type { PlacedOrder } from "@/types";
-
-/** Orders from an earlier build carry no method, but always carry card digits. */
-function paymentLabel(order: PlacedOrder): string {
-  switch (order.paymentMethod ?? "card") {
-    case "upi":
-      return "UPI";
-    case "cod":
-      return "Cash on delivery";
-    default:
-      return `Card ending ${order.cardLast4}`;
-  }
-}
+import { useHydrated } from "@/lib/persistentStore";
 
 export default function SuccessPage() {
-  const order = usePersistentValue(lastOrderStore);
+  // The head of the order history is the order that was just placed.
+  const order = useLatestOrder();
   const hydrated = useHydrated();
-  const { format } = useCurrency();
 
   if (!hydrated) {
     return (
@@ -49,11 +36,6 @@ export default function SuccessPage() {
     );
   }
 
-  const placedOn = new Date(order.placedAt).toLocaleString("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-
   return (
     <div className="container page">
       <CheckoutSteps current={2} />
@@ -64,14 +46,19 @@ export default function SuccessPage() {
           title="Order placed successfully"
           subTitle={
             <>
-              Order <strong>{order.id}</strong> · placed {placedOn} · arriving by{" "}
-              <strong>{estimatedDelivery()}</strong>
+              Order <strong>{order.id}</strong> · placed {formatPlacedAt(order.placedAt)} ·
+              arriving by <strong>{estimatedDelivery()}</strong>
             </>
           }
           extra={[
             <Link key="shop" href={ROUTES.products}>
               <Button type="primary" size="large" icon={<Package />}>
                 Continue shopping
+              </Button>
+            </Link>,
+            <Link key="orders" href={ROUTES.orders}>
+              <Button size="large" icon={<ReceiptText />}>
+                Your orders
               </Button>
             </Link>,
             <Link key="home" href={ROUTES.home}>
@@ -92,70 +79,7 @@ export default function SuccessPage() {
       </div>
 
       <div className="checkout-grid">
-        <div className="surface-card card-pad-lg">
-          <h2 className="card-heading">
-            Delivery details
-          </h2>
-
-          <Descriptions
-            bordered
-            size="small"
-            column={1}
-            items={[
-              { key: "name", label: "Recipient", children: order.address.fullName },
-              {
-                key: "address",
-                label: "Address",
-                children: [
-                  order.address.addressLine,
-                  order.address.landmark,
-                  `${order.address.city}, ${order.address.state} ${order.address.pincode}`,
-                ]
-                  .filter(Boolean)
-                  .join(", "),
-              },
-              { key: "phone", label: "Phone", children: `+91 ${order.address.phone}` },
-              { key: "email", label: "Email", children: order.address.email },
-              { key: "payment", label: "Payment", children: paymentLabel(order) },
-            ]}
-          />
-
-          <Divider />
-
-          <h2 className="card-heading card-heading-tight">
-            {order.totals.itemCount} {order.totals.itemCount === 1 ? "item" : "items"}
-          </h2>
-
-          {order.lines.map((line) => (
-            <div className="cart-line" key={line.productId}>
-              <Link href={ROUTES.product(line.product.slug)} className="cart-thumb">
-                <Image
-                  src={line.product.image}
-                  alt={line.product.name}
-                  width={92}
-                  height={92}
-                  style={{ objectFit: "contain" }}
-                />
-              </Link>
-
-              <div className="min-w-0">
-                <Link href={ROUTES.product(line.product.slug)}>
-                  <h3 className="receipt-line-name">
-                    {line.product.name}
-                  </h3>
-                </Link>
-                <p className="receipt-line-meta">
-                  {line.product.brand} · Qty {line.quantity}
-                </p>
-              </div>
-
-              <div className="cart-line-total" style={{ textAlign: "right" }}>
-                <strong>{format(line.lineTotal)}</strong>
-              </div>
-            </div>
-          ))}
-        </div>
-
+        <OrderReceipt order={order} />
         <OrderSummary
           totals={order.totals}
           title="Amount paid"

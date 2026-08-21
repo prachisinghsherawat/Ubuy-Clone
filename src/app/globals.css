@@ -4093,3 +4093,389 @@ img {
   font-size: 13px;
   color: var(--ink-muted);
 }
+
+
+/* ==========================================================================
+   Account area
+   The /account routes: identity rail, section nav, and the order history
+   cards shared by the overview and the full list.
+   ========================================================================== */
+
+.account-layout {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.account-rail {
+  display: grid;
+  gap: 16px;
+  position: sticky;
+  top: calc(var(--header-height) + 16px);
+}
+
+.account-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.account-identity strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+/* The email is the one string here long enough to blow out a 264px rail. */
+.account-identity small {
+  display: block;
+  color: var(--ink-muted);
+  font-size: 12.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-avatar {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--grad-brand);
+  color: #fff;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.account-nav {
+  display: grid;
+  padding: 8px;
+  gap: 2px;
+}
+
+.account-nav a,
+.account-signout {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 1.2;
+  transition: background 0.18s var(--ease-out), color 0.18s var(--ease-out);
+}
+
+.account-nav a:hover,
+.account-signout:hover {
+  background: var(--canvas);
+  color: var(--brand-coral);
+}
+
+.account-nav a[data-active="true"] {
+  background: var(--grad-brand-soft);
+  color: var(--brand-coral);
+}
+
+/* Matches the links it sits with rather than looking like a form control. */
+.account-signout {
+  border: none;
+  background: none;
+  width: 100%;
+  margin-top: 4px;
+  padding-inline: 14px;
+  color: #cf3c46;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.account-signout:hover {
+  background: #fff1f0;
+  color: #cf3c46;
+}
+
+.account-title {
+  margin-bottom: 2px;
+}
+
+.account-subtitle {
+  margin: 0 0 4px;
+  color: var(--ink-muted);
+  font-size: 14px;
+}
+
+.account-orders-head {
+  align-items: center;
+}
+
+.account-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  color: var(--ink-muted);
+  font-size: 13.5px;
+  font-weight: 550;
+}
+
+.account-back:hover {
+  color: var(--brand-coral);
+}
+
+/* ------------------------------------------------------------ stat tiles -- */
+
+.account-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin: 20px 0 8px;
+}
+
+.account-stat {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px 18px;
+}
+
+.account-stat strong {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+
+.account-stat small {
+  color: var(--ink-muted);
+  font-size: 12.5px;
+}
+
+.account-stat-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--grad-brand-soft);
+  color: var(--brand-coral);
+  font-size: 19px;
+}
+
+/* -------------------------------------------------------------- address -- */
+
+.account-address {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.account-address p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-muted);
+}
+
+.account-address strong {
+  color: var(--ink);
+}
+
+.account-address-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --------------------------------------------------------- order history -- */
+
+.order-list {
+  display: grid;
+  gap: 16px;
+}
+
+.order-card {
+  padding: 18px 20px;
+}
+
+.order-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.order-card-id {
+  font-size: 15.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-card-id:hover {
+  color: var(--brand-coral);
+}
+
+.order-card-meta {
+  margin: 3px 0 0;
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.order-card-head-end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.order-card-head-end strong {
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px 0;
+}
+
+.order-thumbs {
+  display: flex;
+  gap: 10px;
+}
+
+.order-thumb {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  transition: border-color 0.18s var(--ease-out), transform 0.18s var(--ease-out);
+}
+
+.order-thumb:hover {
+  border-color: var(--brand-coral);
+  transform: translateY(-2px);
+}
+
+.order-thumb img {
+  max-height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+/* The overflow count is a span, not a link — nothing to hover into. */
+.order-thumb-more {
+  color: var(--ink-muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  background: var(--canvas);
+}
+
+.order-thumb-more:hover {
+  border-color: var(--line);
+  transform: none;
+}
+
+.order-card-actions,
+.order-detail-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.order-card-foot {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 13.5px;
+}
+
+.order-card-foot strong {
+  color: var(--ink);
+}
+
+.order-progress {
+  margin-bottom: 24px;
+}
+
+/* ----------------------------------------------------- account responsive -- */
+
+/* The rail stops being a rail at the same breakpoint every other side column
+   in the app does, so the nav becomes a scrollable strip above the content. */
+@media (max-width: 992px) {
+  .account-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .account-rail {
+    position: static;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .account-nav {
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .account-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .account-signout {
+    margin-top: 0;
+    width: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .order-card-body {
+    align-items: flex-start;
+  }
+
+  .order-card-actions {
+    width: 100%;
+  }
+
+  .order-card-actions > * {
+    flex: 1;
+  }
+
+  .order-card-actions .ant-btn {
+    width: 100%;
+  }
+}
+
+/* Receipts are the one thing here anyone prints; drop the chrome. */
+@media print {
+  .site-header,
+  .site-footer,
+  .account-rail,
+  .order-card-actions,
+  .order-detail-actions,
+  .back-to-top,
+  .checkout-steps {
+    display: none !important;
+  }
+
+  .surface-card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}

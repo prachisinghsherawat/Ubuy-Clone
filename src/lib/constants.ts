@@ -17,6 +17,10 @@ export const ROUTES = {
   success: "/checkout/success",
   signIn: "/signin",
   signUp: "/signup",
+  account: "/account",
+  orders: "/account/orders",
+  order: (id: string) => `/account/orders/${id}`,
+  wishlist: "/products?saved=1",
 } as const;
 
 /** localStorage keys, namespaced so a shared origin never collides. */
@@ -26,6 +30,8 @@ export const STORAGE_KEYS = {
   users: "ubuy.users",
   session: "ubuy.session",
   address: "ubuy.address",
+  orders: "ubuy.orders",
+  /** Superseded by `orders`; still read once so an old single order is kept. */
   lastOrder: "ubuy.lastOrder",
   destination: "ubuy.destination",
   recentSearches: "ubuy.recentSearches",
@@ -35,6 +41,9 @@ export const STORAGE_KEYS = {
 export const FREE_SHIPPING_THRESHOLD = 25_000;
 export const FLAT_SHIPPING = 499;
 export const TAX_RATE = 0.05;
+
+/** Working days quoted as the delivery window, everywhere one is shown. */
+export const DELIVERY_DAYS = 5;
 
 export const PRICE_BUCKETS = [
   { id: "under-7700", label: "Under ₹7,700", min: 0, max: 7_700 },
